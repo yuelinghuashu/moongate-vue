@@ -1,0 +1,63 @@
+.mg-tooltip-trigger {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.mg-tooltip {
+  position: fixed;
+  z-index: var(--ui-z-index-tooltip, 1500);
+  padding: var(--ui-spacing-xs, 4px) var(--ui-spacing-sm, 8px);
+  background-color: var(--ui-bg-elevated, #1e293b);
+  color: var(--ui-text, #e2e8f0);
+  font-size: var(--ui-typography-size-small, 12px);
+  border-radius: var(--ui-radius-sm, 2px);
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--ui-motion-duration-neural, 150ms) ease;
+}
+
+.mg-tooltip-visible {
+  opacity: 1;
+}
+
+/* 浅色模式适配 */
+.light .mg-tooltip {
+  background-color: var(--ui-bg-elevated, #1e293b);
+  color: var(--ui-text, #0f172a);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 箭头 */
+.mg-tooltip-arrow {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background-color: inherit;
+  transform: rotate(45deg);
+}
+
+.mg-tooltip-arrow-top {
+  bottom: -4px;
+  left: 50%;
+  margin-left: -4px;
+}
+
+.mg-tooltip-arrow-bottom {
+  top: -4px;
+  left: 50%;
+  margin-left: -4px;
+}
+
+.mg-tooltip-arrow-left {
+  right: -4px;
+  top: 50%;
+  margin-top: -4px;
+}
+
+.mg-tooltip-arrow-right {
+  left: -4px;
+  top: 50%;
+  margin-top: -4px;
+}

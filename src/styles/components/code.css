@@ -1,0 +1,22 @@
+.mg-code {
+  font-family: var(--ui-typography-family-mono);
+  font-size: var(--ui-typography-size-code);
+}
+.mg-code-inline {
+  background-color: var(--ui-bg-muted);
+  padding: 0.2rem 0.4rem;
+  border-radius: var(--ui-radius-sm);
+  color: var(--ui-primary);
+}
+.mg-code-block {
+  display: block;
+  background-color: var(--ui-bg-muted);
+  padding: var(--ui-spacing-lg);
+  overflow-x: auto;
+  border-radius: var(--ui-radius-none);
+}
+.mg-code-block code {
+  background: none;
+  padding: 0;
+  color: inherit;
+}

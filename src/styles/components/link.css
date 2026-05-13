@@ -1,0 +1,23 @@
+.mg-link {
+  color: var(--ui-text-dim);
+  text-decoration: none;
+  transition: color var(--ui-motion-duration-neural) ease;
+  cursor: pointer;
+}
+.mg-link:hover {
+  color: var(--ui-primary);
+}
+
+/* 导航栏链接（需要更大点击区域） */
+.nav-link {
+  display: inline-block; /* 让 padding 生效 */
+  padding: var(--ui-spacing-sm) var(--ui-spacing-md);
+  color: var(--ui-text);
+  text-decoration: none;
+  border-radius: var(--ui-radius-sm);
+  transition: all var(--ui-motion-duration-neural) ease;
+  cursor: pointer;
+}
+.nav-link:hover {
+  background-color: color-mix(in srgb, var(--ui-primary), transparent 90%);
+}

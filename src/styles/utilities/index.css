@@ -1,0 +1,81 @@
+/* 全局重置 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+/* ---------- 核心契约 ---------- */
+:root {
+  --ui-radius: 0px;
+  --ui-glow-alpha: var(--ui-physics-glow-alpha-dawn);
+}
+.dark {
+  --ui-radius: 0px;
+  --ui-glow-alpha: var(--ui-physics-glow-alpha-night);
+}
+
+/* 月晕效果 */
+.mg-lunar-halo {
+  box-shadow: 0 8px 24px -4px
+    color-mix(
+      in srgb,
+      var(--ui-primary),
+      transparent calc(100% - var(--ui-glow-alpha) * 100%)
+    );
+}
+
+/* ---------- 语义颜色工具类 ---------- */
+.text-primary {
+  color: var(--ui-primary);
+}
+.text-success {
+  color: var(--ui-success);
+}
+.text-warning {
+  color: var(--ui-warning);
+}
+.text-error {
+  color: var(--ui-error);
+}
+.text-muted {
+  color: var(--ui-text-muted);
+}
+.text-dim {
+  color: var(--ui-text-dim);
+}
+
+.bg-primary {
+  background-color: var(--ui-primary);
+}
+.bg-success {
+  background-color: var(--ui-success);
+}
+.bg-warning {
+  background-color: var(--ui-warning);
+}
+.bg-error {
+  background-color: var(--ui-error);
+}
+.bg-muted {
+  background-color: var(--ui-bg-muted);
+}
+.bg-elevated {
+  background-color: var(--ui-bg-elevated);
+}
+.bg-hover {
+  background-color: var(--ui-bg-hover);
+}
+
+.border-primary {
+  border-color: var(--ui-primary);
+}
+.border-muted {
+  border-color: var(--ui-border);
+}
+
+.radius-0,
+.radius-none {
+  border-radius: 0;
+}

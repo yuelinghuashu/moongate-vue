@@ -1,0 +1,34 @@
+.mg-card {
+  background-color: var(--ui-bg-elevated);
+  border: none;
+  border-radius: var(--ui-radius-none);
+  overflow: hidden;
+  list-style: none;
+}
+
+.mg-card-header {
+  padding: var(--ui-spacing-lg);
+  border-bottom: 1px solid var(--ui-border);
+  font-weight: 600;
+}
+.mg-card-body {
+  padding: var(--ui-spacing-lg);
+}
+.mg-card-footer {
+  padding: var(--ui-spacing-lg);
+  border-top: 1px solid var(--ui-border);
+}
+.mg-card-hoverable {
+  transition:
+    transform var(--ui-motion-duration-lunar) var(--ui-motion-easing-lunar),
+    box-shadow var(--ui-motion-duration-lunar) var(--ui-motion-easing-lunar);
+}
+.mg-card-hoverable:hover {
+  transform: translateY(calc(var(--ui-physics-tidal-offset) * -1));
+  box-shadow: 0 8px 24px -4px
+    color-mix(
+      in srgb,
+      var(--ui-primary),
+      transparent calc(100% - var(--ui-glow-alpha) * 100%)
+    );
+}

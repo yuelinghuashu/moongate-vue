@@ -1,0 +1,116 @@
+.mg-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-spacing-sm);
+  cursor: pointer;
+  font-size: var(--ui-typography-size-body);
+  color: var(--ui-text);
+  user-select: none;
+}
+
+/* 原生复选框隐藏，用自定义样式 */
+.mg-checkbox-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* 自定义复选框外观 */
+.mg-checkbox-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.125rem;
+  height: 1.125rem;
+  border: var(--ui-physics-border-crease) solid var(--ui-border);
+  border-radius: var(--ui-radius-sm);
+  background-color: var(--ui-bg-muted);
+  transition: all var(--ui-motion-duration-neural) ease;
+  flex-shrink: 0;
+}
+
+/* 悬停效果 */
+.mg-checkbox:hover .mg-checkbox-box {
+  border-color: var(--ui-primary);
+}
+
+/* 选中状态 */
+.mg-checkbox-input:checked + .mg-checkbox-box {
+  background-color: var(--ui-primary);
+  border-color: var(--ui-primary);
+}
+
+/* 选中后的勾选图标（使用伪元素） */
+.mg-checkbox-input:checked + .mg-checkbox-box::after {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: white;
+  border-radius: 0;
+}
+
+/* 聚焦状态（可访问性） */
+.mg-checkbox-input:focus-visible + .mg-checkbox-box {
+  outline: var(--ui-physics-focus-ring) solid var(--ui-primary);
+  outline-offset: var(--ui-physics-focus-ring);
+}
+
+/* 禁用状态 */
+.mg-checkbox-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 错误状态 */
+.mg-checkbox-error .mg-checkbox-box {
+  border-color: var(--ui-error);
+}
+.mg-checkbox-error:hover .mg-checkbox-box {
+  border-color: var(--ui-error);
+}
+.mg-checkbox-error .mg-checkbox-input:checked + .mg-checkbox-box {
+  background-color: var(--ui-error);
+  border-color: var(--ui-error);
+}
+
+/* 尺寸变体 */
+.mg-checkbox-sm {
+  font-size: var(--ui-typography-size-small);
+  gap: var(--ui-spacing-xs);
+}
+.mg-checkbox-sm .mg-checkbox-box {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+.mg-checkbox-sm .mg-checkbox-input:checked + .mg-checkbox-box::after {
+  width: 0.375rem;
+  height: 0.375rem;
+}
+
+.mg-checkbox-md {
+  font-size: var(--ui-typography-size-body);
+  gap: var(--ui-spacing-sm);
+}
+.mg-checkbox-md .mg-checkbox-box {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+.mg-checkbox-md .mg-checkbox-input:checked + .mg-checkbox-box::after {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+
+.mg-checkbox-lg {
+  font-size: 1.125rem;
+  gap: var(--ui-spacing-md);
+}
+.mg-checkbox-lg .mg-checkbox-box {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+.mg-checkbox-lg .mg-checkbox-input:checked + .mg-checkbox-box::after {
+  width: 0.625rem;
+  height: 0.625rem;
+}

@@ -1,0 +1,15 @@
+.mg-divider {
+  border: none;
+  border-top: var(--ui-physics-border-crease) solid var(--ui-border);
+  margin: var(--ui-spacing-xl) 0;
+}
+.mg-divider-vertical {
+  display: inline-block;
+  border: none;
+  border-left: var(--ui-physics-border-crease) solid var(--ui-border);
+  margin: 0 var(--ui-spacing-md);
+  height: 1em;
+}
+.mg-divider-dashed {
+  border-top-style: dashed;
+}

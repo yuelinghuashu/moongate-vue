@@ -1,0 +1,57 @@
+.mg-hero {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+@media (min-width: 768px) {
+  .mg-hero {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+}
+
+.mg-hero-container {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.mg-hero-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+  .mg-hero-title {
+    font-size: 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .mg-hero-title {
+    font-size: 3.75rem;
+  }
+}
+
+.mg-hero-description {
+  font-size: 1.125rem;
+  color: var(--ui-text-dim);
+  text-align: center;
+  max-width: 42rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 1rem;
+  line-height: 1.6;
+}
+
+.mg-hero-actions {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}

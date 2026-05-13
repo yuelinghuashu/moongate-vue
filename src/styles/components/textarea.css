@@ -1,0 +1,43 @@
+.mg-textarea {
+  background-color: var(--ui-bg-muted);
+  border: var(--ui-physics-border-crease) solid var(--ui-border);
+  border-radius: var(--ui-radius-none);
+  color: var(--ui-text);
+  padding: var(--ui-spacing-sm);
+  transition: border-color var(--ui-motion-duration-neural) ease;
+  width: 100%;
+  font-family: inherit;
+  resize: vertical;
+}
+.mg-textarea:focus {
+  outline: none;
+  border-color: var(--ui-primary);
+  box-shadow: 0 0 0 var(--ui-physics-focus-ring)
+    color-mix(in srgb, var(--ui-primary), transparent 80%);
+}
+.mg-textarea::placeholder {
+  color: var(--ui-text-muted);
+  opacity: 0.7;
+}
+.mg-textarea-error {
+  border-color: var(--ui-error);
+}
+.mg-textarea-error:focus {
+  border-color: var(--ui-error);
+  box-shadow: 0 0 0 var(--ui-physics-focus-ring)
+    color-mix(in srgb, var(--ui-error), transparent 80%);
+}
+
+/* 尺寸变体 */
+.mg-textarea-sm {
+  padding: var(--ui-spacing-xs) var(--ui-spacing-sm);
+  font-size: var(--ui-typography-size-small);
+}
+.mg-textarea-md {
+  padding: var(--ui-spacing-sm) var(--ui-spacing-md);
+  font-size: var(--ui-typography-size-body);
+}
+.mg-textarea-lg {
+  padding: var(--ui-spacing-md) var(--ui-spacing-lg);
+  font-size: 1.125rem;
+}

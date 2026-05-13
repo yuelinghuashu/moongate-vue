@@ -1,0 +1,159 @@
+.mg-drawer-root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: var(--ui-z-index-modal, 1000);
+}
+
+.mg-drawer-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity var(--ui-motion-duration-fluid, 0.3s) ease;
+  pointer-events: auto;
+}
+
+.mg-drawer-overlay-open {
+  opacity: 1;
+}
+
+.mg-drawer {
+  position: absolute;
+  background-color: var(--ui-bg-elevated);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform var(--ui-motion-duration-fluid, 0.3s) ease;
+  display: flex;
+  flex-direction: column;
+  pointer-events: auto;
+}
+
+/* 方向定位与初始偏移 */
+.mg-drawer-left {
+  top: 0;
+  left: 0;
+  height: 100%;
+  transform: translateX(-100%);
+}
+.mg-drawer-right {
+  top: 0;
+  right: 0;
+  height: 100%;
+  transform: translateX(100%);
+}
+.mg-drawer-top {
+  top: 0;
+  left: 0;
+  width: 100%;
+  transform: translateY(-100%);
+}
+.mg-drawer-bottom {
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  transform: translateY(100%);
+}
+
+/* 打开状态 */
+.mg-drawer-open.mg-drawer-left,
+.mg-drawer-open.mg-drawer-right {
+  transform: translateX(0);
+}
+.mg-drawer-open.mg-drawer-top,
+.mg-drawer-open.mg-drawer-bottom {
+  transform: translateY(0);
+}
+
+/* 尺寸（左右方向宽度） */
+.mg-drawer-left.mg-drawer-sm,
+.mg-drawer-right.mg-drawer-sm {
+  width: 240px;
+}
+.mg-drawer-left.mg-drawer-md,
+.mg-drawer-right.mg-drawer-md {
+  width: 320px;
+}
+.mg-drawer-left.mg-drawer-lg,
+.mg-drawer-right.mg-drawer-lg {
+  width: 480px;
+}
+.mg-drawer-left.mg-drawer-xl,
+.mg-drawer-right.mg-drawer-xl {
+  width: 640px;
+}
+.mg-drawer-left.mg-drawer-full,
+.mg-drawer-right.mg-drawer-full {
+  width: 100%;
+}
+
+/* 尺寸（上下方向高度） */
+.mg-drawer-top.mg-drawer-sm,
+.mg-drawer-bottom.mg-drawer-sm {
+  height: 240px;
+}
+.mg-drawer-top.mg-drawer-md,
+.mg-drawer-bottom.mg-drawer-md {
+  height: 320px;
+}
+.mg-drawer-top.mg-drawer-lg,
+.mg-drawer-bottom.mg-drawer-lg {
+  height: 480px;
+}
+.mg-drawer-top.mg-drawer-xl,
+.mg-drawer-bottom.mg-drawer-xl {
+  height: 640px;
+}
+.mg-drawer-top.mg-drawer-full,
+.mg-drawer-bottom.mg-drawer-full {
+  height: 100%;
+}
+
+/* 头部、内容、底部样式（复用 Modal 类似样式） */
+.mg-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--ui-spacing-lg);
+  border-bottom: 1px solid var(--ui-border);
+}
+.mg-drawer-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--ui-text);
+}
+.mg-drawer-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--ui-text-dim);
+  transition: color var(--ui-motion-duration-neural) ease;
+  padding: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.mg-drawer-close:hover {
+  color: var(--ui-primary);
+}
+.mg-drawer-body {
+  flex: 1;
+  padding: var(--ui-spacing-lg);
+  overflow-y: auto;
+  color: var(--ui-text);
+}
+.mg-drawer-footer {
+  padding: var(--ui-spacing-lg);
+  border-top: 1px solid var(--ui-border);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--ui-spacing-sm);
+}

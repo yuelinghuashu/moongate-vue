@@ -1,0 +1,35 @@
+.mg-badge {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 500;
+  border-radius: var(--ui-radius-sm);
+  white-space: nowrap;
+}
+
+/* Badge 尺寸 */
+.mg-badge-sm {
+  padding: var(--ui-spacing-xs) var(--ui-spacing-sm);
+  font-size: var(--ui-typography-size-small);
+}
+.mg-badge-md {
+  padding: var(--ui-spacing-sm) var(--ui-spacing-md);
+  font-size: var(--ui-typography-size-code);
+}
+
+/* Badge 变体 */
+.mg-badge-primary {
+  background-color: color-mix(in srgb, var(--ui-primary), transparent 85%);
+  color: var(--ui-primary);
+}
+.mg-badge-success {
+  background-color: color-mix(in srgb, var(--ui-success), transparent 85%);
+  color: var(--ui-success);
+}
+.mg-badge-warning {
+  background-color: color-mix(in srgb, var(--ui-warning), transparent 85%);
+  color: var(--ui-warning);
+}
+.mg-badge-error {
+  background-color: color-mix(in srgb, var(--ui-error), transparent 85%);
+  color: var(--ui-error);
+}

@@ -1,0 +1,82 @@
+.mg-tabs {
+  width: 100%;
+}
+
+/* 标签栏 */
+.mg-tabs-header {
+  display: flex;
+  gap: var(--ui-spacing-sm, 8px);
+  border-bottom: var(--ui-physics-border-crease, 1px) solid var(--ui-border, #cbd5e1);
+  margin-bottom: var(--ui-spacing-lg, 16px);
+}
+
+/* 标签项 */
+.mg-tab {
+  padding: var(--ui-spacing-sm, 8px) var(--ui-spacing-md, 12px);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--ui-text-dim, #475569);
+  font-size: var(--ui-typography-size-body, 15px);
+  cursor: pointer;
+  transition: all var(--ui-motion-duration-neural, 150ms) ease;
+}
+
+.mg-tab:hover {
+  color: var(--ui-primary, #0284c7);
+}
+
+.mg-tab-active {
+  color: var(--ui-primary, #0284c7);
+  border-bottom-color: var(--ui-primary, #0284c7);
+}
+
+.mg-tab:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 尺寸变体 */
+.mg-tabs-sm .mg-tab {
+  padding: var(--ui-spacing-xs, 4px) var(--ui-spacing-sm, 8px);
+  font-size: var(--ui-typography-size-small, 12px);
+}
+
+.mg-tabs-md .mg-tab {
+  padding: var(--ui-spacing-sm, 8px) var(--ui-spacing-md, 12px);
+  font-size: var(--ui-typography-size-body, 15px);
+}
+
+.mg-tabs-lg .mg-tab {
+  padding: var(--ui-spacing-md, 12px) var(--ui-spacing-lg, 16px);
+  font-size: 1.125rem;
+}
+
+/* 卡片风格 */
+.mg-tabs-card .mg-tabs-header {
+  gap: 0;
+  border-bottom: none;
+}
+
+.mg-tabs-card .mg-tab {
+  border: var(--ui-physics-border-crease, 1px) solid var(--ui-border, #cbd5e1);
+  border-bottom: none;
+  border-radius: var(--ui-radius-sm, 2px) var(--ui-radius-sm, 2px) 0 0;
+  margin-right: -1px;
+  background-color: var(--ui-bg-muted, #f1f5f9);
+}
+
+.mg-tabs-card .mg-tab-active {
+  background-color: var(--ui-bg-elevated, #ffffff);
+  border-bottom-color: var(--ui-bg-elevated, #ffffff);
+  color: var(--ui-primary, #0284c7);
+}
+
+/* 内容面板 */
+.mg-tab-panel {
+  display: none;
+}
+
+.mg-tab-panel-active {
+  display: block;
+}

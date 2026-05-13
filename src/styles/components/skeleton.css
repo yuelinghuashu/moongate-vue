@@ -1,0 +1,119 @@
+.mg-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-spacing-md, 12px);
+  width: 100%;
+}
+
+/* 行样式 */
+.mg-skeleton-line {
+  height: 1em;
+  line-height: 1;
+  background: linear-gradient(
+    90deg,
+    var(--ui-bg-muted, #f1f5f9) 25%,
+    var(--ui-bg-hover, #e2e8f0) 50%,
+    var(--ui-bg-muted, #f1f5f9) 75%
+  );
+  background-size: 200% 100%;
+  animation: mg-skeleton-loading 1.5s infinite;
+}
+
+/* 行尺寸 */
+.mg-skeleton-line-sm {
+  height: 0.875rem;
+  width: 60%;
+}
+.mg-skeleton-line-md {
+  height: 1rem;
+  width: 80%;
+}
+.mg-skeleton-line-lg {
+  height: 1.25rem;
+  width: 100%;
+}
+
+/* 标题行（更宽） */
+.mg-skeleton-title {
+  height: 1.5rem;
+  width: 60%;
+  margin-bottom: var(--ui-spacing-sm, 8px);
+}
+
+/* 头像样式 */
+.mg-skeleton-avatar {
+  background: linear-gradient(
+    90deg,
+    var(--ui-bg-muted, #f1f5f9) 25%,
+    var(--ui-bg-hover, #e2e8f0) 50%,
+    var(--ui-bg-muted, #f1f5f9) 75%
+  );
+  background-size: 200% 100%;
+  animation: mg-skeleton-loading 1.5s infinite;
+  flex-shrink: 0;
+}
+
+.mg-skeleton-avatar-circle {
+  border-radius: 50%;
+}
+.mg-skeleton-avatar-square {
+  border-radius: var(--ui-radius-sm, 2px);
+}
+
+.mg-skeleton-avatar-sm {
+  width: 32px;
+  height: 32px;
+}
+.mg-skeleton-avatar-md {
+  width: 40px;
+  height: 40px;
+}
+.mg-skeleton-avatar-lg {
+  width: 48px;
+  height: 48px;
+}
+
+/* 卡片布局（带头像的单行布局） */
+.mg-skeleton-card {
+  display: flex;
+  gap: var(--ui-spacing-md, 12px);
+}
+.mg-skeleton-card .mg-skeleton-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-spacing-sm, 8px);
+}
+
+/* 列表布局 */
+.mg-skeleton-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-spacing-lg, 16px);
+}
+.mg-skeleton-list-item {
+  display: flex;
+  gap: var(--ui-spacing-md, 12px);
+  align-items: center;
+}
+
+/* 动画 */
+@keyframes mg-skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* 深色模式适配 */
+.dark .mg-skeleton-line,
+.dark .mg-skeleton-avatar {
+  background: linear-gradient(
+    90deg,
+    var(--ui-bg-muted, #1e293b) 25%,
+    var(--ui-bg-hover, #334155) 50%,
+    var(--ui-bg-muted, #1e293b) 75%
+  );
+}

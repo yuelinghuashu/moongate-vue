@@ -1,0 +1,134 @@
+.mg-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-spacing-sm);
+  cursor: pointer;
+  font-size: var(--ui-typography-size-body);
+  color: var(--ui-text);
+  user-select: none;
+}
+
+.mg-switch-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* 开关轨道 */
+.mg-switch-track {
+  position: relative;
+  display: inline-block;
+  width: 2.5rem;
+  height: 1.25rem;
+  background-color: var(--ui-bg-muted);
+  border: var(--ui-physics-border-crease) solid var(--ui-border);
+  border-radius: 1rem;
+  transition: all var(--ui-motion-duration-neural) ease;
+  flex-shrink: 0;
+}
+
+/* 开关滑块 */
+.mg-switch-track::after {
+  content: "";
+  position: absolute;
+  top: 0.125rem;
+  left: 0.125rem;
+  width: 0.875rem;
+  height: 0.875rem;
+  background-color: var(--ui-text-dim);
+  border-radius: 50%;
+  transition: transform var(--ui-motion-duration-neural) ease;
+}
+
+/* 悬停效果 */
+.mg-switch:hover .mg-switch-track {
+  border-color: var(--ui-primary);
+}
+
+/* 选中状态 */
+.mg-switch-input:checked + .mg-switch-track {
+  background-color: var(--ui-primary);
+  border-color: var(--ui-primary);
+}
+
+.mg-switch-input:checked + .mg-switch-track::after {
+  transform: translateX(1.25rem);
+  background-color: white;
+}
+
+/* 聚焦状态 */
+.mg-switch-input:focus-visible + .mg-switch-track {
+  outline: var(--ui-physics-focus-ring) solid var(--ui-primary);
+  outline-offset: var(--ui-physics-focus-ring);
+}
+
+/* 禁用状态 */
+.mg-switch-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 错误状态 */
+.mg-switch-error .mg-switch-track {
+  border-color: var(--ui-error);
+}
+.mg-switch-error:hover .mg-switch-track {
+  border-color: var(--ui-error);
+}
+.mg-switch-error .mg-switch-input:checked + .mg-switch-track {
+  background-color: var(--ui-error);
+  border-color: var(--ui-error);
+}
+
+/* 尺寸变体 */
+.mg-switch-sm {
+  font-size: var(--ui-typography-size-small);
+  gap: var(--ui-spacing-xs);
+}
+.mg-switch-sm .mg-switch-track {
+  width: 2rem;
+  height: 1rem;
+}
+.mg-switch-sm .mg-switch-track::after {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+.mg-switch-sm .mg-switch-input:checked + .mg-switch-track::after {
+  transform: translateX(1rem);
+}
+
+.mg-switch-md {
+  font-size: var(--ui-typography-size-body);
+  gap: var(--ui-spacing-sm);
+}
+.mg-switch-md .mg-switch-track {
+  width: 2.5rem;
+  height: 1.25rem;
+}
+.mg-switch-md .mg-switch-track::after {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+.mg-switch-md .mg-switch-input:checked + .mg-switch-track::after {
+  transform: translateX(1.25rem);
+}
+
+.mg-switch-lg {
+  font-size: 1.125rem;
+  gap: var(--ui-spacing-md);
+}
+.mg-switch-lg .mg-switch-track {
+  width: 3rem;
+  height: 1.5rem;
+}
+.mg-switch-lg .mg-switch-track::after {
+  width: 1rem;
+  height: 1rem;
+  top: 0.25rem;
+  left: 0.25rem;
+}
+.mg-switch-lg .mg-switch-input:checked + .mg-switch-track::after {
+  transform: translateX(1.5rem);
+}

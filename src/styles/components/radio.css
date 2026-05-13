@@ -1,0 +1,114 @@
+.mg-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-spacing-sm);
+  cursor: pointer;
+  font-size: var(--ui-typography-size-body);
+  color: var(--ui-text);
+  user-select: none;
+}
+
+.mg-radio-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.mg-radio-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.125rem;
+  height: 1.125rem;
+  border: var(--ui-physics-border-crease) solid var(--ui-border);
+  border-radius: 50%;
+  background-color: var(--ui-bg-muted);
+  transition: all var(--ui-motion-duration-neural) ease;
+  flex-shrink: 0;
+}
+
+/* 圆点始终存在，通过可见性控制，避免布局偏移 */
+.mg-radio-circle::after {
+  content: "";
+  display: block;
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: var(--ui-primary);
+  border-radius: 50%;
+  visibility: hidden;
+  transition: visibility var(--ui-motion-duration-neural) ease;
+}
+
+.mg-radio:hover .mg-radio-circle {
+  border-color: var(--ui-primary);
+}
+
+.mg-radio-input:checked + .mg-radio-circle {
+  border-color: var(--ui-primary);
+}
+
+.mg-radio-input:checked + .mg-radio-circle::after {
+  visibility: visible;
+}
+
+.mg-radio-input:focus-visible + .mg-radio-circle {
+  outline: var(--ui-physics-focus-ring) solid var(--ui-primary);
+  outline-offset: var(--ui-physics-focus-ring);
+}
+
+.mg-radio-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.mg-radio-error .mg-radio-circle {
+  border-color: var(--ui-error);
+}
+.mg-radio-error:hover .mg-radio-circle {
+  border-color: var(--ui-error);
+}
+.mg-radio-error .mg-radio-input:checked + .mg-radio-circle::after {
+  background-color: var(--ui-error);
+}
+
+/* 尺寸变体 */
+.mg-radio-sm {
+  font-size: var(--ui-typography-size-small);
+  gap: var(--ui-spacing-xs);
+}
+.mg-radio-sm .mg-radio-circle {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+.mg-radio-sm .mg-radio-circle::after {
+  width: 0.375rem;
+  height: 0.375rem;
+}
+
+.mg-radio-md {
+  font-size: var(--ui-typography-size-body);
+  gap: var(--ui-spacing-sm);
+}
+.mg-radio-md .mg-radio-circle {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+.mg-radio-md .mg-radio-circle::after {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+
+.mg-radio-lg {
+  font-size: 1.125rem;
+  gap: var(--ui-spacing-md);
+}
+.mg-radio-lg .mg-radio-circle {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+.mg-radio-lg .mg-radio-circle::after {
+  width: 0.625rem;
+  height: 0.625rem;
+}

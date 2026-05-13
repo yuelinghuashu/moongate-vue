@@ -1,0 +1,60 @@
+/* --------------------------------------------
+   Select 下拉选择框
+--------------------------------------------- */
+.mg-select {
+  background-color: var(--ui-bg-muted);
+  border: var(--ui-physics-border-crease) solid var(--ui-border);
+  border-radius: var(--ui-radius-none);
+  color: var(--ui-text);
+  padding: var(--ui-spacing-sm);
+  transition: border-color var(--ui-motion-duration-neural) ease;
+  width: 100%;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--ui-spacing-sm) center;
+  padding-right: var(--ui-spacing-xl);
+}
+
+.mg-select:focus {
+  outline: none;
+  border-color: var(--ui-primary);
+  box-shadow: 0 0 0 var(--ui-physics-focus-ring) color-mix(in srgb, var(--ui-primary), transparent 80%);
+}
+
+.mg-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.mg-select-error {
+  border-color: var(--ui-error);
+}
+
+.mg-select-error:focus {
+  border-color: var(--ui-error);
+  box-shadow: 0 0 0 var(--ui-physics-focus-ring) color-mix(in srgb, var(--ui-error), transparent 80%);
+}
+
+/* 尺寸变体 */
+.mg-select-sm {
+  padding: var(--ui-spacing-xs) var(--ui-spacing-sm);
+  padding-right: var(--ui-spacing-lg);
+  font-size: var(--ui-typography-size-small);
+  background-size: 12px;
+}
+
+.mg-select-md {
+  padding: var(--ui-spacing-sm) var(--ui-spacing-md);
+  padding-right: var(--ui-spacing-xl);
+  font-size: var(--ui-typography-size-body);
+  background-size: 14px;
+}
+
+.mg-select-lg {
+  padding: var(--ui-spacing-md) var(--ui-spacing-lg);
+  padding-right: var(--ui-spacing-2xl);
+  font-size: 1.125rem;
+  background-size: 16px;
+}

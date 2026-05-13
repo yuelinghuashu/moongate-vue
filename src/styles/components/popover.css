@@ -1,0 +1,22 @@
+.mg-popover-trigger {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.mg-popover {
+  position: fixed;
+  z-index: var(--ui-z-index-popover, 1500);
+  background-color: var(--ui-bg-elevated);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-sm);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 0.25rem 0;
+  min-width: 120px;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  pointer-events: auto;
+}
+
+.mg-popover-visible {
+  opacity: 1;
+}

@@ -1,0 +1,20 @@
+.mg-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+.mg-table th,
+.mg-table td {
+  border: var(--ui-physics-border-crease) solid var(--ui-border);
+  padding: var(--ui-spacing-sm);
+  text-align: left;
+}
+.mg-table th {
+  background-color: var(--ui-bg-muted);
+  font-weight: 600;
+}
+.mg-table-hoverable tbody tr:hover {
+  background-color: var(--ui-bg-hover);
+}
+.mg-table-striped tbody tr:nth-child(even) {
+  background-color: var(--ui-bg-muted);
+}

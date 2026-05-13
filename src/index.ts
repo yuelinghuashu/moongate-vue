@@ -1,0 +1,69 @@
+import type { App, Plugin } from 'vue'
+import Button from './components/Button.vue'
+import Card from './components/Card.vue'
+import Badge from './components/Badge.vue'
+import Divider from './components/Divider.vue'
+import Input from './components/Input.vue'
+import Textarea from './components/Textarea.vue'
+import Checkbox from './components/Checkbox.vue'
+import Radio from './components/Radio.vue'
+import Switch from './components/Switch.vue'
+import Select from './components/Select.vue'
+import Pagination from './components/Pagination.vue'
+import Modal from './components/Modal.vue'
+import Toast from './components/Toast.vue'
+import Tabs from './components/Tabs.vue'
+import Skeleton from './components/Skeleton.vue'
+import Tooltip from './components/Tooltip.vue'
+import { useToast } from './composables/useToast'
+import Container from './components/Container.vue'
+import Header from './components/Header.vue'
+import Main from './components/Main.vue'
+import Footer from './components/Footer.vue'
+import Hero from './components/Hero.vue'
+import Popover from './components/Popover.vue'
+import Drawer from './components/Drawer.vue'
+import './styles/index.css'
+
+const components = [
+  Button, Card, Badge, Divider, Input, Textarea,
+  Checkbox, Radio, Switch, Select, Pagination,
+  Modal, Toast, Tabs, Skeleton, Tooltip,
+  Container, Header, Main, Footer, Hero, Popover, Drawer
+]
+
+export const install: Plugin = (app: App) => {
+  components.forEach(component => {
+    const name = component.name || component.__name
+    if (name) {
+      app.component(name, component)
+    }
+  })
+}
+
+export {
+  Button,
+  Card,
+  Badge,
+  Divider,
+  Input,
+  Textarea,
+  Checkbox,
+  Radio,
+  Switch,
+  Select,
+  Pagination,
+  Modal,
+  Toast,
+  Tabs,
+  Skeleton,
+  Tooltip,
+  useToast,
+  Container,
+  Header,
+  Main,
+  Footer,
+  Hero,
+  Popover, 
+  Drawer
+}

@@ -1,0 +1,133 @@
+.mg-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ui-spacing-md);
+  flex-wrap: wrap;
+}
+
+/* 按钮基础样式 */
+.mg-pagination-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border: var(--ui-physics-border-crease) solid var(--ui-border);
+  color: var(--ui-text);
+  cursor: pointer;
+  transition: all var(--ui-motion-duration-neural) ease;
+}
+
+.mg-pagination-btn:hover:not(:disabled) {
+  border-color: var(--ui-primary);
+  color: var(--ui-primary);
+}
+
+.mg-pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 当前页码（可点击） */
+.mg-pagination-current {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ui-primary);
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 1px dashed var(--ui-border);
+  transition: all var(--ui-motion-duration-neural) ease;
+}
+
+.mg-pagination-current:hover {
+  border-bottom-color: var(--ui-primary);
+}
+
+/* 分隔符和总页数 */
+.mg-pagination-sep,
+.mg-pagination-total {
+  color: var(--ui-text-dim);
+}
+
+/* 页码输入框 */
+.mg-pagination-input {
+  background-color: var(--ui-bg-muted);
+  border: var(--ui-physics-border-crease) solid var(--ui-primary);
+  color: var(--ui-primary);
+  font-weight: 500;
+  text-align: center;
+  outline: none;
+}
+
+.mg-pagination-input:focus {
+  box-shadow: 0 0 0 var(--ui-physics-focus-ring)
+    color-mix(in srgb, var(--ui-primary), transparent 80%);
+}
+
+/* 尺寸变体 */
+/* 小号 */
+.mg-pagination-sm {
+  gap: var(--ui-spacing-sm);
+}
+.mg-pagination-sm .mg-pagination-btn {
+  padding: var(--ui-spacing-xs) var(--ui-spacing-md);
+  font-size: var(--ui-typography-size-small);
+}
+.mg-pagination-sm .mg-pagination-current {
+  min-width: 2rem;
+  font-size: var(--ui-typography-size-small);
+}
+.mg-pagination-sm .mg-pagination-sep,
+.mg-pagination-sm .mg-pagination-total {
+  font-size: var(--ui-typography-size-small);
+}
+.mg-pagination-sm .mg-pagination-input {
+  width: 3.5rem;
+  padding: var(--ui-spacing-xs) var(--ui-spacing-sm);
+  font-size: var(--ui-typography-size-small);
+}
+
+/* 中号 */
+.mg-pagination-md {
+  gap: var(--ui-spacing-md);
+}
+.mg-pagination-md .mg-pagination-btn {
+  padding: var(--ui-spacing-sm) var(--ui-spacing-lg);
+  font-size: var(--ui-typography-size-body);
+}
+.mg-pagination-md .mg-pagination-current {
+  min-width: 2.5rem;
+  font-size: var(--ui-typography-size-body);
+}
+.mg-pagination-md .mg-pagination-sep,
+.mg-pagination-md .mg-pagination-total {
+  font-size: var(--ui-typography-size-body);
+}
+.mg-pagination-md .mg-pagination-input {
+  width: 4rem;
+  padding: var(--ui-spacing-sm) var(--ui-spacing-md);
+  font-size: var(--ui-typography-size-body);
+}
+
+/* 大号 */
+.mg-pagination-lg {
+  gap: var(--ui-spacing-lg);
+}
+.mg-pagination-lg .mg-pagination-btn {
+  padding: var(--ui-spacing-md) var(--ui-spacing-xl);
+  font-size: 1.125rem;
+}
+.mg-pagination-lg .mg-pagination-current {
+  min-width: 3rem;
+  font-size: 1.125rem;
+}
+.mg-pagination-lg .mg-pagination-sep,
+.mg-pagination-lg .mg-pagination-total {
+  font-size: 1.125rem;
+}
+.mg-pagination-lg .mg-pagination-input {
+  width: 4.5rem;
+  padding: var(--ui-spacing-md) var(--ui-spacing-lg);
+  font-size: 1.125rem;
+}
