@@ -1,6 +1,6 @@
 <template>
-  <Teleport to="body" >
-    <div v-if="modelValue" class="mg-drawer-root">
+  <Teleport to="body">
+    <div v-if="modelValue" v-bind="$attrs" class="mg-drawer-root">
       <!-- 遮罩层 -->
       <div
         class="mg-drawer-overlay"
@@ -42,6 +42,7 @@
 
 <script setup lang="ts">
 import { watch } from "vue"
+
 type Placement = "left" | "right" | "top" | "bottom"
 type Size = "sm" | "md" | "lg" | "xl" | "full"
 
@@ -67,6 +68,10 @@ const props = withDefaults(defineProps<Props>(), {
   title: "",
   closable: true,
   closeOnOverlay: true,
+})
+
+defineOptions({
+  inheritAttrs: false,
 })
 
 const emit = defineEmits<{

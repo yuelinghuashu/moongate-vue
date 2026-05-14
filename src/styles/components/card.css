@@ -32,3 +32,11 @@
       transparent calc(100% - var(--ui-glow-alpha) * 100%)
     );
 }
+
+.mg-card-header--no-border {
+  border-bottom: none;
+}
+
+.mg-card-footer--no-border {
+  border-top: none;
+}

@@ -39,6 +39,29 @@
 </Card>
 ```
 
+## 隐藏主体或底部区域
+
+通过 `hideBody` 和 `hideFooter` 属性可分别控制主体或底部区域的渲染（不生成对应 DOM）。
+
+```vue
+<!-- 隐藏主体内容 -->
+<Card hide-body>
+  <template #header>只有头部</template>
+  <!-- 这里的内容不会显示 -->
+</Card>
+
+<!-- 隐藏底部区域 -->
+<Card hide-footer>
+  <p>主体内容</p>
+  <template #footer>这个底部不会显示</template>
+</Card>
+
+<!-- 同时隐藏主体和底部 -->
+<Card hide-body hide-footer>
+  <template #header>只剩头部</template>
+</Card>
+```
+
 ## 改变根元素语义
 
 通过 `as` 属性改变根元素标签，提升 HTML 语义化。支持任意合法 HTML 标签。
@@ -102,10 +125,12 @@
 
 ### Props
 
-| 属性        | 类型      | 默认值  | 说明                               |
-| ----------- | --------- | ------- | ---------------------------------- |
-| `as`        | `string`  | `'div'` | 根元素标签，支持任意合法 HTML 标签 |
-| `hoverable` | `boolean` | `false` | 是否启用悬停上浮 + 月晕效果        |
+| 属性         | 类型      | 默认值  | 说明                                   |
+| ------------ | --------- | ------- | -------------------------------------- |
+| `as`         | `string`  | `'div'` | 根元素标签，支持任意合法 HTML 标签     |
+| `hoverable`  | `boolean` | `false` | 是否启用悬停上浮 + 月晕效果            |
+| `hideBody`   | `boolean` | `false` | 是否隐藏主体区域（默认插槽）           |
+| `hideFooter` | `boolean` | `false` | 是否隐藏底部区域（`footer` 插槽）      |
 
 ### Slots
 
@@ -120,5 +145,6 @@
 - 卡片默认**无边框、无圆角**，符合 Moongate 的直角美学
 - 悬停效果仅当 `hoverable` 为 `true` 时生效
 - 头部和底部插槽为可选，不传则对应区域不会渲染
+- 使用 `hideBody` 或 `hideFooter` 时，对应的 DOM 元素完全不会生成，适用于需要精确控制布局的场景
 - 若卡片内部包含多个可交互元素（如多个链接），请确保各元素的 `z-index` 或点击区域不冲突
 - `as` 属性支持任意合法 HTML 标签，提供最大的语义化灵活性
