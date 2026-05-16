@@ -1,5 +1,5 @@
 <template>
-  <div ref="triggerRef" class="mg-popover-trigger" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
+  <div ref="triggerRef" v-bind="$attrs" class="mg-popover-trigger" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
     <!--
       触发元素插槽
       支持通过 #trigger 自定义触发内容，否则使用默认插槽

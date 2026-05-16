@@ -1,5 +1,5 @@
 <template>
-  <section class="mg-hero">
+  <section v-bind="$attrs" class="mg-hero">
     <div class="mg-hero-container">
       <h1 class="mg-hero-title">
         <slot name="title">{{ title }}</slot>

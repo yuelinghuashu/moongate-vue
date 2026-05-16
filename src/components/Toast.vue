@@ -2,9 +2,8 @@
   <Teleport to="body">
     <div
       v-if="visible"
-      v-bind="$attrs"
-      class="mg-toast-container"
-      :class="{ 'mg-toast-container-bottom': position === 'bottom' }"
+      v-bind="attrsWithoutClass"
+      :class="['mg-toast-container', mergedClass, { 'mg-toast-container-bottom': position === 'bottom' }]"
     >
       <div
         class="mg-toast"
@@ -32,6 +31,7 @@
 
 <script setup lang="ts">
 import { ref, watch, onMounted } from "vue"
+import { useAttrsWithClass } from "../composables/useAttrsWithClass"
 
 type ToastType = "success" | "error" | "warning" | "info"
 type ToastPosition = "top" | "bottom"
@@ -56,6 +56,8 @@ const props = withDefaults(defineProps<Props>(), {
   icon: "",
 })
 
+defineOptions({ inheritAttrs: false })
+
 const emit = defineEmits<{
   "update:modelValue": [value: boolean]
   close: []
@@ -63,6 +65,9 @@ const emit = defineEmits<{
 
 const visible = ref(props.modelValue)
 const isLeaving = ref(false)
+
+// 处理外部属性透传（无内部动态类，仅合并外部 class）
+const { attrsWithoutClass, mergedClass } = useAttrsWithClass(() => ({}))
 
 watch(
   () => props.modelValue,
@@ -102,7 +107,6 @@ const handleClose = () => {
   closeToast()
 }
 
-// 清理定时器
 onMounted(() => {
   if (visible.value) {
     startTimer()

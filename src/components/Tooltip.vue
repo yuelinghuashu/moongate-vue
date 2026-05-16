@@ -1,7 +1,8 @@
 <template>
   <div
     ref="triggerRef"
-    class="mg-tooltip-trigger"
+    v-bind="attrsWithoutClass"
+    :class="['mg-tooltip-trigger', mergedClass]"
     @mouseenter="show"
     @mouseleave="hide"
   >
@@ -35,6 +36,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onUnmounted, onMounted } from "vue"
+import { useAttrsWithClass } from "../composables/useAttrsWithClass"
 
 type Placement = "top" | "bottom" | "left" | "right"
 
@@ -52,6 +54,8 @@ const props = withDefaults(defineProps<Props>(), {
   offset: 8,
 })
 
+defineOptions({ inheritAttrs: false })
+
 const visible = ref(false)
 let timer: ReturnType<typeof setTimeout> | null = null
 
@@ -65,6 +69,9 @@ const tooltipStyle = computed(() => ({
 }))
 
 const tooltipPosition = ref({ top: 0, left: 0 })
+
+// 处理外部属性透传（无内部动态类，仅合并外部 class）
+const { attrsWithoutClass, mergedClass } = useAttrsWithClass(() => ({}))
 
 const show = () => {
   if (timer) clearTimeout(timer)
@@ -84,14 +91,12 @@ const updatePosition = () => {
 
   const triggerRect = triggerRef.value.getBoundingClientRect()
   const tooltipRect = tooltipRef.value.getBoundingClientRect()
+  const viewportWidth = window.innerWidth
+  const viewportHeight = window.innerHeight
 
   let top = 0
   let left = 0
   let finalPlacement = props.placement
-
-  // 计算位置，如果超出视口则自动调整
-  const viewportWidth = window.innerWidth
-  const viewportHeight = window.innerHeight
 
   switch (props.placement) {
     case "top":
@@ -116,7 +121,6 @@ const updatePosition = () => {
       break
   }
 
-  // 如果位置被调整，重新计算一次
   if (finalPlacement !== props.placement) {
     currentPlacement.value = finalPlacement
     recalculatePosition(finalPlacement, triggerRect, tooltipRect)
@@ -157,31 +161,20 @@ const recalculatePosition = (
   tooltipPosition.value = { top, left }
 }
 
-// 监听滚动和窗口大小变化，更新位置
 const handleScroll = () => {
-  if (visible.value) {
-    updatePosition()
-  }
+  if (visible.value) updatePosition()
 }
-
 const handleResize = () => {
-  if (visible.value) {
-    updatePosition()
-  }
+  if (visible.value) updatePosition()
 }
 
-// 使用 MutationObserver 监听 DOM 变化
 let observer: MutationObserver | null = null
 
 onMounted(() => {
   window.addEventListener("scroll", handleScroll, true)
   window.addEventListener("resize", handleResize)
-
-  // 监听 DOM 变化，更新位置
   observer = new MutationObserver(() => {
-    if (visible.value) {
-      updatePosition()
-    }
+    if (visible.value) updatePosition()
   })
   observer.observe(document.body, { childList: true, subtree: true })
 })
@@ -189,9 +182,7 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener("scroll", handleScroll, true)
   window.removeEventListener("resize", handleResize)
-  if (observer) {
-    observer.disconnect()
-  }
+  if (observer) observer.disconnect()
   if (timer) clearTimeout(timer)
 })
 </script>

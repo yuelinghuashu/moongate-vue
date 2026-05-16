@@ -2,8 +2,8 @@
   <Teleport to="body">
     <div
       v-if="modelValue"
-      class="mg-modal-overlay"
-      :class="{ 'mg-modal-overlay-open': modelValue }"
+      v-bind="attrsWithoutClass"
+      :class="['mg-modal-overlay', mergedClass, { 'mg-modal-overlay-open': modelValue }]"
       @click.self="handleOverlayClick"
     >
       <div
@@ -44,6 +44,7 @@
 
 <script setup lang="ts">
 import { watch } from "vue"
+import { useAttrsWithClass } from "../composables/useAttrsWithClass"
 
 type Size = "sm" | "md" | "lg" | "xl"
 
@@ -63,13 +64,19 @@ const props = withDefaults(defineProps<Props>(), {
   closeOnOverlay: true,
 })
 
+defineOptions({
+  inheritAttrs: false,
+})
+
 const emit = defineEmits<{
   "update:modelValue": [value: boolean]
   open: []
   close: []
 }>()
 
-// 监听打开/关闭事件
+// 处理外部属性透传（无内部动态类，仅合并外部 class）
+const { attrsWithoutClass, mergedClass } = useAttrsWithClass(() => ({}))
+
 watch(
   () => props.modelValue,
   (val) => {

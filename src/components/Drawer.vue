@@ -1,6 +1,10 @@
 <template>
   <Teleport to="body">
-    <div v-if="modelValue" v-bind="$attrs" class="mg-drawer-root">
+    <div
+      v-if="modelValue"
+      v-bind="attrsWithoutClass"
+      :class="['mg-drawer-root', mergedClass]"
+    >
       <!-- 遮罩层 -->
       <div
         class="mg-drawer-overlay"
@@ -42,6 +46,7 @@
 
 <script setup lang="ts">
 import { watch } from "vue"
+import { useAttrsWithClass } from "../composables/useAttrsWithClass"
 
 type Placement = "left" | "right" | "top" | "bottom"
 type Size = "sm" | "md" | "lg" | "xl" | "full"
@@ -79,6 +84,9 @@ const emit = defineEmits<{
   open: []
   close: []
 }>()
+
+// 处理外部属性透传（无内部动态类，仅合并外部 class）
+const { attrsWithoutClass, mergedClass } = useAttrsWithClass(() => ({}))
 
 watch(
   () => props.modelValue,

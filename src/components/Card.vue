@@ -1,12 +1,5 @@
 <template>
-  <component
-    v-bind="$attrs"
-    :is="as"
-    :class="{
-      'mg-card-hoverable': hoverable,
-      'mg-card--body-hidden': hideBody,
-    }"
-  >
+  <component v-bind="attrsWithoutClass" :is="as" :class="mergedClass">
     <!-- header 区域 -->
     <div
       v-if="hasHeader"
@@ -30,6 +23,7 @@
 
 <script setup lang="ts">
 import { useSlots, computed } from "vue"
+import { useAttrsWithClass } from "../composables/useAttrsWithClass"
 
 const slots = useSlots()
 
@@ -43,10 +37,17 @@ interface Props {
   hideFooter?: boolean
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   as: "div",
   hoverable: false,
   hideBody: false,
   hideFooter: false,
 })
+
+defineOptions({ inheritAttrs: false })
+
+const { attrsWithoutClass, mergedClass } = useAttrsWithClass(() => ({
+  "mg-card-hoverable": props.hoverable,
+  "mg-card--body-hidden": props.hideBody,
+}))
 </script>
