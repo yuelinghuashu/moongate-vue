@@ -1,5 +1,11 @@
 <template>
-  <div ref="triggerRef" v-bind="$attrs" class="mg-popover-trigger" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
+  <div
+    ref="triggerRef"
+    v-bind="$attrs"
+    class="mg-popover-trigger"
+    @mouseenter="onMouseEnter"
+    @mouseleave="onMouseLeave"
+  >
     <!--
       触发元素插槽
       支持通过 #trigger 自定义触发内容，否则使用默认插槽
@@ -14,7 +20,10 @@
         v-if="visible"
         ref="popoverRef"
         class="mg-popover"
-        :class="[`mg-popover-${currentPlacement}`, { 'mg-popover-visible': visible }]"
+        :class="[
+          `mg-popover-${currentPlacement}`,
+          { 'mg-popover-visible': visible },
+        ]"
         :style="popoverStyle"
         @mouseenter="cancelHideTimer"
         @mouseleave="startHideTimer"
@@ -27,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick } from "vue"
 
 // ==================== 类型定义 ====================
 /**
@@ -37,7 +46,7 @@ import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
  * - left: 左侧
  * - right: 右侧
  */
-type Placement = 'top' | 'bottom' | 'left' | 'right'
+type Placement = "top" | "bottom" | "left" | "right"
 
 /**
  * 组件 Props 接口
@@ -55,7 +64,7 @@ interface Props {
 
 // ==================== Props 默认值 ====================
 const props = withDefaults(defineProps<Props>(), {
-  placement: 'bottom',
+  placement: "bottom",
   delay: 0,
   hideDelay: 100,
   offset: 8,
@@ -150,24 +159,24 @@ const onMouseLeave = () => startHideTimer()
 const recalculatePosition = (
   placement: Placement,
   triggerRect: DOMRect,
-  popoverRect: DOMRect
+  popoverRect: DOMRect,
 ) => {
   let top = 0
   let left = 0
   switch (placement) {
-    case 'top':
+    case "top":
       top = triggerRect.top - popoverRect.height - props.offset
       left = triggerRect.left + (triggerRect.width - popoverRect.width) / 2
       break
-    case 'bottom':
+    case "bottom":
       top = triggerRect.bottom + props.offset
       left = triggerRect.left + (triggerRect.width - popoverRect.width) / 2
       break
-    case 'left':
+    case "left":
       top = triggerRect.top + (triggerRect.height - popoverRect.height) / 2
       left = triggerRect.left - popoverRect.width - props.offset
       break
-    case 'right':
+    case "right":
       top = triggerRect.top + (triggerRect.height - popoverRect.height) / 2
       left = triggerRect.right + props.offset
       break
@@ -192,25 +201,25 @@ const updatePosition = () => {
 
   // 1. 根据期望方向计算初始位置，并检测是否超出视口
   switch (props.placement) {
-    case 'top':
+    case "top":
       top = triggerRect.top - popoverRect.height - props.offset
       left = triggerRect.left + (triggerRect.width - popoverRect.width) / 2
-      if (top < 0) finalPlacement = 'bottom'
+      if (top < 0) finalPlacement = "bottom"
       break
-    case 'bottom':
+    case "bottom":
       top = triggerRect.bottom + props.offset
       left = triggerRect.left + (triggerRect.width - popoverRect.width) / 2
-      if (top + popoverRect.height > viewportHeight) finalPlacement = 'top'
+      if (top + popoverRect.height > viewportHeight) finalPlacement = "top"
       break
-    case 'left':
+    case "left":
       top = triggerRect.top + (triggerRect.height - popoverRect.height) / 2
       left = triggerRect.left - popoverRect.width - props.offset
-      if (left < 0) finalPlacement = 'right'
+      if (left < 0) finalPlacement = "right"
       break
-    case 'right':
+    case "right":
       top = triggerRect.top + (triggerRect.height - popoverRect.height) / 2
       left = triggerRect.right + props.offset
-      if (left + popoverRect.width > viewportWidth) finalPlacement = 'left'
+      if (left + popoverRect.width > viewportWidth) finalPlacement = "left"
       break
   }
 
@@ -266,8 +275,8 @@ let observer: MutationObserver | null = null
 
 onMounted(() => {
   // 监听滚动和窗口大小变化
-  window.addEventListener('scroll', handleScroll, true)
-  window.addEventListener('resize', handleResize)
+  window.addEventListener("scroll", handleScroll, true)
+  window.addEventListener("resize", handleResize)
 
   // 监听 DOM 变化（例如内容变动导致尺寸改变）
   observer = new MutationObserver(() => {
@@ -278,37 +287,9 @@ onMounted(() => {
 
 onUnmounted(() => {
   // 清理事件监听和 MutationObserver
-  window.removeEventListener('scroll', handleScroll, true)
-  window.removeEventListener('resize', handleResize)
+  window.removeEventListener("scroll", handleScroll, true)
+  window.removeEventListener("resize", handleResize)
   if (observer) observer.disconnect()
   clearTimers()
 })
 </script>
-
-<style scoped>
-/* 触发区域容器样式 */
-.mg-popover-trigger {
-  display: inline-block;
-  cursor: pointer;
-}
-
-/* 弹出层基础样式 */
-.mg-popover {
-  position: fixed;
-  z-index: var(--ui-z-index-popover, 1500);
-  background-color: var(--ui-bg-elevated);
-  border: 1px solid var(--ui-border);
-  border-radius: var(--ui-radius-sm);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  padding: 0.25rem 0;
-  min-width: 120px;
-  opacity: 0;
-  transition: opacity 0.15s ease;
-  pointer-events: auto;
-}
-
-/* 可见状态 */
-.mg-popover-visible {
-  opacity: 1;
-}
-</style>

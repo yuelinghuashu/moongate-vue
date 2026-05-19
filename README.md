@@ -38,29 +38,58 @@ import "moongate-vue/style.css"
 
 ## 组件列表
 
+### 基础组件
+
 | 组件       | 说明     |
 | ---------- | -------- |
 | Button     | 按钮     |
 | Card       | 卡片     |
-| Input      | 输入框   |
-| Textarea   | 多行文本 |
-| Checkbox   | 复选框   |
-| Radio      | 单选框   |
-| Switch     | 开关     |
-| Select     | 下拉选择 |
-| Pagination | 分页     |
-| Modal      | 模态框   |
-| Toast      | 通知     |
-| Tabs       | 标签页   |
-| Skeleton   | 骨架屏   |
-| Tooltip    | 提示     |
 | Badge      | 徽章     |
 | Divider    | 分割线   |
-| Container  | 容器     |
-| Header     | 头部容器 |
-| Main       | 主内容   |
-| Footer     | 底部容器 |
-| Hero       | 英雄区   |
+
+### 表单组件
+
+| 组件     | 说明         |
+| -------- | ------------ |
+| Input    | 输入框       |
+| Textarea | 多行文本     |
+| Checkbox | 复选框       |
+| Radio    | 单选框       |
+| Switch   | 开关         |
+| Select   | 下拉选择     |
+
+### 布局组件
+
+| 组件      | 说明         |
+| --------- | ------------ |
+| Container | 容器         |
+| Header    | 头部容器     |
+| Main      | 主内容容器   |
+| Footer    | 底部容器     |
+| Hero      | 英雄区       |
+
+### 导航组件
+
+| 组件       | 说明     |
+| ---------- | -------- |
+| Pagination | 分页     |
+| Tabs       | 标签页   |
+| Link       | 链接样式 |
+
+### 反馈组件
+
+| 组件    | 说明     |
+| ------- | -------- |
+| Modal   | 模态框   |
+| Toast   | 通知     |
+| Tooltip | 提示     |
+| Popover | 弹出层   |
+| Drawer  | 抽屉     |
+| Skeleton| 骨架屏   |
+
+> **说明**：Link 组件仅提供样式类（`.mg-link`、`.nav-link`），不封装 Vue 组件。Popover 和 Drawer 为较新的组件，功能相对独立。
+
+总计 **22 个组件**，覆盖了个人博客所需的绝大多数场景。
 
 ## 设计令牌
 

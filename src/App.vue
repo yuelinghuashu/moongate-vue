@@ -1,30 +1,21 @@
 <template>
-  <!-- <Card class="mt-4">
-    <template #header>Header</template>
-    <template #default>Default</template>
-    <template #footer>Footer</template>
-  </Card> -->
+  <Container size="lg">
+    <!-- 启用自动高度 -->
+    <Textarea
+      v-model="comment"
+      auto-resize
+      placeholder="支持多行输入，高度会自动增长"
+    />
 
-  <Button @click="isVisble = !isVisble">Click</Button>
-  <Drawer v-model="isVisble">
-  </Drawer>
+    <!-- 固定行数（默认行为） -->
+    <Textarea v-model="content" :rows="5" placeholder="固定 5 行高度" />
+  </Container>
 </template>
 
 <script setup>
 import { ref } from "vue"
-import Card from "./components/Card.vue"
-import Drawer from "./components/Drawer.vue"
-import Button from "./components/Button.vue"
+import Textarea from "./components/Textarea.vue"
 
-const isVisble = ref(false)
+const content = ref('Learn Vue')
 </script>
 
-<style>
-.mt-4 {
-  margin-top: 5rem;
-}
-
-.border {
-  border: 1px solid red;
-}
-</style>

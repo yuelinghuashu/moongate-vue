@@ -22,7 +22,17 @@ const comment = ref("")
 </template>
 ```
 
+## 自动高度
+
+设置 `auto-resize` 属性，文本域高度会根据内容自动增长。
+
+```vue
+<Textarea auto-resize placeholder="内容越多，高度越高" />
+```
+
 ## 自定义行数
+
+设置 `rows` 属性控制默认显示行数（仅在未启用 `auto-resize` 时生效）。
 
 ```vue
 <Textarea rows="5" placeholder="更多行数" />
@@ -64,15 +74,16 @@ const comment = ref("")
 
 ### Props
 
-| 属性          | 类型                   | 默认值  | 说明                   |
-| ------------- | ---------------------- | ------- | ---------------------- |
-| `modelValue`  | `string`               | `''`    | 输入框的值（v-model）  |
-| `placeholder` | `string`               | `''`    | 占位文本               |
-| `disabled`    | `boolean`              | `false` | 是否禁用               |
-| `readonly`    | `boolean`              | `false` | 是否只读               |
-| `size`        | `'sm' \| 'md' \| 'lg'` | `'md'`  | 尺寸                   |
-| `rows`        | `number`               | `3`     | 显示行数               |
-| `error`       | `boolean`              | `false` | 错误状态（仅控制样式） |
+| 属性          | 类型                   | 默认值  | 说明                                    |
+| ------------- | ---------------------- | ------- | --------------------------------------- |
+| `modelValue`  | `string`               | `''`    | 输入框的值（v-model）                   |
+| `placeholder` | `string`               | `''`    | 占位文本                                |
+| `disabled`    | `boolean`              | `false` | 是否禁用                                |
+| `readonly`    | `boolean`              | `false` | 是否只读                                |
+| `size`        | `'sm' \| 'md' \| 'lg'` | `'md'`  | 尺寸                                    |
+| `rows`        | `number`               | `3`     | 显示行数（仅在 `autoResize` 为 `false` 时生效） |
+| `error`       | `boolean`              | `false` | 错误状态（仅控制样式）                  |
+| `autoResize`  | `boolean`              | `false` | 是否启用自动高度（根据内容自动调整）    |
 
 ### Events
 
@@ -92,3 +103,4 @@ const comment = ref("")
 - 错误消息需要用户自行渲染，以获得最大的布局灵活性
 - 聚焦时显示主题色边框和聚焦环，错误状态下聚焦环变为错误色
 - 原生属性（`id`、`name` 等）通过 `v-bind="$attrs"` 自动透传
+- 启用 `autoResize` 时，`rows` 属性将被忽略，高度完全由内容决定
