@@ -35,7 +35,7 @@ const components = [
 
 export const install: Plugin = (app: App) => {
   components.forEach(component => {
-    const name = component.name || component.__name
+    const name = component.name
     if (name) {
       app.component(name, component)
     }
