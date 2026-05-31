@@ -49,7 +49,6 @@ type ClassValue = string | any[] | Record<string, boolean>
  */
 export function useAttrsWithClass(
   internalClassFactory: () => ClassValue,
-  deps?: any[]  // 可选依赖，通常不需要显式传递
 ) {
   // 获取组件的所有属性（包括外部传入的 class、style、id 等）
   const attrs = useAttrs()

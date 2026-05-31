@@ -1,13 +1,18 @@
+/* 基础类：等宽字体 */
 .mg-code {
   font-family: var(--ui-typography-family-mono);
   font-size: var(--ui-typography-size-code);
 }
+
+/* 行内代码（用户手动使用） */
 .mg-code-inline {
   background-color: var(--ui-bg-muted);
   padding: 0.2rem 0.4rem;
   border-radius: var(--ui-radius-sm);
   color: var(--ui-primary);
 }
+
+/* 代码块容器（用户手动使用） */
 .mg-code-block {
   display: block;
   background-color: var(--ui-bg-muted);
@@ -15,8 +20,40 @@
   overflow-x: auto;
   border-radius: var(--ui-radius-none);
 }
+
+/* 代码块内的 code 重置 */
 .mg-code-block code {
   background: none;
   padding: 0;
   color: inherit;
+}
+
+/* ---------- 全局样式（自动适配 Markdown 渲染）---------- */
+
+/* 行内代码：不在 pre 内的 code 自动获得样式 */
+code:not(pre code) {
+  background-color: var(--ui-bg-muted);
+  padding: 0.2rem 0.4rem;
+  border-radius: var(--ui-radius-sm);
+  color: var(--ui-primary);
+  font-family: var(--ui-typography-family-mono);
+  font-size: var(--ui-typography-size-code);
+}
+
+/* 代码块：pre 标签自动获得样式 */
+pre {
+  background-color: var(--ui-bg-muted);
+  padding: var(--ui-spacing-lg);
+  overflow-x: auto;
+  border-radius: var(--ui-radius-none);
+  margin: var(--ui-spacing-lg) 0;
+}
+
+/* 代码块内的 code 重置 */
+pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
 }

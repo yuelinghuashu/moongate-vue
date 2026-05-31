@@ -23,12 +23,13 @@ import Footer from './components/Footer.vue'
 import Hero from './components/Hero.vue'
 import Popover from './components/Popover.vue'
 import Drawer from './components/Drawer.vue'
+import Table from './components/Table.vue'
 import './styles/index.css'
 
 const components = [
   Button, Card, Badge, Divider, Input, Textarea,
   Checkbox, Radio, Switch, Select, Pagination,
-  Modal, Toast, Tabs, Skeleton, Tooltip,
+  Modal, Toast, Tabs, Skeleton, Tooltip, Table,
   Container, Header, Main, Footer, Hero, Popover, Drawer
 ]
 
@@ -58,12 +59,21 @@ export {
   Tabs,
   Skeleton,
   Tooltip,
+  Table,
   useToast,
   Container,
   Header,
   Main,
   Footer,
   Hero,
-  Popover, 
+  Popover,
   Drawer
 }
+
+// Table 组件类型（泛型组件需要单独导出类型）
+export type {
+  TableColumn,
+  SortParams,
+  CellSlotProps,
+  ColumnSlotProps,
+} from './types/table.ts'

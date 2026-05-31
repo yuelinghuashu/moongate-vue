@@ -1,20 +1,142 @@
-.mg-table {
-  border-collapse: collapse;
+/* ========== 表格容器 ========== */
+.mg-table-wrapper {
+  position: relative;
   width: 100%;
 }
-.mg-table th,
-.mg-table td {
-  border: var(--ui-physics-border-crease) solid var(--ui-border);
-  padding: var(--ui-spacing-sm);
+
+/* 响应式：小屏幕自动横向滚动 */
+.mg-table-responsive {
+  overflow-x: auto;
+}
+
+/* 表格滚动容器（强制滚动） */
+.mg-table-container {
+  width: 100%;
+}
+
+.mg-table-scrollable {
+  overflow-x: auto;
+}
+
+/* ========== 表格本体 ========== */
+.mg-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--ui-typography-size-body);
+  color: var(--ui-text);
+  background-color: var(--ui-bg-elevated);
+}
+
+/* ========== 表头 ========== */
+.mg-table thead tr {
+  border-bottom: var(--ui-physics-border-crease) solid var(--ui-border);
+}
+
+.mg-table th {
+  padding: var(--ui-spacing-md) var(--ui-spacing-lg);
+  text-align: left;
+  font-weight: 600;
+  color: var(--ui-text-dim);
+  background-color: var(--ui-bg-muted);
+  white-space: nowrap;
+}
+
+/* 表头对齐 */
+.mg-table-th-left {
   text-align: left;
 }
-.mg-table th {
-  background-color: var(--ui-bg-muted);
-  font-weight: 600;
+.mg-table-th-center {
+  text-align: center;
 }
-.mg-table-hoverable tbody tr:hover {
+.mg-table-th-right {
+  text-align: right;
+}
+
+/* 可排序列 - 交互效果 */
+.mg-table-sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color var(--ui-motion-duration-neural) ease;
+}
+
+.mg-table-sortable:hover {
   background-color: var(--ui-bg-hover);
 }
-.mg-table-striped tbody tr:nth-child(even) {
+
+/* 排序图标容器 */
+.mg-table-th-content {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-spacing-xs);
+}
+
+.mg-table-sort-icon {
+  display: inline-flex;
+  align-items: center;
+  opacity: 0.4;
+  transition: opacity var(--ui-motion-duration-neural) ease;
+}
+
+.mg-table-sortable:hover .mg-table-sort-icon {
+  opacity: 0.8;
+}
+
+/* 排序图标 SVG */
+.mg-table-sort-svg {
+  display: block;
+  transition: color var(--ui-motion-duration-neural) ease;
+}
+
+/* 激活的排序状态 */
+.mg-table-sort-asc,
+.mg-table-sort-desc {
+  opacity: 1;
+  color: var(--ui-primary);
+}
+
+/* ========== 表体 ========== */
+.mg-table tbody tr {
+  border-bottom: var(--ui-physics-border-crease) solid var(--ui-border-dim);
+  transition: background-color var(--ui-motion-duration-neural) ease;
+}
+
+/* 斑马纹 */
+.mg-table-row-striped {
   background-color: var(--ui-bg-muted);
+}
+
+/* 悬停高亮 */
+.mg-table-row-hover:hover {
+  background-color: var(--ui-bg-hover);
+}
+
+/* 单元格 */
+.mg-table td {
+  padding: var(--ui-spacing-md) var(--ui-spacing-lg);
+  white-space: nowrap;
+}
+
+/* 单元格对齐 */
+.mg-table-td-left {
+  text-align: left;
+}
+.mg-table-td-center {
+  text-align: center;
+}
+.mg-table-td-right {
+  text-align: right;
+}
+
+/* ========== 空状态 ========== */
+.mg-table-empty {
+  text-align: center !important;
+  padding: var(--ui-spacing-3xl) !important;
+}
+
+.mg-table-empty-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ui-spacing-md);
+  color: var(--ui-text-muted);
 }

@@ -11,6 +11,7 @@ Moongate UI 是一个受月亮启发的极简 Vue 3 组件库。设计令牌驱�
 - 🎨 **设计令牌驱动** — 基于 CSS 变量，主题切换 effortless
 - 🔧 **CSS 优先** — 样式与逻辑解耦，可跨框架复用
 - ✨ **极简 API** — 每个组件 2-8 个 props，易学易用
+- 🎨 **代码美化** — 内置行内代码和代码块样式，适配深色/浅色模式
 - 🚀 **零依赖** — 无需额外配置，开箱即用
 
 ## 安装
@@ -36,8 +37,6 @@ import "moongate-vue/style.css"
 </template>
 ```
 
-## 组件列表
-
 ### 基础组件
 
 | 组件       | 说明     |
@@ -58,6 +57,14 @@ import "moongate-vue/style.css"
 | Switch   | 开关         |
 | Select   | 下拉选择     |
 
+### 数据展示组件
+
+| 组件       | 说明         |
+| ---------- | ------------ |
+| Table      | 表格         |
+| Pagination | 分页         |
+| Tabs       | 标签页       |
+
 ### 布局组件
 
 | 组件      | 说明         |
@@ -68,28 +75,30 @@ import "moongate-vue/style.css"
 | Footer    | 底部容器     |
 | Hero      | 英雄区       |
 
-### 导航组件
-
-| 组件       | 说明     |
-| ---------- | -------- |
-| Pagination | 分页     |
-| Tabs       | 标签页   |
-| Link       | 链接样式 |
-
 ### 反馈组件
 
-| 组件    | 说明     |
-| ------- | -------- |
-| Modal   | 模态框   |
-| Toast   | 通知     |
-| Tooltip | 提示     |
-| Popover | 弹出层   |
-| Drawer  | 抽屉     |
-| Skeleton| 骨架屏   |
+| 组件       | 说明  |
+| -------- | --- |
+| Modal    | 模态框 |
+| Toast    | 通知  |
+| Tooltip  | 提示  |
+| Popover  | 弹出层 |
+| Drawer   | 抽屉  |
+| Skeleton | 骨架屏 |
 
-> **说明**：Link 组件仅提供样式类（`.mg-link`、`.nav-link`），不封装 Vue 组件。Popover 和 Drawer 为较新的组件，功能相对独立。
+## 样式工具（非组件）
 
-总计 **22 个组件**，覆盖了个人博客所需的绝大多数场景。
+以下为全局样式类，无需导入 Vue 组件，直接使用类名即可：
+
+| 样式 | 类名 | 说明 |
+|------|------|------|
+| Link | `.mg-link` / `.nav-link` | 链接样式 |
+| Code | `.mg-code` / `.mg-code-inline` / `.mg-code-block` | 代码样式 |
+
+> **说明**：
+> - **样式类（非组件）**：Link（`.mg-link`、`.nav-link`）、Code（`.mg-code`、`.mg-code-inline`、`.mg-code-block`）
+
+总计 **24 个组件 + 2 个样式工具**，覆盖了个人博客所需的绝大多数场景。
 
 ## 设计令牌
 
@@ -138,7 +147,7 @@ Moongate UI 基于完整的设计令牌系统：
 
 ## 许可证
 
-[MIT](./LICENSE.txt)
+[MIT](./LICENSE)
 
 ## 相关链接
 

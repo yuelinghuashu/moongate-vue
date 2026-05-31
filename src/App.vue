@@ -1,21 +1,37 @@
 <template>
-  <Container size="lg">
-    <!-- 启用自动高度 -->
-    <Textarea
-      v-model="comment"
-      auto-resize
-      placeholder="支持多行输入，高度会自动增长"
-    />
+  <!-- 默认：显示首尾页按钮 -->
+  <Pagination v-model:current-page="page" :total-pages="50" size="ms" />
 
-    <!-- 固定行数（默认行为） -->
-    <Textarea v-model="content" :rows="5" placeholder="固定 5 行高度" />
-  </Container>
+  <!-- 隐藏快速跳转按钮 -->
+  <Pagination
+    v-model:current-page="page"
+    :total-pages="50"
+    :show-quick-jump="false"
+  />
+
+  <!-- 自定义快速跳转按钮文字 -->
+  <Pagination
+    v-model:current-page="page"
+    :total-pages="50"
+    first-text="⏮"
+    last-text="⏭"
+  />
+
+  <!-- 中文环境 -->
+  <Pagination
+    v-model:current-page="page"
+    :total-pages="50"
+    prev-text="上一页"
+    next-text="下一页"
+    first-text="首页"
+    last-text="尾页"
+  />
 </template>
 
 <script setup>
-import { ref } from "vue"
-import Textarea from "./components/Textarea.vue"
+import { ref, computed } from "vue"
+import Pagination from "./components/Pagination.vue"
 
-const content = ref('Learn Vue')
+const page = ref(1) // 当前页码
+const total = ref(50) // 总页数
 </script>
-
