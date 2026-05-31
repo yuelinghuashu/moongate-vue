@@ -1,6 +1,5 @@
 # 🌙 Moongate UI
 
-
 [![npm version](https://img.shields.io/npm/v/moongate-vue.svg)](https://www.npmjs.com/package/moongate-vue)
 [![npm bundle size](https://img.shields.io/bundlephobia/minzip/moongate-vue)](https://bundlephobia.com/package/moongate-vue)
 [![npm downloads](https://img.shields.io/npm/dm/moongate-vue.svg)](https://www.npmjs.com/package/moongate-vue)
@@ -10,7 +9,7 @@ Moongate UI 是一个受月亮启发的极简 Vue 3 组件库。设计令牌驱�
 ## 特性
 
 - 🌙 **月亮哲学** — 克制、冷静、秩序感
-- 📦 **极致轻量** — 完整组件库仅 ~12KB (gzipped)
+- 📦 **极致轻量** — 完整组件库仅 ~10KB (gzipped)
 - 🎨 **设计令牌驱动** — 基于 CSS 变量，主题切换 effortless
 - 🔧 **CSS 优先** — 样式与逻辑解耦，可跨框架复用
 - ✨ **极简 API** — 每个组件 2-8 个 props，易学易用
