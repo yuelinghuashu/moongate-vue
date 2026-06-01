@@ -1,37 +1,22 @@
 <template>
-  <!-- 默认：显示首尾页按钮 -->
-  <Pagination v-model:current-page="page" :total-pages="50" size="ms" />
-
-  <!-- 隐藏快速跳转按钮 -->
-  <Pagination
-    v-model:current-page="page"
-    :total-pages="50"
-    :show-quick-jump="false"
-  />
-
-  <!-- 自定义快速跳转按钮文字 -->
-  <Pagination
-    v-model:current-page="page"
-    :total-pages="50"
-    first-text="⏮"
-    last-text="⏭"
-  />
-
-  <!-- 中文环境 -->
-  <Pagination
-    v-model:current-page="page"
-    :total-pages="50"
-    prev-text="上一页"
-    next-text="下一页"
-    first-text="首页"
-    last-text="尾页"
-  />
+  <Table :columns="columns" :data="users" fixed-header max-height="400px" />
 </template>
 
-<script setup>
-import { ref, computed } from "vue"
-import Pagination from "./components/Pagination.vue"
+<script lang="ts" setup>
+import { ref } from "vue"
+import Table from "./components/Table.vue"
 
-const page = ref(1) // 当前页码
-const total = ref(50) // 总页数
+const columns = ref([
+  { key: "id", title: "ID" },
+  { key: "name", title: "Name" },
+  { key: "age", title: "Age" },
+  { key: "email", title: "Email" },
+])
+
+const users = ref([
+  { id: 1, name: "John Doe", age: 30, email: "john.doe@example.com" },
+  { id: 2, name: "Jane Smith", age: 25, email: "jane.smith@example.com" },
+  { id: 3, name: "Alice Johnson", age: 35, email: "alice.johnson@example.com" },
+  { id: 4, name: "Bob Brown", age: 40, email: "bob.brown@example.com" },
+])
 </script>

@@ -18,6 +18,36 @@
   overflow-x: auto;
 }
 
+/* ========== 固定表头 ========== */
+.mg-table-fixed-header-container {
+  overflow-y: auto;
+  position: relative;
+}
+
+.mg-table-fixed-header .mg-table thead tr {
+  position: sticky;
+  top: 0;
+  z-index: var(--ui-z-index-sticky, 100);
+}
+
+/* 表头单元格背景，避免内容透出 */
+.mg-table-fixed-header .mg-table th {
+  background-color: var(--ui-bg-muted);
+  position: relative;
+}
+
+/* 可选：滚动时表头底部阴影 */
+.mg-table-fixed-header .mg-table thead::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--ui-border);
+  pointer-events: none;
+}
+
 /* ========== 表格本体 ========== */
 .mg-table {
   width: 100%;

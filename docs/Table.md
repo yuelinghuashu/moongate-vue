@@ -1,10 +1,6 @@
-好的，根据最新优化的 Table 组件（移除 loading、移除 row-dblclick、移除 row-contextmenu、双插槽方案、泛型自动推断），生成对应的 README。
-
----
-
 # Table 表格
 
-表格组件，用于展示结构化数据。支持排序、自定义列、空状态等常用功能。
+表格组件，用于展示结构化数据。支持排序、自定义列、空状态、固定表头等常用功能。
 
 ## 基础用法
 
@@ -97,6 +93,18 @@ const handleSort = ({ key, order }) => {
     @sort="handleSort"
   />
 </template>
+```
+
+## 固定表头
+
+当表格数据较多时，可以固定表头，滚动时表头始终可见。
+
+```vue
+<!-- 固定表头，高度 400px -->
+<Table :columns="columns" :data="users" fixed-header max-height="400px" />
+
+<!-- 固定表头，视口高度 -->
+<Table :columns="columns" :data="users" fixed-header max-height="60vh" />
 ```
 
 ## 自定义字段名
@@ -331,6 +339,8 @@ setTimeout(() => {
 | `hoverable` | `boolean` | `true` | 是否显示悬停高亮 |
 | `scrollable` | `boolean` | `false` | 是否强制横向滚动 |
 | `responsive` | `boolean` | `true` | 是否响应式（小屏自动滚动） |
+| `fixedHeader` | `boolean` | `false` | 是否固定表头 |
+| `maxHeight` | `string` | `'400px'` | 固定表头时的最大高度（配合 `fixedHeader` 使用） |
 | `sortKey` | `string` | `undefined` | 当前排序字段（受控模式） |
 | `sortOrder` | `'asc' \| 'desc'` | `undefined` | 当前排序方向（受控模式） |
 | `labelKey` | `string` | `'label'` | 全局默认标题字段名 |
@@ -412,5 +422,8 @@ import type { TableColumn, CellSlotProps } from 'moongate-vue'
 - 空状态时，`empty` 插槽优先级高于 `emptyText` prop
 - `responsive` 默认开启，无需手动添加 `overflow-x: auto`
 - `scrollable` 与 `responsive` 可同时使用，效果为强制滚动
+- `fixedHeader` 需要配合 `maxHeight` 使用，否则表格会无限撑开
+- 固定表头时，表头会浮动在滚动内容上方，确保表格背景色已设置
+- 移动端建议谨慎使用固定表头功能
 - 建议在 `tsconfig.json` 中开启 `strict: true` 以获得最佳类型推断体验
 - 加载状态推荐配合 `Skeleton` 组件使用，Table 本身不内置加载逻辑

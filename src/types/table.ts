@@ -1,9 +1,4 @@
 /**
- * Table 组件类型定义
- * @module types/table
- */
-
-/**
  * 表格列配置
  * @template T - 行数据的类型
  */

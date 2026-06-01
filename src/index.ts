@@ -12,10 +12,10 @@ import Select from './components/Select.vue'
 import Pagination from './components/Pagination.vue'
 import Modal from './components/Modal.vue'
 import Toast from './components/Toast.vue'
+import Message from './components/Message.vue'
 import Tabs from './components/Tabs.vue'
 import Skeleton from './components/Skeleton.vue'
 import Tooltip from './components/Tooltip.vue'
-import { useToast } from './composables/useToast'
 import Container from './components/Container.vue'
 import Header from './components/Header.vue'
 import Main from './components/Main.vue'
@@ -24,12 +24,16 @@ import Hero from './components/Hero.vue'
 import Popover from './components/Popover.vue'
 import Drawer from './components/Drawer.vue'
 import Table from './components/Table.vue'
+
+import { useToast } from './composables/useToast'
+import { useMessage } from './composables/useMessage'
+
 import './styles/index.css'
 
 const components = [
   Button, Card, Badge, Divider, Input, Textarea,
   Checkbox, Radio, Switch, Select, Pagination,
-  Modal, Toast, Tabs, Skeleton, Tooltip, Table,
+  Modal, Toast, Message, Tabs, Skeleton, Tooltip, Table,
   Container, Header, Main, Footer, Hero, Popover, Drawer
 ]
 
@@ -60,14 +64,16 @@ export {
   Skeleton,
   Tooltip,
   Table,
-  useToast,
   Container,
   Header,
   Main,
   Footer,
   Hero,
   Popover,
-  Drawer
+  Drawer,
+
+  useToast,
+  useMessage,
 }
 
 // Table 组件类型（泛型组件需要单独导出类型）
