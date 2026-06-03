@@ -1,6 +1,6 @@
 {
   "name": "moongate-vue",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "module",
   "sideEffects": [
     "*.css"
@@ -23,7 +23,11 @@
     "dev": "vite",
     "build": "vite build && npm run build:types",
     "build:types": "vue-tsc --emitDeclarationOnly --declaration --declarationDir ./dist --skipLibCheck",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "docs:dev": "pnpm run register:components && vitepress dev docs",
+    "docs:build": "pnpm run register:components && vitepress build docs",
+    "register:components": "vitepress-rc",
+    "docs:preview": "vitepress preview docs"
   },
   "peerDependencies": {
     "vue": "^3.0.0"
@@ -32,7 +36,12 @@
     "@vitejs/plugin-vue": "^6.0.6",
     "typescript": "^6.0.3",
     "vite": "^8.0.10",
+    "vitepress": "^1.6.4",
+    "vitepress-theme-demoblock": "^3.1.3",
     "vue": "^3.5.32",
     "vue-tsc": "^3.2.7"
+  },
+  "dependencies": {
+    "@types/node": "^25.9.1"
   }
 }

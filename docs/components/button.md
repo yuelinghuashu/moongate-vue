@@ -4,11 +4,21 @@
 
 ## 基础用法
 
+:::demo
+
 ```vue
-<Button label="默认按钮" />
-<Button variant="filled" color="primary" label="主要按钮" />
-<Button variant="outline" color="error" label="危险操作" />
+<template>
+  <Button color="primary">主要按钮</Button>
+  <Button color="success">成功按钮</Button>
+  <Button color="warning">警告按钮</Button>
+  <Button color="error">错误按钮</Button>
+</template>
+
+<script setup>
+import { Button } from "moongate-vue"
+</script>
 ```
+:::
 
 ## 带图标
 
@@ -106,7 +116,7 @@
 | `label`    | `string`                                         | `''`        | 按钮文字                  |
 | `variant`  | `'filled' \| 'outline'`                          | `'filled'`  | 视觉变体                  |
 | `color`    | `'primary' \| 'success' \| 'warning' \| 'error'` | `'primary'` | 主题色                    |
-| `size`     | ` 'sm' \| 'md' \| 'lg'`                   | `'md'`      | 按钮尺寸                  |
+| `size`     | ` 'sm' \| 'md' \| 'lg'`                          | `'md'`      | 按钮尺寸                  |
 | `disabled` | `boolean`                                        | `false`     | 是否禁用                  |
 | `loading`  | `boolean`                                        | `false`     | 是否加载中                |
 | `block`    | `boolean`                                        | `false`     | 是否为块级（宽度 100%）   |

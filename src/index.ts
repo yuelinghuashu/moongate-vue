@@ -13,7 +13,7 @@ import Pagination from './components/Pagination.vue'
 import Modal from './components/Modal.vue'
 import Toast from './components/Toast.vue'
 import Message from './components/Message.vue'
-import Tabs from './components/Tabs.vue'
+import Tab from './components/Tab.vue'
 import Skeleton from './components/Skeleton.vue'
 import Tooltip from './components/Tooltip.vue'
 import Container from './components/Container.vue'
@@ -33,7 +33,7 @@ import './styles/index.css'
 const components = [
   Button, Card, Badge, Divider, Input, Textarea,
   Checkbox, Radio, Switch, Select, Pagination,
-  Modal, Toast, Message, Tabs, Skeleton, Tooltip, Table,
+  Modal, Toast, Message, Tab, Skeleton, Tooltip, Table,
   Container, Header, Main, Footer, Hero, Popover, Drawer
 ]
 
@@ -60,7 +60,7 @@ export {
   Pagination,
   Modal,
   Toast,
-  Tabs,
+  Tab,
   Skeleton,
   Tooltip,
   Table,

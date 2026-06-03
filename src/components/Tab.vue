@@ -10,10 +10,10 @@
         v-for="(tab, index) in tabs"
         :key="index"
         class="mg-tab"
-        :class="{ 'mg-tab-active': activeTab === index }"
+        :class="{ 'mg-tab-active': activeIndex === index }"
         :disabled="tab.disabled"
         role="tab"
-        :aria-selected="activeTab === index"
+        :aria-selected="activeIndex === index"
         :aria-controls="`mg-tab-panel-${index}`"
         @click="handleTabClick(index)"
       >
@@ -26,10 +26,10 @@
     <template v-for="(tab, index) in tabs" :key="index">
       <div
         v-if="!lazy || (lazy && renderedPanels.has(index))"
-        v-show="activeTab === index"
+        v-show="activeIndex === index"
         :id="`mg-tab-panel-${index}`"
         class="mg-tab-panel"
-        :class="{ 'mg-tab-panel-active': activeTab === index }"
+        :class="{ 'mg-tab-panel-active': activeIndex === index }"
         role="tabpanel"
         :aria-labelledby="`mg-tab-${index}`"
       >
@@ -75,23 +75,24 @@ const emit = defineEmits<{
   change: [index: number, tab: TabItem]
 }>()
 
-const activeTab = ref(props.modelValue)
+// 当前激活的标签索引
+const activeIndex = ref(props.modelValue)
 
 // 记录已渲染过的面板索引（用于懒加载）
-const renderedPanels = ref<Set<number>>(new Set([activeTab.value]))
+const renderedPanels = ref<Set<number>>(new Set([activeIndex.value]))
 
-// 监听外部 v-model 变化
+// 监听外部 v-model 变化，同步内部状态
 watch(
   () => props.modelValue,
   (val) => {
-    if (val !== activeTab.value) {
-      activeTab.value = val
+    if (val !== activeIndex.value) {
+      activeIndex.value = val
     }
   },
 )
 
 // 监听内部变化，同步到外部并记录渲染
-watch(activeTab, (val) => {
+watch(activeIndex, (val) => {
   if (val !== props.modelValue) {
     emit("update:modelValue", val)
   }
@@ -101,10 +102,18 @@ watch(activeTab, (val) => {
   }
 })
 
+/**
+ * 处理标签点击
+ * @param index - 点击的标签索引
+ */
 const handleTabClick = (index: number) => {
+  // 禁用状态不可点击
   if (props.tabs[index]?.disabled) return
-  if (activeTab.value === index) return
-  activeTab.value = index
+  // 已激活无需重复点击
+  if (activeIndex.value === index) return
+  // 更新激活索引
+  activeIndex.value = index
+  // 触发 change 事件
   emit("change", index, props.tabs[index])
 }
 </script>

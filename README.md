@@ -1,10 +1,10 @@
-# 🌙 Moongate UI
+# 🌙 Moongate Vue
 
 [![npm version](https://img.shields.io/npm/v/moongate-vue.svg)](https://www.npmjs.com/package/moongate-vue)
 [![npm bundle size](https://img.shields.io/bundlephobia/minzip/moongate-vue)](https://bundlephobia.com/package/moongate-vue)
 [![npm downloads](https://img.shields.io/npm/dm/moongate-vue.svg)](https://www.npmjs.com/package/moongate-vue)
 
-Moongate UI 是一个受月亮启发的极简 Vue 3 组件库。设计令牌驱动，CSS 优先，框架无关。
+Moongate Vue 是一个受月亮启发的极简 Vue 3 组件库。设计令牌驱动，CSS 优先，框架无关。
 
 **完整组件库仅 10KB (gzipped)**，比主流组件库轻 10 倍以上。
 
@@ -108,7 +108,7 @@ const message = useMessage()
 
 ## 设计令牌
 
-Moongate UI 基于完整的设计令牌系统：
+Moongate Vue 基于完整的设计令牌系统：
 
 - `colors.css` — 浅色/深色模式颜色变量
 - `layout.css` — 间距、字体、动效等布局变量
