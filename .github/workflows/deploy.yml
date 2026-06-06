@@ -8,7 +8,7 @@ on:
       - "package.json"
       - "pnpm-lock.yaml"
       - "Dockerfile"
-      - ".github/workflows/deploy-docs.yml"
+      - ".github/workflows/deploy.yml"
 
 jobs:
   ci:
