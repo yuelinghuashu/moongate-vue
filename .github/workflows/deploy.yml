@@ -1,4 +1,4 @@
-name: Deploy Docs To Aliyun (Docker)
+name: Deploy To Aliyun
 
 on:
   push:
@@ -35,8 +35,8 @@ jobs:
           file: Dockerfile.docs
           push: true
           tags: |
-            ${{ secrets.ACR_REGISTRY }}/moongate/moongate-docs:latest
-            ${{ secrets.ACR_REGISTRY }}/moongate/moongate-docs:${{ github.sha }}
+            ${{ secrets.ACR_REGISTRY }}/moongate/moongate-vue:latest
+            ${{ secrets.ACR_REGISTRY }}/moongate/moongate-vue:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -53,15 +53,15 @@ jobs:
             echo "${{ secrets.ACR_PASSWORD }}" | docker login "${{ secrets.ACR_REGISTRY }}" -u "${{ secrets.ACR_USERNAME }}" --password-stdin
 
             # 拉取最新镜像
-            docker pull ${{ secrets.ACR_REGISTRY }}/moongate/moongate-docs:latest
+            docker pull ${{ secrets.ACR_REGISTRY }}/moongate/moongate-vue:latest
 
             # 停止并删除旧容器
-            docker stop moongate-docs || true
-            docker rm moongate-docs || true
+            docker stop moongate-vue || true
+            docker rm moongate-vue || true
 
             # 运行新容器
             docker run -d \
-              --name moongate-docs \
+              --name moongate-vue \
               --restart unless-stopped \
               -p 3001:80 \
-              ${{ secrets.ACR_REGISTRY }}/moongate/moongate-docs:latest
+              ${{ secrets.ACR_REGISTRY }}/moongate/moongate-vue:latest
