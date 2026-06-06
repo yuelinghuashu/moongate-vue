@@ -6,7 +6,6 @@ on:
     paths:
       - "docs/**"
       - "package.json"
-      - "pnpm-lock.yaml"
       - "Dockerfile"
       - ".github/workflows/deploy.yml"
 
