@@ -7,7 +7,7 @@ on:
       - "docs/**"
       - "package.json"
       - "pnpm-lock.yaml"
-      - "Dockerfile.docs"
+      - "Dockerfile"
       - ".github/workflows/deploy-docs.yml"
 
 jobs:
@@ -32,7 +32,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: Dockerfile.docs
+          file: Dockerfile
           push: true
           tags: |
             ${{ secrets.ACR_REGISTRY }}/moongate/moongate-vue:latest
