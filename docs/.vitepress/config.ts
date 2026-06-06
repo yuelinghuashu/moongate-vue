@@ -52,7 +52,7 @@ const sidebar = {
       items: [
         { text: 'Table 表格', link: '/components/table' },
         { text: 'Pagination 分页', link: '/components/pagination' },
-        { text: 'Tab 标签页', link: '/components/tab' },
+        { text: 'Tabs 标签页', link: '/components/tabs' },
       ],
     },
     {
@@ -77,6 +77,13 @@ const sidebar = {
         { text: 'Skeleton 骨架屏', link: '/components/skeleton' },
       ],
     },
+    {
+      text: '样式组件',
+      items: [
+        { text: 'Code 代码样式', link: '/components/code' },
+        { text: 'Link 链接样式', link: '/components/link' },
+      ],
+    }
   ],
   '/tokens/': [
     {

@@ -4,54 +4,60 @@
 
 ## 函数式调用（推荐）
 
+:::demo
+
 ```vue
 <script setup>
-import { useToast } from "moongate-vue"
+import { useToast, Button } from "moongate-vue"
 
 const toast = useToast()
 
-// 成功
-toast.success("评论发布成功")
-
-// 错误
-toast.error("发布失败，请重试")
-
-// 警告
-toast.warning("内容不能为空")
-
-// 信息
-toast.info("正在加载...")
-
-// 自定义
-toast.show({
-  message: "自定义提示",
-  type: "success",
-  duration: 5000,
-  closable: true,
-  position: "bottom",
-})
+const handleSuccess = () => toast.success("评论发布成功")
+const handleError = () => toast.error("发布失败，请重试")
+const handleWarning = () => toast.warning("内容不能为空")
+const handleInfo = () => toast.info("正在加载...")
+const handleCustom = () =>
+  toast.show({
+    message: "自定义提示",
+    type: "success",
+    duration: 5000,
+    closable: true,
+    position: "bottom",
+  })
 </script>
+
+<template>
+  <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+    <Button @click="handleSuccess" label="成功" />
+    <Button @click="handleError" label="错误" />
+    <Button @click="handleWarning" label="警告" />
+    <Button @click="handleInfo" label="信息" />
+    <Button @click="handleCustom" label="自定义" />
+  </div>
+</template>
 ```
+
+:::
 
 ## Nuxt 环境使用
 
 在 Nuxt 中，Toast 涉及 DOM 操作，需要确保只在客户端执行：
 
+:::demo
+
 ```vue
 <script setup>
-import { useToast } from "moongate-vue"
+import { useToast, Button } from "moongate-vue"
 
 const toast = useToast()
 
 const handleSuccess = () => {
-  // 方式一：使用 import.meta.client
   if (import.meta.client) {
     toast.success("操作成功")
   }
 }
 
 const handleError = () => {
-  // 方式二：使用 process.client
   if (process.client) {
     toast.error("操作失败")
   }
@@ -59,10 +65,14 @@ const handleError = () => {
 </script>
 
 <template>
-  <Button @click="handleSuccess" label="成功" />
-  <Button @click="handleError" label="错误" />
+  <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+    <Button @click="handleSuccess" label="成功" />
+    <Button @click="handleError" label="错误" />
+  </div>
 </template>
 ```
+
+:::
 
 ### Nuxt 插件方式（推荐）
 
@@ -73,7 +83,7 @@ import { useToast as useToastCore } from "moongate-vue"
 
 export default defineNuxtPlugin(() => {
   const toast = useToastCore()
-  
+
   return {
     provide: {
       toast,
@@ -86,10 +96,14 @@ export default defineNuxtPlugin(() => {
 
 ```vue
 <script setup>
-const { $toast } = useNuxtApp()
+import { Button } from "moongate-vue"
+
+// 在 Nuxt 环境中使用 $toast
+// const { $toast } = useNuxtApp()
 
 const handleClick = () => {
-  $toast.success("操作成功")
+  // $toast.success("操作成功")
+  console.log("在 Nuxt 环境中，$toast 可用")
 }
 </script>
 
@@ -102,21 +116,52 @@ const handleClick = () => {
 
 ## 组件式调用
 
+:::demo
+
 ```vue
-<Button @click="show = true" label="显示提示" />
-<Toast v-model="show" message="操作成功" type="success" />
+<script setup>
+import { ref } from "vue"
+import { Button, Toast } from "moongate-vue"
+
+const show = ref(false)
+</script>
+
+<template>
+  <div>
+    <Button @click="show = true" label="显示提示" />
+    <Toast v-model="show" message="操作成功" type="success" />
+  </div>
+</template>
 ```
+
+:::
 
 ## 自定义图标
 
+:::demo
+
 ```vue
-<Toast v-model="show" type="success">
-  <template #icon>
-    <span>🎉</span>
-  </template>
-  自定义图标
-</Toast>
+<script setup>
+import { ref } from "vue"
+import { Button, Toast } from "moongate-vue"
+
+const show = ref(false)
+</script>
+
+<template>
+  <div>
+    <Button @click="show = true" label="显示自定义提示" />
+    <Toast v-model="show" type="success">
+      <template #icon>
+        <span>🎉</span>
+      </template>
+      自定义图标
+    </Toast>
+  </div>
+</template>
 ```
+
+:::
 
 ## API
 

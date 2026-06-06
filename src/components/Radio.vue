@@ -23,6 +23,8 @@
 </template>
 
 <script setup lang="ts">
+defineOptions({ name: "Radio", inheritAttrs: false })
+
 import { computed } from "vue"
 
 type Size = "sm" | "md" | "lg"

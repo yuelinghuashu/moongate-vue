@@ -106,6 +106,8 @@
 </template>
 
 <script setup lang="ts">
+defineOptions({ name: "Select", inheritAttrs: false })
+
 import { ref, computed, watch, nextTick } from "vue"
 
 // ==================== 类型定义 ====================

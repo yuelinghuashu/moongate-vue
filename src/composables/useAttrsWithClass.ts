@@ -30,8 +30,6 @@ type ClassValue = string | any[] | Record<string, boolean>
  * <script setup>
  * import { useAttrsWithClass } from '@/composables/useAttrsWithClass'
  *
- * defineOptions({ inheritAttrs: false })
- *
  * const props = defineProps<{ active?: boolean }>()
  *
  * const { attrsWithoutClass, mergedClass } = useAttrsWithClass(() => ({

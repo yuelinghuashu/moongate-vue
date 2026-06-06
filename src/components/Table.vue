@@ -39,7 +39,8 @@
                       'mg-table-sort-asc':
                         sortKey === getColumnKey(column) && sortOrder === 'asc',
                       'mg-table-sort-desc':
-                        sortKey === getColumnKey(column) && sortOrder === 'desc',
+                        sortKey === getColumnKey(column) &&
+                        sortOrder === 'desc',
                     }"
                     xmlns="http://www.w3.org/2000/svg"
                     width="14"
@@ -114,6 +115,8 @@
 <script setup lang="ts" generic="T extends Record<string, any> = any">
 import { ref, computed } from "vue"
 import type { TableColumn, SortParams } from "../types/table"
+
+defineOptions({ name: "Table", inheritAttrs: false })
 
 // ==================== Props 定义 ====================
 const props = withDefaults(
@@ -193,7 +196,8 @@ defineSlots<{
  */
 const getColumnKey = (column: TableColumn<T>): string => {
   if (column.key !== undefined && column.key !== "") return String(column.key)
-  if (column.valueKey !== undefined && column.valueKey !== "") return column.valueKey
+  if (column.valueKey !== undefined && column.valueKey !== "")
+    return column.valueKey
   if (column.labelKey !== undefined && typeof column === "object") {
     const val = (column as any)[column.labelKey]
     if (val !== undefined && val !== "") return String(val)
@@ -288,7 +292,9 @@ const displayData = computed(() => {
         return order === "asc" ? aRaw - bRaw : bRaw - aRaw
       }
 
-      return order === "asc" ? aStr.localeCompare(bStr) : bStr.localeCompare(aStr)
+      return order === "asc"
+        ? aStr.localeCompare(bStr)
+        : bStr.localeCompare(aStr)
     })
   }
 

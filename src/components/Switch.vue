@@ -22,6 +22,8 @@
 </template>
 
 <script setup lang="ts">
+defineOptions({ name: "Switch", inheritAttrs: false })
+
 type Size = "sm" | "md" | "lg"
 
 interface Props {

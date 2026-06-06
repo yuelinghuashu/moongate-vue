@@ -4,48 +4,102 @@
 
 ## 基础用法
 
+:::demo
+
 ```vue
-<Badge label="P3" />
-<Badge color="success" label="已发布" />
-<Badge color="warning" label="进行中" />
-<Badge color="error" label="已归档" />
+<template>
+  <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+    <Badge label="P3" />
+    <Badge color="success" label="已发布" />
+    <Badge color="warning" label="进行中" />
+    <Badge color="error" label="已归档" />
+  </div>
+</template>
+
+<script setup>
+import { Badge } from "moongate-vue"
+</script>
 ```
+
+:::
 
 ## 尺寸
 
+:::demo
+
 ```vue
-<Badge size="sm" label="小号" />
-<Badge size="md" label="中号" />
+<template>
+  <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+    <Badge size="sm" label="小号" />
+    <Badge size="md" label="中号" />
+  </div>
+</template>
+
+<script setup>
+import { Badge } from "moongate-vue"
+</script>
 ```
+
+:::
 
 ## 自定义内容
 
 通过默认插槽自定义内容（优先级高于 `label` prop）。
 
-```vue
-<Badge color="primary">
-  <span class="flex items-center gap-1">🔥 热门</span>
-</Badge>
+:::demo
 
-<Badge color="success">
-  <span class="flex items-center gap-1">✓ 已完成</span>
-</Badge>
+```vue
+<template>
+  <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+    <Badge color="primary">
+      <span style="display: flex; align-items: center; gap: 4px;">🔥 热门</span>
+    </Badge>
+
+    <Badge color="success">
+      <span style="display: flex; align-items: center; gap: 4px;"
+        >✓ 已完成</span
+      >
+    </Badge>
+  </div>
+</template>
+
+<script setup>
+import { Badge } from "moongate-vue"
+</script>
 ```
+
+:::
 
 ## 博客卡片中的使用
 
+:::demo
+
 ```vue
-<Card>
-  <template #header>
-    <div class="flex justify-between items-center mb-2">
-      <Badge color="primary">P3</Badge>
-      <time class="text-dim text-sm">2026-04-20</time>
-    </div>
-    <h3>文章标题</h3>
-  </template>
-  <p>文章摘要...</p>
-</Card>
+<template>
+  <div style="width: 320px;">
+    <Card>
+      <template #header>
+        <div
+          style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;"
+        >
+          <Badge color="primary">P3</Badge>
+          <time style="color: var(--text-dim, #666); font-size: 14px;"
+            >2026-04-20</time
+          >
+        </div>
+        <h3 style="margin: 0;">文章标题</h3>
+      </template>
+      <p style="margin: 8px 0 0;">文章摘要...</p>
+    </Card>
+  </div>
+</template>
+
+<script setup>
+import { Badge, Card } from "moongate-vue"
+</script>
 ```
+
+:::
 
 ## API
 

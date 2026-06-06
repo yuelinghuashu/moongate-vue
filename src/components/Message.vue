@@ -30,6 +30,9 @@
 </template>
 
 <script setup lang="ts">
+defineOptions({ name: "Message", inheritAttrs: false })
+
+
 import { ref, watch, onMounted, onUnmounted } from "vue"
 import { useAttrsWithClass } from "../composables/useAttrsWithClass"
 
@@ -58,8 +61,6 @@ const props = withDefaults(defineProps<Props>(), {
   closable: false,
   icon: "",
 })
-
-defineOptions({ inheritAttrs: false })
 
 const emit = defineEmits<{
   "update:modelValue": [value: boolean]

@@ -6,37 +6,89 @@
 
 ## 基础用法
 
+:::demo
+
 ```vue
-<Input placeholder="请输入内容" />
+<template>
+  <div style="width: 320px;">
+    <Input placeholder="请输入内容" />
+  </div>
+</template>
+
+<script setup>
+import { Input } from "moongate-vue"
+</script>
 ```
+
+:::
 
 ## v-model 绑定
 
+:::demo
+
 ```vue
 <script setup>
+import { ref } from "vue"
+import { Input } from "moongate-vue"
+
 const value = ref("")
 </script>
 
 <template>
-  <Input v-model="value" placeholder="输入内容" />
+  <div style="width: 320px;">
+    <Input v-model="value" placeholder="输入内容" />
+    <p style="margin-top: 8px;">输入内容: {{ value }}</p>
+  </div>
 </template>
 ```
 
+:::
+
 ## 尺寸
 
+:::demo
+
 ```vue
-<Input size="sm" placeholder="小号" />
-<Input size="md" placeholder="中号" />
-<Input size="lg" placeholder="大号" />
+<template>
+  <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+    <div style="width: 200px;">
+      <Input size="sm" placeholder="小号" />
+    </div>
+    <div style="width: 200px;">
+      <Input size="md" placeholder="中号" />
+    </div>
+    <div style="width: 200px;">
+      <Input size="lg" placeholder="大号" />
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { Input } from "moongate-vue"
+</script>
 ```
+
+:::
 
 ## 错误状态
 
 `error` 属性仅控制输入框的边框和聚焦环样式，不渲染错误消息。
 
+:::demo
+
 ```vue
-<Input :error="true" placeholder="输入有误" />
+<template>
+  <div style="width: 320px;">
+    <Input :error="true" placeholder="输入有误" />
+  </div>
+</template>
+
+<script setup>
+import { Input } from "moongate-vue"
+</script>
 ```
+
+:::
 
 ## 错误消息（用户自行控制）
 
@@ -44,36 +96,109 @@ const value = ref("")
 
 ### 消息在下方
 
+:::demo
+
 ```vue
-<div class="flex flex-col gap-1">
-  <Input v-model="username" :error="!!usernameError" />
-  <span v-if="usernameError" class="text-error text-sm">{{ usernameError }}</span>
-</div>
+<script setup>
+import { ref } from "vue"
+import { Input } from "moongate-vue"
+
+const username = ref("")
+const usernameError = ref("用户名不能为空")
+</script>
+
+<template>
+  <div style="display: flex; flex-direction: column; gap: 4px; width: 320px;">
+    <Input
+      v-model="username"
+      :error="!!usernameError"
+      placeholder="请输入用户名"
+    />
+    <span
+      v-if="usernameError"
+      style="color: var(--ui-error); font-size: 12px;"
+      >{{ usernameError }}</span
+    >
+  </div>
+</template>
 ```
+
+:::
 
 ### 消息在右侧
 
+:::demo
+
 ```vue
-<div class="flex items-center gap-2">
-  <Input v-model="email" :error="!!emailError" class="flex-1" />
-  <span v-if="emailError" class="text-error text-sm">{{ emailError }}</span>
-</div>
+<script setup>
+import { ref } from "vue"
+import { Input } from "moongate-vue"
+
+const email = ref("")
+const emailError = ref("邮箱格式错误")
+</script>
+
+<template>
+  <div style="display: flex; align-items: center; gap: 8px; width: 400px;">
+    <Input
+      v-model="email"
+      :error="!!emailError"
+      placeholder="请输入邮箱"
+      style="flex: 1;"
+    />
+    <span
+      v-if="emailError"
+      style="color: var(--ui-error); font-size: 12px; white-space: nowrap;"
+      >{{ emailError }}</span
+    >
+  </div>
+</template>
 ```
+
+:::
 
 ## 禁用与只读
 
+:::demo
+
 ```vue
-<Input disabled placeholder="已禁用" />
-<Input readonly value="只读内容" />
+<template>
+  <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+    <div style="width: 200px;">
+      <Input disabled placeholder="已禁用" />
+    </div>
+    <div style="width: 200px;">
+      <Input readonly value="只读内容" />
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { Input } from "moongate-vue"
+</script>
 ```
+
+:::
 
 ## 不同类型
 
+:::demo
+
 ```vue
-<Input type="email" placeholder="邮箱" />
-<Input type="password" placeholder="密码" />
-<Input type="number" placeholder="数字" />
+<template>
+  <div style="display: flex; flex-direction: column; gap: 16px; width: 320px;">
+    <Input type="email" placeholder="邮箱" />
+    <Input type="password" placeholder="密码" />
+    <Input type="number" placeholder="数字" />
+  </div>
+</template>
+
+<script setup>
+import { Input } from "moongate-vue"
+</script>
 ```
+
+:::
 
 ## API
 

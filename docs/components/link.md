@@ -15,27 +15,46 @@
 
 ### 基础用法
 
-```vue
-<!-- 内部链接 -->
-<RouterLink to="/about" rel="noopener noreferrer" class="mg-link">
-  关于我们
-</RouterLink>
+:::demo
 
-<!-- 外部链接（新窗口打开，注意添加安全属性） -->
-<a href="https://example.com" rel="noopener noreferrer" target="_blank" class="mg-link" rel="noopener noreferrer">
-  外部网站
-</a>
+```vue
+<template>
+  <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+    <!-- 内部链接 -->
+    <RouterLink to="/about" class="mg-link"> 关于我们 </RouterLink>
+
+    <!-- 外部链接（新窗口打开，注意添加安全属性） -->
+    <a href="https://example.com" target="_blank" class="mg-link"> 外部网站 </a>
+  </div>
+</template>
 ```
+
+:::
 
 ### 自定义颜色
 
 配合工具类实现不同颜色：
 
+:::demo
+
 ```vue
-<RouterLink to="/login" rel="noopener noreferrer" class="mg-link text-primary">
-  登录
-</RouterLink>
+<template>
+  <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+    <RouterLink to="/login" class="mg-link" style="color: var(--ui-primary);">
+      登录
+    </RouterLink>
+    <RouterLink
+      to="/register"
+      class="mg-link"
+      style="color: var(--ui-success);"
+    >
+      注册
+    </RouterLink>
+  </div>
+</template>
 ```
+
+:::
 
 ## 导航链接 `.nav-link`
 
@@ -43,28 +62,45 @@
 
 ### 基础用法
 
+:::demo
+
 ```vue
-<RouterLink to="/" rel="noopener noreferrer" class="nav-link">首页</RouterLink>
-<RouterLink to="/about" rel="noopener noreferrer" class="nav-link">关于</RouterLink>
+<template>
+  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+    <RouterLink to="/" class="nav-link">首页</RouterLink>
+    <RouterLink to="/about" class="nav-link">关于</RouterLink>
+    <RouterLink to="/docs" class="nav-link">文档</RouterLink>
+  </div>
+</template>
 ```
+
+:::
 
 ### 激活状态
 
 `RouterLink` 和 `NuxtLink` 会自动添加 `router-link-active` 类，你可根据需要自定义激活样式：
 
-```vue
-<!-- 自定义激活样式 -->
-<RouterLink to="/" rel="noopener noreferrer" class="nav-link" active-class="active">
-  首页
-</RouterLink>
-```
+:::demo
 
-```css
+```vue
+<template>
+  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+    <RouterLink to="/" class="nav-link" active-class="active">首页</RouterLink>
+    <RouterLink to="/about" class="nav-link" active-class="active"
+      >关于</RouterLink
+    >
+  </div>
+</template>
+
+<style scoped>
 .nav-link.active {
   background-color: var(--ui-bg-active);
   color: var(--ui-primary);
 }
+</style>
 ```
+
+:::
 
 ## API
 
@@ -72,10 +108,10 @@
 
 ### 样式类列表
 
-| 类名 | 适用场景 | 内边距 | 背景色 | 悬停效果 |
-|------|----------|--------|--------|----------|
-| `.mg-link` | 正文链接 | 无 | 无 | 变色 + 下划线 |
-| `.nav-link` | 导航链接 | 有 | 有（悬停） | 背景色变化 |
+| 类名        | 适用场景 | 内边距 | 背景色     | 悬停效果      |
+| ----------- | -------- | ------ | ---------- | ------------- |
+| `.mg-link`  | 正文链接 | 无     | 无         | 变色 + 下划线 |
+| `.nav-link` | 导航链接 | 有     | 有（悬停） | 背景色变化    |
 
 ## 注意事项
 

@@ -31,6 +31,8 @@
 </template>
 
 <script setup lang="ts">
+defineOptions({ name: "Button", inheritAttrs: false })
+
 import { useSlots, computed } from "vue"
 import type { Component } from "vue"
 

@@ -4,48 +4,75 @@
 
 ## 基础用法
 
+:::demo
+
 ```vue
-<Hero title="Where Moon Meets Code" description="推开月之门，进入一个由代码构筑的探索空间。">
-  <template #actions>
-    <Button variant="filled" color="primary" size="lg" to="/docs">
-      Access the Gate
-      <template #icon>
-        <Icon name="lucide:arrow-right" class="w-4 h-4" />
-      </template>
-    </Button>
-  </template>
-</Hero>
+<template>
+  <Hero title="Where Moon Meets Code" description="推开月之门，进入一个由代码构筑的探索空间。">
+    <template #actions>
+      <Button variant="filled" color="primary" size="lg">开始阅读</Button>
+    </template>
+  </Hero>
+</template>
+
+<script setup>
+import { Hero, Button } from "moongate-vue"
+</script>
 ```
+
+:::
 
 ## 自定义标题和描述
 
 通过插槽可以更灵活地定制内容。
 
+:::demo
+
 ```vue
-<Hero>
-  <template #title>
-    <span class="text-gradient">Where Moon Meets Code</span>
-  </template>
-  <template #description>
-    <p>推开月之门，进入一个由代码构筑的探索空间。</p>
-    <p class="mt-2 text-sm">探索、学习、创造</p>
-  </template>
-  <template #actions>
-    <div class="flex gap-4 justify-center">
-      <Button variant="filled" color="primary" to="/docs">开始阅读</Button>
-      <Button variant="outline" color="primary" to="/about">关于我</Button>
-    </div>
-  </template>
-</Hero>
+<template>
+  <Hero>
+    <template #title>
+      <span style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+        Where Moon Meets Code
+      </span>
+    </template>
+    <template #description>
+      <p>推开月之门，进入一个由代码构筑的探索空间。</p>
+      <p style="margin-top: 8px; font-size: 14px;">探索、学习、创造</p>
+    </template>
+    <template #actions">
+      <div style="display: flex; gap: 16px; justify-content: center;">
+        <Button variant="filled" color="primary">开始阅读</Button>
+        <Button variant="outline" color="primary">关于我</Button>
+      </div>
+    </template>
+  </Hero>
+</template>
+
+<script setup>
+import { Hero, Button } from "moongate-vue"
+</script>
 ```
+
+:::
 
 ## 纯展示模式
 
 不需要按钮时，可以省略 `actions` 插槽。
 
+:::demo
+
 ```vue
-<Hero title="Where Moon Meets Code" description="推开月之门..." />
+<template>
+  <Hero title="Where Moon Meets Code" description="推开月之门..." />
+</template>
+
+<script setup>
+import { Hero } from "moongate-vue"
+</script>
 ```
+
+:::
 
 ## API
 

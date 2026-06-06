@@ -1,4 +1,3 @@
-import type { App, Plugin } from 'vue'
 import Button from './components/Button.vue'
 import Card from './components/Card.vue'
 import Badge from './components/Badge.vue'
@@ -13,7 +12,7 @@ import Pagination from './components/Pagination.vue'
 import Modal from './components/Modal.vue'
 import Toast from './components/Toast.vue'
 import Message from './components/Message.vue'
-import Tab from './components/Tab.vue'
+import Tabs from './components/Tabs.vue'
 import Skeleton from './components/Skeleton.vue'
 import Tooltip from './components/Tooltip.vue'
 import Container from './components/Container.vue'
@@ -30,22 +29,6 @@ import { useMessage } from './composables/useMessage'
 
 import './styles/index.css'
 
-const components = [
-  Button, Card, Badge, Divider, Input, Textarea,
-  Checkbox, Radio, Switch, Select, Pagination,
-  Modal, Toast, Message, Tab, Skeleton, Tooltip, Table,
-  Container, Header, Main, Footer, Hero, Popover, Drawer
-]
-
-export const install: Plugin = (app: App) => {
-  components.forEach(component => {
-    const name = component.name
-    if (name) {
-      app.component(name, component)
-    }
-  })
-}
-
 export {
   Button,
   Card,
@@ -60,7 +43,8 @@ export {
   Pagination,
   Modal,
   Toast,
-  Tab,
+  Message,
+  Tabs,
   Skeleton,
   Tooltip,
   Table,

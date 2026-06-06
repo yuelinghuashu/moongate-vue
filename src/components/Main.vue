@@ -3,3 +3,7 @@
     <slot />
   </main>
 </template>
+
+<script setup>
+defineOptions({ name: "Main", inheritAttrs: false })
+</script>

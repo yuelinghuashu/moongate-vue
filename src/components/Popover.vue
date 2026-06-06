@@ -36,6 +36,9 @@
 </template>
 
 <script setup lang="ts">
+defineOptions({ name: "Popover" })
+
+
 import { ref, computed, onMounted, onUnmounted, nextTick } from "vue"
 
 // ==================== 类型定义 ====================

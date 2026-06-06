@@ -4,50 +4,50 @@ Moongate Vue 提供了 25+ 个组件，覆盖日常开发需求。
 
 ## 基础组件
 
-| 组件 | 说明 |
-|------|------|
-| [Button 按钮](./button) | 按钮组件，用于触发操作 |
-| [Card 卡片](./card) | 卡片容器 |
-| [Badge 徽章](./badge) | 徽章标记 |
-| [Divider 分割线](./divider) | 内容分隔线 |
+| 组件                        | 说明                   |
+| --------------------------- | ---------------------- |
+| [Button 按钮](./button)     | 按钮组件，用于触发操作 |
+| [Card 卡片](./card)         | 卡片容器               |
+| [Badge 徽章](./badge)       | 徽章标记               |
+| [Divider 分割线](./divider) | 内容分隔线             |
 
 ## 表单组件
 
-| 组件 | 说明 |
-|------|------|
-| [Input 输入框](./input) | 文本输入 |
+| 组件                            | 说明         |
+| ------------------------------- | ------------ |
+| [Input 输入框](./input)         | 文本输入     |
 | [Textarea 多行文本](./textarea) | 多行文本输入 |
-| [Checkbox 复选框](./checkbox) | 多选框 |
-| [Radio 单选框](./radio) | 单选框 |
-| [Switch 开关](./switch) | 开关切换 |
-| [Select 下拉选择](./select) | 下拉选择器 |
+| [Checkbox 复选框](./checkbox)   | 多选框       |
+| [Radio 单选框](./radio)         | 单选框       |
+| [Switch 开关](./switch)         | 开关切换     |
+| [Select 下拉选择](./select)     | 下拉选择器   |
 
 ## 数据展示组件
 
-| 组件 | 说明 |
-|------|------|
-| [Table 表格](./table) | 数据表格，支持排序、固定表头 |
-| [Pagination 分页](./pagination) | 分页导航 |
-| [Tab 标签页](./tab) | 内容分类切换 |
+| 组件                            | 说明                         |
+| ------------------------------- | ---------------------------- |
+| [Table 表格](./table)           | 数据表格，支持排序、固定表头 |
+| [Pagination 分页](./pagination) | 分页导航                     |
+| [Tab 标签页](./tabs)             | 内容分类切换                 |
 
 ## 布局组件
 
-| 组件 | 说明 |
-|------|------|
-| [Container 容器](./container) | 内容容器 |
-| [Header 头部](./header) | 页面头部 |
-| [Main 主体](./main) | 页面主体 |
-| [Footer 底部](./footer) | 页面底部 |
-| [Hero 英雄区](./hero) | 首屏大区块 |
+| 组件                          | 说明       |
+| ----------------------------- | ---------- |
+| [Container 容器](./container) | 内容容器   |
+| [Header 头部](./header)       | 页面头部   |
+| [Main 主体](./main)           | 页面主体   |
+| [Footer 底部](./footer)       | 页面底部   |
+| [Hero 英雄区](./hero)         | 首屏大区块 |
 
 ## 反馈组件
 
-| 组件 | 说明 |
-|------|------|
-| [Modal 模态框](./modal) | 弹窗 |
-| [Toast 通知](./toast) | 轻提示（函数式调用） |
+| 组件                          | 说明                   |
+| ----------------------------- | ---------------------- |
+| [Modal 模态框](./modal)       | 弹窗                   |
+| [Toast 通知](./toast)         | 轻提示（函数式调用）   |
 | [Message 消息提示](./message) | 消息提示（函数式调用） |
-| [Tooltip 提示](./tooltip) | 文字提示 |
-| [Popover 弹出层](./popover) | 弹出层卡片 |
-| [Drawer 抽屉](./drawer) | 侧边抽屉 |
-| [Skeleton 骨架屏](./skeleton) | 加载占位 |
+| [Tooltip 提示](./tooltip)     | 文字提示               |
+| [Popover 弹出层](./popover)   | 弹出层卡片             |
+| [Drawer 抽屉](./drawer)       | 侧边抽屉               |
+| [Skeleton 骨架屏](./skeleton) | 加载占位               |

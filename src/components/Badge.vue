@@ -9,6 +9,8 @@
 </template>
 
 <script setup lang="ts">
+defineOptions({ name: "Badge", inheritAttrs: false })
+
 type Color = "primary" | "success" | "warning" | "error"
 type Size = "sm" | "md"
 

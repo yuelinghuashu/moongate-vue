@@ -4,53 +4,59 @@
 
 ## 函数式调用（推荐）
 
+:::demo
+
 ```vue
 <script setup>
-import { useMessage } from "moongate-vue"
+import { useMessage, Button } from "moongate-vue"
 
 const message = useMessage()
 
-// 成功
-message.success("保存成功")
-
-// 错误
-message.error("保存失败，请重试")
-
-// 警告
-message.warning("内容不能为空")
-
-// 信息
-message.info("正在加载...")
-
-// 自定义
-message.show({
-  message: "自定义提示",
-  type: "success",
-  duration: 5000,
-  closable: true,
-})
+const handleSuccess = () => message.success("保存成功")
+const handleError = () => message.error("保存失败，请重试")
+const handleWarning = () => message.warning("内容不能为空")
+const handleInfo = () => message.info("正在加载...")
+const handleCustom = () =>
+  message.show({
+    message: "自定义提示",
+    type: "success",
+    duration: 5000,
+    closable: true,
+  })
 </script>
+
+<template>
+  <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+    <Button @click="handleSuccess" label="成功" />
+    <Button @click="handleError" label="错误" />
+    <Button @click="handleWarning" label="警告" />
+    <Button @click="handleInfo" label="信息" />
+    <Button @click="handleCustom" label="自定义" />
+  </div>
+</template>
 ```
+
+:::
 
 ## Nuxt 环境使用
 
 在 Nuxt 中，Message 涉及 DOM 操作，需要确保只在客户端执行：
 
+:::demo
+
 ```vue
 <script setup>
-import { useMessage } from "moongate-vue"
+import { useMessage, Button } from "moongate-vue"
 
 const message = useMessage()
 
 const handleSuccess = () => {
-  // 方式一：使用 import.meta.client
   if (import.meta.client) {
     message.success("操作成功")
   }
 }
 
 const handleError = () => {
-  // 方式二：使用 process.client
   if (process.client) {
     message.error("操作失败")
   }
@@ -58,10 +64,14 @@ const handleError = () => {
 </script>
 
 <template>
-  <Button @click="handleSuccess" label="成功" />
-  <Button @click="handleError" label="错误" />
+  <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+    <Button @click="handleSuccess" label="成功" />
+    <Button @click="handleError" label="错误" />
+  </div>
 </template>
 ```
+
+:::
 
 ### Nuxt 插件方式（推荐）
 
@@ -72,7 +82,7 @@ import { useMessage as useMessageCore } from "moongate-vue"
 
 export default defineNuxtPlugin(() => {
   const message = useMessageCore()
-  
+
   return {
     provide: {
       message,
@@ -85,10 +95,14 @@ export default defineNuxtPlugin(() => {
 
 ```vue
 <script setup>
-const { $message } = useNuxtApp()
+import { Button } from "moongate-vue"
+
+// 在 Nuxt 环境中使用 $message
+// const { $message } = useNuxtApp()
 
 const handleClick = () => {
-  $message.success("操作成功")
+  // $message.success("操作成功")
+  console.log("在 Nuxt 环境中，$message 可用")
 }
 </script>
 
@@ -101,21 +115,52 @@ const handleClick = () => {
 
 ## 组件式调用
 
+:::demo
+
 ```vue
-<Button @click="show = true" label="显示消息" />
-<Message v-model="show" message="操作成功" type="success" />
+<script setup>
+import { ref } from "vue"
+import { Button, Message } from "moongate-vue"
+
+const show = ref(false)
+</script>
+
+<template>
+  <div>
+    <Button @click="show = true" label="显示消息" />
+    <Message v-model="show" message="操作成功" type="success" />
+  </div>
+</template>
 ```
+
+:::
 
 ## 自定义图标
 
+:::demo
+
 ```vue
-<Message v-model="show" type="success">
-  <template #icon>
-    <span>🎉</span>
-  </template>
-  自定义图标
-</Message>
+<script setup>
+import { ref } from "vue"
+import { Button, Message } from "moongate-vue"
+
+const show = ref(false)
+</script>
+
+<template>
+  <div>
+    <Button @click="show = true" label="显示自定义消息" />
+    <Message v-model="show" type="success">
+      <template #icon>
+        <span>🎉</span>
+      </template>
+      自定义图标
+    </Message>
+  </div>
+</template>
 ```
+
+:::
 
 ## API
 
@@ -168,12 +213,12 @@ const handleClick = () => {
 
 ## Message vs Toast
 
-| 特性     | Message      | Toast        |
-| -------- | ------------ | ------------ |
-| 位置     | 顶部居中     | 右上角       |
-| 动画     | 淡入淡出     | 右侧滑入     |
-| 使用场景 | 常规操作反馈 | 轻量提示     |
-| 持久化   | 自动消失     | 自动消失     |
+| 特性     | Message      | Toast    |
+| -------- | ------------ | -------- |
+| 位置     | 顶部居中     | 右上角   |
+| 动画     | 淡入淡出     | 右侧滑入 |
+| 使用场景 | 常规操作反馈 | 轻量提示 |
+| 持久化   | 自动消失     | 自动消失 |
 
 ## 注意事项
 

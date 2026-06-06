@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: "Hero" })
+defineOptions({ name: "Hero", inheritAttrs: false })
 
 interface Props {
   title?: string

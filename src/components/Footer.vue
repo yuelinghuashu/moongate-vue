@@ -3,3 +3,7 @@
     <slot />
   </footer>
 </template>
+
+<script setup>
+defineOptions({ name: "Footer", inheritAttrs: false })
+</script>

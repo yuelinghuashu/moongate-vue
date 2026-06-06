@@ -4,36 +4,86 @@
 
 ## 基础用法
 
+:::demo
+
 ```vue
-<Divider />
+<template>
+  <div>
+    <p>上方内容</p>
+    <Divider />
+    <p>下方内容</p>
+  </div>
+</template>
+
+<script setup>
+import { Divider } from "moongate-vue"
+</script>
 ```
+
+:::
 
 ## 虚线
 
+:::demo
+
 ```vue
-<Divider dashed />
+<template>
+  <div>
+    <p>上方内容</p>
+    <Divider dashed />
+    <p>下方内容</p>
+  </div>
+</template>
+
+<script setup>
+import { Divider } from "moongate-vue"
+</script>
 ```
+
+:::
 
 ## 带文字
 
+:::demo
+
 ```vue
-<Divider>分隔文字</Divider>
-<Divider dashed>虚线分隔</Divider>
+<template>
+  <div style="display: flex; flex-direction: column; gap: 24px;">
+    <Divider>分隔文字</Divider>
+    <Divider dashed>虚线分隔</Divider>
+  </div>
+</template>
+
+<script setup>
+import { Divider } from "moongate-vue"
+</script>
 ```
+
+:::
 
 ## 垂直分割线
 
 用于按钮组、面包屑等内联场景。
 
+:::demo
+
 ```vue
-<div class="flex items-center gap-2">
-  <span>首页</span>
-  <Divider vertical />
-  <span>关于</span>
-  <Divider vertical />
-  <span>联系</span>
-</div>
+<template>
+  <div style="display: flex; align-items: center; gap: 12px;">
+    <span>首页</span>
+    <Divider vertical />
+    <span>关于</span>
+    <Divider vertical />
+    <span>联系</span>
+  </div>
+</template>
+
+<script setup>
+import { Divider } from "moongate-vue"
+</script>
 ```
+
+:::
 
 ## API
 

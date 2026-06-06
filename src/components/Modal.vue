@@ -3,7 +3,11 @@
     <div
       v-if="modelValue"
       v-bind="attrsWithoutClass"
-      :class="['mg-modal-overlay', mergedClass, { 'mg-modal-overlay-open': modelValue }]"
+      :class="[
+        'mg-modal-overlay',
+        mergedClass,
+        { 'mg-modal-overlay-open': modelValue },
+      ]"
       @click.self="handleOverlayClick"
     >
       <div
@@ -43,6 +47,8 @@
 </template>
 
 <script setup lang="ts">
+defineOptions({ name: "Modal", inheritAttrs: false })
+
 import { watch } from "vue"
 import { useAttrsWithClass } from "../composables/useAttrsWithClass"
 
@@ -62,10 +68,6 @@ const props = withDefaults(defineProps<Props>(), {
   size: "md",
   closable: true,
   closeOnOverlay: true,
-})
-
-defineOptions({
-  inheritAttrs: false,
 })
 
 const emit = defineEmits<{

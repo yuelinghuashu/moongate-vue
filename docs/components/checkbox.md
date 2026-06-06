@@ -6,29 +6,55 @@
 
 ## 基础用法
 
+:::demo
+
 ```vue
-<Checkbox label="同意用户协议" />
+<template>
+  <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+    <Checkbox label="同意用户协议" />
+  </div>
+</template>
+
+<script setup>
+import { Checkbox } from "moongate-vue"
+</script>
 ```
+
+:::
 
 ## v-model 绑定
 
+:::demo
+
 ```vue
 <script setup>
+import { ref } from "vue"
+import { Checkbox } from "moongate-vue"
+
 const agreed = ref(false)
 </script>
 
 <template>
-  <Checkbox v-model="agreed" label="我已阅读并同意" />
-  <p>当前状态: {{ agreed ? "✅ 已同意" : "⬜ 未同意" }}</p>
+  <div>
+    <Checkbox v-model="agreed" label="我已阅读并同意" />
+    <p>当前状态: {{ agreed ? "✅ 已同意" : "⬜ 未同意" }}</p>
+  </div>
 </template>
 ```
+
+:::
 
 ## 多选（数组模式）
 
 通过 `value` 属性实现多选，`v-model` 绑定数组。
 
+:::demo
+
 ```vue
 <script setup>
+import { ref } from "vue"
+import { Checkbox } from "moongate-vue"
+
 const colors = ref([])
 const options = [
   { label: "红色", value: "red" },
@@ -38,49 +64,104 @@ const options = [
 </script>
 
 <template>
-  <Checkbox
-    v-for="item in options"
-    :key="item.value"
-    v-model="colors"
-    :value="item.value"
-    :label="item.label"
-  />
-  <p>已选: {{ colors.join(", ") }}</p>
+  <div>
+    <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+      <Checkbox
+        v-for="item in options"
+        :key="item.value"
+        v-model="colors"
+        :value="item.value"
+        :label="item.label"
+      />
+    </div>
+    <p>已选: {{ colors.join(", ") }}</p>
+  </div>
 </template>
 ```
 
+:::
+
 ## 尺寸
 
+:::demo
+
 ```vue
-<Checkbox size="sm" label="小号" />
-<Checkbox size="md" label="中号" />
-<Checkbox size="lg" label="大号" />
+<template>
+  <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+    <Checkbox size="sm" label="小号" />
+    <Checkbox size="md" label="中号" />
+    <Checkbox size="lg" label="大号" />
+  </div>
+</template>
+
+<script setup>
+import { Checkbox } from "moongate-vue"
+</script>
 ```
+
+:::
 
 ## 禁用状态
 
+:::demo
+
 ```vue
-<Checkbox disabled label="已禁用" />
-<Checkbox disabled checked label="已禁用（选中）" />
+<template>
+  <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+    <Checkbox disabled label="已禁用" />
+    <Checkbox disabled checked label="已禁用（选中）" />
+  </div>
+</template>
+
+<script setup>
+import { Checkbox } from "moongate-vue"
+</script>
 ```
+
+:::
 
 ## 错误状态
 
 `error` 属性仅控制复选框边框颜色，不渲染错误消息。
 
+:::demo
+
 ```vue
-<Checkbox v-model="agree" :error="!agree" label="请同意后继续" />
+<script setup>
+import { ref } from "vue"
+import { Checkbox } from "moongate-vue"
+
+const agree = ref(false)
+</script>
+
+<template>
+  <div>
+    <Checkbox v-model="agree" :error="!agree" label="请同意后继续" />
+  </div>
+</template>
 ```
+
+:::
 
 ## 自定义标签（插槽）
 
+:::demo
+
 ```vue
-<Checkbox>
-  <span class="flex items-center gap-1">
-    我已阅读<a href="/terms" class="mg-link">《用户协议》</a>
-  </span>
-</Checkbox>
+<template>
+  <Checkbox>
+    <span style="display: flex; align-items: center; gap: 4px;">
+      我已阅读<a href="/terms" class="mg-link">《用户协议》</a>
+    </span>
+  </Checkbox>
+</template>
+
+<script setup>
+import { Checkbox } from "moongate-vue"
+</script>
 ```
+
+:::
 
 ## API
 

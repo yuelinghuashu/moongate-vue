@@ -4,43 +4,65 @@
 
 ## 基础用法
 
+:::demo
+
 ```vue
-<Container>
-  <p>内容区域自动居中，最大宽度 1024px</p>
-</Container>
+<template>
+  <Container>
+    <p>内容区域自动居中，最大宽度 1024px</p>
+  </Container>
+</template>
+
+<script setup>
+import { Container } from "moongate-vue"
+</script>
 ```
+
+:::
 
 ## 尺寸
 
+:::demo
+
 ```vue
-<Container size="sm">
-  <p>最大宽度 640px</p>
-</Container>
+<template>
+  <div style="display: flex; flex-direction: column; gap: 16px;">
+    <Container size="sm">
+      <p>最大宽度 640px</p>
+    </Container>
 
-<Container size="md">
-  <p>最大宽度 768px</p>
-</Container>
+    <Container size="md">
+      <p>最大宽度 768px</p>
+    </Container>
 
-<Container size="lg">
-  <p>最大宽度 1024px（默认）</p>
-</Container>
+    <Container size="lg">
+      <p>最大宽度 1024px（默认）</p>
+    </Container>
 
-<Container size="xl">
-  <p>最大宽度 1280px</p>
-</Container>
+    <Container size="xl">
+      <p>最大宽度 1280px</p>
+    </Container>
 
-<Container size="2xl">
-  <p>最大宽度 1536px</p>
-</Container>
+    <Container size="2xl">
+      <p>最大宽度 1536px</p>
+    </Container>
 
-<Container size="3xl">
-  <p>最大宽度 1920px</p>
-</Container>
+    <Container size="3xl">
+      <p>最大宽度 1920px</p>
+    </Container>
 
-<Container size="full">
-  <p>最大宽度 100%，占满整行</p>
-</Container>
+    <Container size="full">
+      <p>最大宽度 100%，占满整行</p>
+    </Container>
+  </div>
+</template>
+
+<script setup>
+import { Container } from "moongate-vue"
+</script>
 ```
+
+:::
 
 ## API
 

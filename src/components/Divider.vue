@@ -14,6 +14,8 @@
 </template>
 
 <script setup lang="ts">
+defineOptions({ name: "Divider", inheritAttrs: false })
+
 import { useSlots, computed } from "vue"
 
 const slots = useSlots()

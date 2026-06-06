@@ -15,21 +15,7 @@ pnpm add moongate-vue
 yarn add moongate-vue
 ```
 
-## 完整引入
-
-```js
-// main.js
-import { createApp } from 'vue'
-import MoongateUI from 'moongate-vue'
-import 'moongate-vue/style.css'
-import App from './App.vue'
-
-const app = createApp(App)
-app.use(MoongateUI)
-app.mount('#app')
-```
-
-## 按需引入
+## 按需导入
 
 ```vue
 <script setup>
@@ -40,5 +26,5 @@ import 'moongate-vue/style.css'
 
 ## 注意事项
 
-- 需要额外引入样式文件 `moongate-vue/style.css`
+- 需要额外导入样式文件 `moongate-vue/style.css`
 - 组件库支持 Tree Shaking，未使用的组件不会打包

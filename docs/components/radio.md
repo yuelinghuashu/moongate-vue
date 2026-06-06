@@ -6,23 +6,60 @@
 
 ## 基础用法
 
-```vue
-<Radio v-model="gender" value="male" label="男" />
-<Radio v-model="gender" value="female" label="女" />
-```
-
-## 默认选中
-
-```vue
-<Radio v-model="size" value="small" label="小号" />
-<Radio v-model="size" value="medium" label="中号" />
-<Radio v-model="size" value="large" label="大号" />
-```
-
-## v-for 循环
+:::demo
 
 ```vue
 <script setup>
+import { ref } from "vue"
+import { Radio } from "moongate-vue"
+
+const gender = ref("male")
+</script>
+
+<template>
+  <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+    <Radio v-model="gender" value="male" label="男" />
+    <Radio v-model="gender" value="female" label="女" />
+  </div>
+  <p style="margin-top: 12px;">当前选中: {{ gender }}</p>
+</template>
+```
+
+:::
+
+## 默认选中
+
+:::demo
+
+```vue
+<script setup>
+import { ref } from "vue"
+import { Radio } from "moongate-vue"
+
+const size = ref("medium")
+</script>
+
+<template>
+  <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+    <Radio v-model="size" value="small" label="小号" />
+    <Radio v-model="size" value="medium" label="中号" />
+    <Radio v-model="size" value="large" label="大号" />
+  </div>
+  <p style="margin-top: 12px;">当前选中: {{ size }}</p>
+</template>
+```
+
+:::
+
+## v-for 循环
+
+:::demo
+
+```vue
+<script setup>
+import { ref } from "vue"
+import { Radio } from "moongate-vue"
+
 const selected = ref("option1")
 const options = [
   { label: "选项一", value: "option1" },
@@ -32,44 +69,102 @@ const options = [
 </script>
 
 <template>
-  <Radio
-    v-for="item in options"
-    :key="item.value"
-    v-model="selected"
-    :value="item.value"
-    :label="item.label"
-  />
+  <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+    <Radio
+      v-for="item in options"
+      :key="item.value"
+      v-model="selected"
+      :value="item.value"
+      :label="item.label"
+    />
+  </div>
+  <p style="margin-top: 12px;">当前选中: {{ selected }}</p>
 </template>
 ```
 
+:::
+
 ## 尺寸
 
+:::demo
+
 ```vue
-<Radio v-model="radioSize" size="sm" value="sm" label="小号" />
-<Radio v-model="radioSize" size="md" value="md" label="中号" />
-<Radio v-model="radioSize" size="lg" value="lg" label="大号" />
+<script setup>
+import { ref } from "vue"
+import { Radio } from "moongate-vue"
+
+const radioSize = ref("md")
+</script>
+
+<template>
+  <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+    <Radio v-model="radioSize" size="sm" value="sm" label="小号" />
+    <Radio v-model="radioSize" size="md" value="md" label="中号" />
+    <Radio v-model="radioSize" size="lg" value="lg" label="大号" />
+  </div>
+  <p style="margin-top: 12px;">当前选中: {{ radioSize }}</p>
+</template>
 ```
+
+:::
 
 ## 禁用状态
 
+:::demo
+
 ```vue
-<Radio disabled value="disabled1" label="已禁用（未选中）" />
-<Radio
-  disabled
-  value="disabled2"
-  label="已禁用（选中）"
-  :model-value="disabledSelected"
-/>
+<script setup>
+import { ref } from "vue"
+import { Radio } from "moongate-vue"
+
+const disabledSelected = ref("disabled2")
+</script>
+
+<template>
+  <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+    <Radio disabled value="disabled1" label="已禁用（未选中）" />
+    <Radio
+      disabled
+      value="disabled2"
+      label="已禁用（选中）"
+      :model-value="disabledSelected"
+    />
+  </div>
+</template>
 ```
+
+:::
 
 ## 错误状态
 
 `error` 属性仅控制单选框边框颜色，不渲染错误消息。
 
+:::demo
+
 ```vue
-<Radio v-model="agree" value="yes" :error="!agree" label="请同意协议" />
-<span v-if="!agree" class="text-error text-sm">请勾选此选项</span>
+<script setup>
+import { ref } from "vue"
+import { Radio } from "moongate-vue"
+
+const agree = ref("")
+</script>
+
+<template>
+  <div>
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <Radio v-model="agree" value="yes" :error="!agree" label="请同意协议" />
+    </div>
+    <span
+      v-if="!agree"
+      style="color: var(--ui-error); font-size: 12px; margin-top: 4px; display: inline-block;"
+    >
+      请勾选此选项
+    </span>
+  </div>
+</template>
 ```
+
+:::
 
 ## API
 

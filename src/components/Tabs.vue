@@ -10,10 +10,10 @@
         v-for="(tab, index) in tabs"
         :key="index"
         class="mg-tab"
-        :class="{ 'mg-tab-active': activeIndex === index }"
+        :class="{ 'mg-tab-active': activeTab === index }"
         :disabled="tab.disabled"
         role="tab"
-        :aria-selected="activeIndex === index"
+        :aria-selected="activeTab === index"
         :aria-controls="`mg-tab-panel-${index}`"
         @click="handleTabClick(index)"
       >
@@ -26,10 +26,10 @@
     <template v-for="(tab, index) in tabs" :key="index">
       <div
         v-if="!lazy || (lazy && renderedPanels.has(index))"
-        v-show="activeIndex === index"
+        v-show="activeTab === index"
         :id="`mg-tab-panel-${index}`"
         class="mg-tab-panel"
-        :class="{ 'mg-tab-panel-active': activeIndex === index }"
+        :class="{ 'mg-tab-panel-active': activeTab === index }"
         role="tabpanel"
         :aria-labelledby="`mg-tab-${index}`"
       >
@@ -42,10 +42,12 @@
 </template>
 
 <script setup lang="ts">
+defineOptions({ name: "tabs", inheritAttrs: false })
+
 import { ref, watch } from "vue"
 
-type TabSize = "sm" | "md" | "lg"
-type TabVariant = "line" | "card"
+type Size = "sm" | "md" | "lg"
+type Variant = "line" | "card"
 
 export interface TabItem {
   label: string
@@ -57,8 +59,8 @@ export interface TabItem {
 interface Props {
   tabs?: TabItem[]
   modelValue?: number
-  size?: TabSize
-  variant?: TabVariant
+  size?: Size
+  variant?: Variant
   lazy?: boolean
 }
 
@@ -75,24 +77,23 @@ const emit = defineEmits<{
   change: [index: number, tab: TabItem]
 }>()
 
-// 当前激活的标签索引
-const activeIndex = ref(props.modelValue)
+const activeTab = ref(props.modelValue)
 
 // 记录已渲染过的面板索引（用于懒加载）
-const renderedPanels = ref<Set<number>>(new Set([activeIndex.value]))
+const renderedPanels = ref<Set<number>>(new Set([activeTab.value]))
 
-// 监听外部 v-model 变化，同步内部状态
+// 监听外部 v-model 变化
 watch(
   () => props.modelValue,
   (val) => {
-    if (val !== activeIndex.value) {
-      activeIndex.value = val
+    if (val !== activeTab.value) {
+      activeTab.value = val
     }
   },
 )
 
 // 监听内部变化，同步到外部并记录渲染
-watch(activeIndex, (val) => {
+watch(activeTab, (val) => {
   if (val !== props.modelValue) {
     emit("update:modelValue", val)
   }
@@ -102,18 +103,10 @@ watch(activeIndex, (val) => {
   }
 })
 
-/**
- * 处理标签点击
- * @param index - 点击的标签索引
- */
 const handleTabClick = (index: number) => {
-  // 禁用状态不可点击
   if (props.tabs[index]?.disabled) return
-  // 已激活无需重复点击
-  if (activeIndex.value === index) return
-  // 更新激活索引
-  activeIndex.value = index
-  // 触发 change 事件
+  if (activeTab.value === index) return
+  activeTab.value = index
   emit("change", index, props.tabs[index])
 }
 </script>

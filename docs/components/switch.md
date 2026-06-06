@@ -4,42 +4,126 @@
 
 ## 基础用法
 
+:::demo
+
 ```vue
-<Switch v-model="darkMode" label="深色模式" />
+<script setup>
+import { ref } from "vue"
+import { Switch } from "moongate-vue"
+
+const darkMode = ref(false)
+</script>
+
+<template>
+  <div>
+    <Switch v-model="darkMode" label="深色模式" />
+    <p style="margin-top: 12px;">当前状态: {{ darkMode ? "开启" : "关闭" }}</p>
+  </div>
+</template>
 ```
+
+:::
 
 ## 尺寸
 
+:::demo
+
 ```vue
-<Switch v-model="value" size="sm" label="小号" />
-<Switch v-model="value" size="md" label="中号" />
-<Switch v-model="value" size="lg" label="大号" />
+<script setup>
+import { ref } from "vue"
+import { Switch } from "moongate-vue"
+
+const valueSm = ref(false)
+const valueMd = ref(false)
+const valueLg = ref(false)
+</script>
+
+<template>
+  <div style="display: flex; flex-direction: column; gap: 16px;">
+    <Switch v-model="valueSm" size="sm" label="小号" />
+    <Switch v-model="valueMd" size="md" label="中号" />
+    <Switch v-model="valueLg" size="lg" label="大号" />
+  </div>
+</template>
 ```
+
+:::
 
 ## 禁用状态
 
+:::demo
+
 ```vue
-<Switch disabled label="已禁用" />
-<Switch disabled :model-value="true" label="已禁用（开启）" />
+<script setup>
+import { Switch } from "moongate-vue"
+</script>
+
+<template>
+  <div style="display: flex; gap: 24px; align-items: center; flex-wrap: wrap;">
+    <Switch disabled label="已禁用" />
+    <Switch disabled :model-value="true" label="已禁用（开启）" />
+  </div>
+</template>
 ```
+
+:::
 
 ## 错误状态
 
 `error` 属性仅控制开关边框颜色，不渲染错误消息。
 
+:::demo
+
 ```vue
-<Switch v-model="agree" :error="!agree" label="请同意协议" />
+<script setup>
+import { ref } from "vue"
+import { Switch } from "moongate-vue"
+
+const agree = ref(false)
+</script>
+
+<template>
+  <div>
+    <Switch v-model="agree" :error="!agree" label="请同意协议" />
+    <span
+      v-if="!agree"
+      style="color: var(--ui-error); font-size: 12px; margin-top: 4px; display: inline-block;"
+    >
+      请同意协议
+    </span>
+  </div>
+</template>
 ```
+
+:::
 
 ## 自定义标签（插槽）
 
+:::demo
+
 ```vue
-<Switch v-model="notifications">
-  <template #label>
-    <span class="flex items-center gap-1">🔔 接收通知</span>
-  </template>
-</Switch>
+<script setup>
+import { ref } from "vue"
+import { Switch } from "moongate-vue"
+
+const notifications = ref(false)
+</script>
+
+<template>
+  <Switch v-model="notifications">
+    <template #label>
+      <span style="display: flex; align-items: center; gap: 4px;"
+        >🔔 接收通知</span
+      >
+    </template>
+  </Switch>
+  <p style="margin-top: 12px;">
+    通知状态: {{ notifications ? "开启" : "关闭" }}
+  </p>
+</template>
 ```
+
+:::
 
 ## API
 

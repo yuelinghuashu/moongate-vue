@@ -3,7 +3,11 @@
     <div
       v-if="visible"
       v-bind="attrsWithoutClass"
-      :class="['mg-toast-container', mergedClass, { 'mg-toast-container-bottom': position === 'bottom' }]"
+      :class="[
+        'mg-toast-container',
+        mergedClass,
+        { 'mg-toast-container-bottom': position === 'bottom' },
+      ]"
     >
       <div
         class="mg-toast"
@@ -30,6 +34,8 @@
 </template>
 
 <script setup lang="ts">
+defineOptions({ name: "Toast", inheritAttrs: false })
+
 import { ref, watch, onMounted } from "vue"
 import { useAttrsWithClass } from "../composables/useAttrsWithClass"
 
@@ -55,8 +61,6 @@ const props = withDefaults(defineProps<Props>(), {
   position: "top",
   icon: "",
 })
-
-defineOptions({ inheritAttrs: false })
 
 const emit = defineEmits<{
   "update:modelValue": [value: boolean]

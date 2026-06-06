@@ -35,6 +35,8 @@
 </template>
 
 <script setup lang="ts">
+defineOptions({ name: "Tooltip", inheritAttrs: false })
+
 import { ref, computed, onUnmounted, onMounted } from "vue"
 import { useAttrsWithClass } from "../composables/useAttrsWithClass"
 
@@ -53,8 +55,6 @@ const props = withDefaults(defineProps<Props>(), {
   delay: 0,
   offset: 8,
 })
-
-defineOptions({ inheritAttrs: false })
 
 const visible = ref(false)
 let timer: ReturnType<typeof setTimeout> | null = null

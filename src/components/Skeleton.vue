@@ -46,6 +46,8 @@
 </template>
 
 <script setup lang="ts">
+defineOptions({ name: "Skeleton", inheritAttrs: false })
+
 import { computed } from "vue"
 
 type SkeletonType = "default" | "card" | "list"

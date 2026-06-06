@@ -71,6 +71,9 @@
 </template>
 
 <script setup lang="ts">
+defineOptions({ name: "Pagination", inheritAttrs: false })
+
+
 import { ref, nextTick } from "vue"
 
 type Size = "sm" | "md" | "lg"

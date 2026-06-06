@@ -4,60 +4,182 @@
 
 ## 基础用法
 
+:::demo
+
 ```vue
-<Button @click="open = true" label="打开弹窗" />
-<Modal v-model="open" title="提示">
-  <p>这是弹窗内容</p>
-</Modal>
+<script setup>
+import { ref } from "vue"
+import { Button, Modal } from "moongate-vue"
+
+const open = ref(false)
+</script>
+
+<template>
+  <div>
+    <Button @click="open = true" label="打开弹窗" />
+    <Modal v-model="open" title="提示">
+      <p>这是弹窗内容</p>
+    </Modal>
+  </div>
+</template>
 ```
+
+:::
 
 ## 尺寸
 
+:::demo
+
 ```vue
-<Modal v-model="open" title="小号" size="sm">...</Modal>
-<Modal v-model="open" title="中号" size="md">...</Modal>
-<Modal v-model="open" title="大号" size="lg">...</Modal>
-<Modal v-model="open" title="超大" size="xl">...</Modal>
+<script setup>
+import { ref } from "vue"
+import { Button, Modal } from "moongate-vue"
+
+const openSm = ref(false)
+const openMd = ref(false)
+const openLg = ref(false)
+const openXl = ref(false)
+</script>
+
+<template>
+  <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+    <Button @click="openSm = true" label="小号" />
+    <Button @click="openMd = true" label="中号" />
+    <Button @click="openLg = true" label="大号" />
+    <Button @click="openXl = true" label="超大" />
+
+    <Modal v-model="openSm" title="小号" size="sm">
+      <p>小号弹窗内容</p>
+    </Modal>
+    <Modal v-model="openMd" title="中号" size="md">
+      <p>中号弹窗内容</p>
+    </Modal>
+    <Modal v-model="openLg" title="大号" size="lg">
+      <p>大号弹窗内容</p>
+    </Modal>
+    <Modal v-model="openXl" title="超大" size="xl">
+      <p>超大弹窗内容</p>
+    </Modal>
+  </div>
+</template>
 ```
+
+:::
 
 ## 自定义底部按钮
 
+:::demo
+
 ```vue
-<Modal v-model="open" title="确认操作">
-  <p>确定要删除吗？</p>
-  <template #footer>
-    <Button variant="outline" @click="open = false" label="取消" />
-    <Button variant="filled" color="error" @click="handleConfirm" label="确认" />
-  </template>
-</Modal>
+<script setup>
+import { ref } from "vue"
+import { Button, Modal } from "moongate-vue"
+
+const open = ref(false)
+
+const handleConfirm = () => {
+  alert("已确认")
+  open.value = false
+}
+</script>
+
+<template>
+  <div>
+    <Button @click="open = true" label="打开弹窗" />
+    <Modal v-model="open" title="确认操作">
+      <p>确定要删除吗？</p>
+      <template #footer>
+        <Button variant="outline" @click="open = false" label="取消" />
+        <Button
+          variant="filled"
+          color="error"
+          @click="handleConfirm"
+          label="确认"
+        />
+      </template>
+    </Modal>
+  </div>
+</template>
 ```
+
+:::
 
 ## 自定义标题
 
+:::demo
+
 ```vue
-<Modal v-model="open">
-  <template #title>
-    <span class="flex items-center gap-2">🎉 自定义标题</span>
-  </template>
-  <p>弹窗内容</p>
-</Modal>
+<script setup>
+import { ref } from "vue"
+import { Button, Modal } from "moongate-vue"
+
+const open = ref(false)
+</script>
+
+<template>
+  <div>
+    <Button @click="open = true" label="打开弹窗" />
+    <Modal v-model="open">
+      <template #title>
+        <span style="display: flex; align-items: center; gap: 8px;"
+          >🎉 自定义标题</span
+        >
+      </template>
+      <p>弹窗内容</p>
+    </Modal>
+  </div>
+</template>
 ```
+
+:::
 
 ## 无关闭按钮
 
+:::demo
+
 ```vue
-<Modal v-model="open" title="提示" :closable="false">
-  <p>这个弹窗没有关闭按钮</p>
-</Modal>
+<script setup>
+import { ref } from "vue"
+import { Button, Modal } from "moongate-vue"
+
+const open = ref(false)
+</script>
+
+<template>
+  <div>
+    <Button @click="open = true" label="打开弹窗" />
+    <Modal v-model="open" title="提示" :closable="false">
+      <p>这个弹窗没有关闭按钮</p>
+    </Modal>
+  </div>
+</template>
 ```
+
+:::
 
 ## 禁用点击遮罩层关闭
 
+:::demo
+
 ```vue
-<Modal v-model="open" title="提示" :close-on-overlay="false">
-  <p>点击遮罩层不会关闭</p>
-</Modal>
+<script setup>
+import { ref } from "vue"
+import { Button, Modal } from "moongate-vue"
+
+const open = ref(false)
+</script>
+
+<template>
+  <div>
+    <Button @click="open = true" label="打开弹窗" />
+    <Modal v-model="open" title="提示" :close-on-overlay="false">
+      <p>点击遮罩层不会关闭</p>
+    </Modal>
+  </div>
+</template>
 ```
+
+:::
 
 ## API
 

@@ -9,6 +9,8 @@
 </template>
 
 <script setup lang="ts">
+defineOptions({ name: "Header", inheritAttrs: false })
+
 interface Props {
   sticky?: boolean
 }

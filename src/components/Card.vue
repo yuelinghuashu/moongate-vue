@@ -22,6 +22,8 @@
 </template>
 
 <script setup lang="ts">
+defineOptions({ name: "Card", inheritAttrs: false })
+
 import { useSlots, computed } from "vue"
 import { useAttrsWithClass } from "../composables/useAttrsWithClass"
 
@@ -43,8 +45,6 @@ const props = withDefaults(defineProps<Props>(), {
   hideBody: false,
   hideFooter: false,
 })
-
-defineOptions({ inheritAttrs: false })
 
 const { attrsWithoutClass, mergedClass } = useAttrsWithClass(() => ({
   "mg-card-hoverable": props.hoverable,

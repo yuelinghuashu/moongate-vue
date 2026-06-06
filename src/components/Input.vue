@@ -15,6 +15,8 @@
 </template>
 
 <script setup lang="ts">
+defineOptions({ name: "Input", inheritAttrs: false })
+
 type Size = "sm" | "md" | "lg"
 type InputType = "text" | "email" | "password" | "number" | "tel" | "url"
 

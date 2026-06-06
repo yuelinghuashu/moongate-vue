@@ -4,23 +4,33 @@
 
 ## 基础用法
 
+:::demo
+
 ```vue
-<Main>
-  <Container>
-    <article>
-      <h1>文章标题</h1>
-      <p>文章内容...</p>
-    </article>
-  </Container>
-</Main>
+<template>
+  <Main>
+    <Container>
+      <article>
+        <h1>文章标题</h1>
+        <p>文章内容...</p>
+      </article>
+    </Container>
+  </Main>
+</template>
+
+<script setup>
+import { Main, Container } from "moongate-vue"
+</script>
 ```
+
+:::
 
 ## API
 
 ### Slots
 
-| 名称 | 说明 |
-|------|------|
+| 名称      | 说明       |
+| --------- | ---------- |
 | `default` | 主内容区域 |
 
 ## 注意事项

@@ -4,22 +4,32 @@
 
 ## 基础用法
 
+:::demo
+
 ```vue
-<Footer>
-  <Container>
-    <div style="padding: 1.5rem 0; text-align: center;">
-      © 2026 Moongate. All rights reserved.
-    </div>
-  </Container>
-</Footer>
+<template>
+  <Footer>
+    <Container>
+      <div style="padding: 1.5rem 0; text-align: center;">
+        © 2026 Moongate. All rights reserved.
+      </div>
+    </Container>
+  </Footer>
+</template>
+
+<script setup>
+import { Footer, Container } from "moongate-vue"
+</script>
 ```
+
+:::
 
 ## API
 
 ### Slots
 
-| 名称 | 说明 |
-|------|------|
+| 名称      | 说明     |
+| --------- | -------- |
 | `default` | 底部内容 |
 
 ## 注意事项

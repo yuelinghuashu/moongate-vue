@@ -19,7 +19,8 @@ Moongate Vue 是一个受月亮启发的**极简 Vue 3 组件库**。设计令�
 
 | <img src="https://raw.githubusercontent.com/alrra/browser-logos/main/src/chrome/chrome_24x24.png" width="24px" height="24px" /> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/main/src/firefox/firefox_24x24.png" width="24px" height="24px" /> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/main/src/edge/edge_24x24.png" width="24px" height="24px" /> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/main/src/safari/safari_24x24.png" width="24px" height="24px" /> |
 |:---:|:---:|:---:|:---:|
-| Chrome ≥ 64 | Firefox ≥ 67 | Edge ≥ 79 | Safari ≥ 12 |
+| Chrome ≥ 111 | Firefox ≥ 113 | Edge ≥ 111 | Safari ≥ 16.2 |
+
 
 ## 贡献
 

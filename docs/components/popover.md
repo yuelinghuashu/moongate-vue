@@ -4,41 +4,81 @@
 
 ## 基础用法
 
+:::demo
+
 ```vue
-<Popover placement="bottom" :delay="100">
-  <template #trigger>
-    <Button>悬浮弹出</Button>
-  </template>
-  <template #content>
-    <div class="p-2">
-      <div class="py-1">选项一</div>
-      <div class="py-1">选项二</div>
-    </div>
-  </template>
-</Popover>
+<script setup>
+import { Popover, Button } from "moongate-vue"
+</script>
+
+<template>
+  <div style="padding: 40px;">
+    <Popover placement="bottom" :delay="100">
+      <template #trigger>
+        <Button>悬浮弹出</Button>
+      </template>
+      <template #content>
+        <div style="min-width: 120px;">
+          <div style="padding: 8px 12px;">选项一</div>
+          <div style="padding: 8px 12px;">选项二</div>
+          <div style="padding: 8px 12px;">选项三</div>
+        </div>
+      </template>
+    </Popover>
+  </div>
+</template>
 ```
+
+:::
 
 ## 语言切换示例
 
+:::demo
+
 ```vue
-<Popover placement="bottom" :delay="100" :hide-delay="200">
-  <template #trigger>
-    <Icon name="tabler:language" class="cursor-pointer" />
-  </template>
-  <template #content>
-    <div class="flex flex-col">
-      <button
-        v-for="lang in languages"
-        :key="lang.code"
-        class="px-4 py-2 text-left hover:bg-muted"
-        @click="setLanguage(lang.code)"
-      >
-        {{ lang.name }}
-      </button>
-    </div>
-  </template>
-</Popover>
+<script setup>
+import { ref } from "vue"
+import { Popover } from "moongate-vue"
+
+const languages = [
+  { code: "zh", name: "中文" },
+  { code: "en", name: "English" },
+  { code: "ja", name: "日本語" },
+]
+
+const currentLang = ref("zh")
+
+const setLanguage = (code) => {
+  currentLang.value = code
+  console.log(`切换到: ${code}`)
+}
+</script>
+
+<template>
+  <div style="padding: 40px;">
+    <Popover placement="bottom" :delay="100" :hide-delay="200">
+      <template #trigger>
+        <span style="cursor: pointer; font-size: 20px;">🌐</span>
+      </template>
+      <template #content>
+        <div style="display: flex; flex-direction: column; min-width: 100px;">
+          <button
+            v-for="lang in languages"
+            :key="lang.code"
+            style="padding: 8px 16px; text-align: left; background: none; border: none; cursor: pointer;"
+            @click="setLanguage(lang.code)"
+          >
+            {{ lang.name }}
+          </button>
+        </div>
+      </template>
+    </Popover>
+    <p style="margin-top: 16px;">当前语言: {{ currentLang }}</p>
+  </div>
+</template>
 ```
+
+:::
 
 ## 触发方式
 
@@ -52,19 +92,19 @@
 
 ### Props
 
-| 属性 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `placement` | `'top' \| 'bottom' \| 'left' \| 'right'` | `'bottom'` | 弹出位置 |
-| `delay` | `number` | `0` | 显示延迟（毫秒） |
-| `hideDelay` | `number` | `100` | 隐藏延迟（毫秒） |
-| `offset` | `number` | `8` | 与触发元素的偏移量（像素） |
+| 属性        | 类型                                     | 默认值     | 说明                       |
+| ----------- | ---------------------------------------- | ---------- | -------------------------- |
+| `placement` | `'top' \| 'bottom' \| 'left' \| 'right'` | `'bottom'` | 弹出位置                   |
+| `delay`     | `number`                                 | `0`        | 显示延迟（毫秒）           |
+| `hideDelay` | `number`                                 | `100`      | 隐藏延迟（毫秒）           |
+| `offset`    | `number`                                 | `8`        | 与触发元素的偏移量（像素） |
 
 ### Slots
 
-| 名称 | 说明 |
-|------|------|
+| 名称      | 说明                             |
+| --------- | -------------------------------- |
 | `trigger` | 触发元素（支持默认插槽作为后备） |
-| `content` | 弹出内容 |
+| `content` | 弹出内容                         |
 
 ## 注意事项
 

@@ -22,6 +22,8 @@
 </template>
 
 <script setup lang="ts">
+defineOptions({ name: "Checkbox", inheritAttrs: false })
+
 import { computed } from "vue"
 
 type Size = "sm" | "md" | "lg"

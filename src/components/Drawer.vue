@@ -45,6 +45,8 @@
 </template>
 
 <script setup lang="ts">
+defineOptions({ name: "Drawer", inheritAttrs: false })
+
 import { watch } from "vue"
 import { useAttrsWithClass } from "../composables/useAttrsWithClass"
 
@@ -73,10 +75,6 @@ const props = withDefaults(defineProps<Props>(), {
   title: "",
   closable: true,
   closeOnOverlay: true,
-})
-
-defineOptions({
-  inheritAttrs: false,
 })
 
 const emit = defineEmits<{
