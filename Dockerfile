@@ -3,6 +3,9 @@ FROM node:24-alpine AS builder
 
 WORKDIR /app
 
+# 安装 git（vitepress 需要）
+RUN apk add --no-cache git
+
 # 安装 pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
