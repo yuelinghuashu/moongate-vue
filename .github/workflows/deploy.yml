@@ -52,6 +52,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           envs: ACR_REGISTRY, ACR_USERNAME, ACR_PASSWORD
           script: |
+            # 如果发生错误，则退出
             set -e
 
             # 登录 ACR
