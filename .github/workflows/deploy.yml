@@ -61,15 +61,14 @@ jobs:
             # 拉取最新镜像
             docker pull $ACR_REGISTRY/moongate/moongate-vue:latest
 
-            # 停止并删除旧容器
-            docker stop moongate-vue || true
-            docker rm moongate-vue || true
+            # 强制删除旧容器（避免容器挂起导致的死锁）
+            docker rm -f moongate-vue || true
 
-            # 运行新容器
+            # 运行新容器（连接到博客的 Docker 网络）
             docker run -d \
               --name moongate-vue \
               --restart unless-stopped \
-              -p 3001:80 \
+              --network my-blog_blog-network \
               $ACR_REGISTRY/moongate/moongate-vue:latest
 
             # 清理旧镜像
