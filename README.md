@@ -168,4 +168,4 @@ Moongate Vue 基于完整的设计令牌系统：
 - [设计理念](https://moongate.top/docs/design-tokens-vs-atomic-css)
 - [实现细节](https://moongate.top/docs/css-first-component-library)
 - [Bundlephobia 分析](https://bundlephobia.com/package/moongate-vue)
-- [在线文档](https://vue.moongate.top) —— 组件 API、设计令牌、部署指南
+- [在线文档](https://vue.moongate.top)
