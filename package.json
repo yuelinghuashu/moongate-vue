@@ -1,6 +1,20 @@
 {
   "name": "moongate-vue",
-  "version": "1.2.0",
+  "version": "1.2.1",
+    "keywords": [
+    "vue",
+    "vue3",
+    "ui",
+    "component-library",
+    "design-system",
+    "css-variables",
+    "dark-mode",
+    "lightweight",
+    "zero-dependencies",
+    "moon-themed",
+    "vue-components",
+    "ui-framework"
+  ],
   "type": "module",
   "sideEffects": [
     "*.css"
