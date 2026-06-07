@@ -6,8 +6,6 @@ WORKDIR /app
 # 安装 pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-ENV PNPM_IGNORE_STORE_INTEGRITY=1
-
 # 复制依赖文件
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
