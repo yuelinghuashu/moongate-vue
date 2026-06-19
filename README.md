@@ -26,6 +26,12 @@ npm install moongate-vue
 pnpm add moongate-vue
 ```
 
+### 版本要求
+
+- **Vue**：`^3.3.0` 或更高版本
+
+> 如果你仍在使用 Vue 3.0 - 3.2，请使用 `moongate-vue@1.2.x` 版本。
+
 ## 快速开始
 
 ```vue
@@ -37,7 +43,11 @@ const message = useMessage()
 </script>
 
 <template>
-  <Button variant="filled" color="primary" @click="message.success('欢迎使用 Moongate')">
+  <Button
+    variant="filled"
+    color="primary"
+    @click="message.success('欢迎使用 Moongate')"
+  >
     月光按钮
   </Button>
 </template>
@@ -46,6 +56,7 @@ const message = useMessage()
 ## 📖 在线文档
 
 访问 [**Moongate Vue 官方文档**](https://vue.moongate.top) 查看：
+
 - 所有组件 API 与交互示例
 - 设计令牌与主题定制指南
 
@@ -55,61 +66,61 @@ const message = useMessage()
 
 ### 基础组件
 
-| 组件       | 说明     |
-| ---------- | -------- |
-| Button     | 按钮     |
-| Card       | 卡片     |
-| Badge      | 徽章     |
-| Divider    | 分割线   |
+| 组件    | 说明   |
+| ------- | ------ |
+| Button  | 按钮   |
+| Card    | 卡片   |
+| Badge   | 徽章   |
+| Divider | 分割线 |
 
 ### 表单组件
 
-| 组件     | 说明         |
-| -------- | ------------ |
-| Input    | 输入框       |
-| Textarea | 多行文本     |
-| Checkbox | 复选框       |
-| Radio    | 单选框       |
-| Switch   | 开关         |
-| Select   | 下拉选择     |
+| 组件     | 说明     |
+| -------- | -------- |
+| Input    | 输入框   |
+| Textarea | 多行文本 |
+| Checkbox | 复选框   |
+| Radio    | 单选框   |
+| Switch   | 开关     |
+| Select   | 下拉选择 |
 
 ### 数据展示组件
 
-| 组件       | 说明  |
-| ---------- | -----|
-| Table      | 表格  |
-| Pagination | 分页        |
+| 组件       | 说明   |
+| ---------- | ------ |
+| Table      | 表格   |
+| Pagination | 分页   |
 | Tabs       | 标签页 |
 
 ### 布局组件
 
-| 组件      | 说明         |
-| --------- | ------------ |
-| Container | 容器         |
-| Header    | 头部容器     |
-| Main      | 主内容容器   |
-| Footer    | 底部容器     |
-| Hero      | 英雄区       |
+| 组件      | 说明       |
+| --------- | ---------- |
+| Container | 容器       |
+| Header    | 头部容器   |
+| Main      | 主内容容器 |
+| Footer    | 底部容器   |
+| Hero      | 英雄区     |
 
 ### 反馈组件
 
-| 组件       | 说明      |
-| --------   | -------- |
-| Modal      | 模态框   |
-| Toast      | 通知      |
-| Message    | 消息提示  |
-| Tooltip    | 提示      |
-| Popover    | 弹出层     |
-| Drawer     | 抽屉       |
-| Skeleton   | 骨架屏    |
+| 组件     | 说明     |
+| -------- | -------- |
+| Modal    | 模态框   |
+| Toast    | 通知     |
+| Message  | 消息提示 |
+| Tooltip  | 提示     |
+| Popover  | 弹出层   |
+| Drawer   | 抽屉     |
+| Skeleton | 骨架屏   |
 
 ## 样式工具
 
 以下为全局样式类，无需导入 Vue 组件，直接使用类名即可：
 
-| 样式 | 类名 | 说明 |
-|------|------|------|
-| Link | `.mg-link` / `.nav-link` | 链接样式 |
+| 样式 | 类名                                              | 说明     |
+| ---- | ------------------------------------------------- | -------- |
+| Link | `.mg-link` / `.nav-link`                          | 链接样式 |
 | Code | `.mg-code` / `.mg-code-inline` / `.mg-code-block` | 代码样式 |
 
 > **说明**：总计 **25 个组件 + 2 个样式工具**，覆盖日常开发绝大多数场景。
