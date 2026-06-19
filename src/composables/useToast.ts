@@ -19,7 +19,13 @@ export interface ToastOptions {
 let toastContainer: HTMLDivElement | null = null
 let currentToastApp: ReturnType<typeof createApp> | null = null
 
+/** 检查是否在浏览器环境 */
+const isBrowser = typeof document !== 'undefined' && typeof window !== 'undefined'
+
 const showToast = (options: ToastOptions) => {
+  // SSR 环境下不执行
+  if (!isBrowser) return
+
   // 完全销毁之前的实例和容器
   if (currentToastApp) {
     currentToastApp.unmount()

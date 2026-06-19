@@ -1,5 +1,12 @@
 # 更新日志
 
+## [1.3.1] - 2026-06-19
+
+### 🐛 Bug 修复
+
+- **SSR 兼容性**：修复 Modal、Drawer、Popover、Tooltip 等组件在服务端渲染时访问 `document` 和 `window` 对象导致的 `document is not defined` 错误
+- **Toast / Message**：命令式调用在 SSR 环境下静默失败，不再抛出错误
+
 ## [1.3.0] - 2026-06-19
 
 ### 🚀 新特性

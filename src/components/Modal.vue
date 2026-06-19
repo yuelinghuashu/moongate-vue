@@ -86,6 +86,12 @@ const emit = defineEmits<{
 const { attrsWithoutClass, mergedClass } = useAttrsWithClass(() => ({}))
 
 /**
+ * 检查是否在浏览器环境
+ * SSR 时 document 不存在
+ */
+const isBrowser = typeof document !== 'undefined'
+
+/**
  * 监听 modelValue 变化
  * - 打开时：触发 open 事件，禁止 body 滚动
  * - 关闭时：触发 close 事件，恢复 body 滚动
@@ -93,6 +99,9 @@ const { attrsWithoutClass, mergedClass } = useAttrsWithClass(() => ({}))
 watch(
   () => modelValue.value,
   (val) => {
+    // SSR 环境下跳过 DOM 操作
+    if (!isBrowser) return
+
     if (val) {
       emit("open")
       document.body.style.overflow = "hidden"
@@ -109,6 +118,7 @@ watch(
  * 防止组件非正常卸载时 body 滚动锁死
  */
 onBeforeUnmount(() => {
+  if (!isBrowser) return
   document.body.style.overflow = ""
 })
 

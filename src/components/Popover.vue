@@ -38,42 +38,42 @@
 <script setup lang="ts">
 defineOptions({ name: "Popover" })
 
-
 import { ref, computed, onMounted, onUnmounted, nextTick } from "vue"
 
 // ==================== 类型定义 ====================
-/**
- * 弹出位置
- * - top: 上方
- * - bottom: 下方
- * - left: 左侧
- * - right: 右侧
- */
+
+/** 弹出层位置 */
 type Placement = "top" | "bottom" | "left" | "right"
 
-/**
- * 组件 Props 接口
- */
+/** 组件 Props 接口 */
 interface Props {
-  /** 弹出位置，默认 bottom */
+  /** 弹出层位置，默认 bottom */
   placement?: Placement
-  /** 显示延迟（毫秒），避免鼠标划过时误弹，默认 0 */
-  delay?: number
-  /** 隐藏延迟（毫秒），方便移入内容区，默认 100 */
+  /** 显示延迟时间（毫秒），避免鼠标划过时误弹，默认 0 */
+  showDelay?: number
+  /** 隐藏延迟时间（毫秒），方便移入内容区，默认 100 */
   hideDelay?: number
-  /** 与触发元素的偏移量（像素），默认 8 */
+  /** 弹出层与触发元素的偏移量（像素），默认 8 */
   offset?: number
 }
 
-// ==================== Props 默认值 ====================
+// ==================== Props ====================
+
 const props = withDefaults(defineProps<Props>(), {
   placement: "bottom",
-  delay: 0,
+  showDelay: 0,
   hideDelay: 100,
   offset: 8,
 })
 
+// ==================== SSR 环境判断 ====================
+
+/** 是否在浏览器环境（SSR 安全） */
+const isBrowser =
+  typeof window !== "undefined" && typeof document !== "undefined"
+
 // ==================== 响应式状态 ====================
+
 /** 弹出层是否可见 */
 const visible = ref(false)
 
@@ -89,24 +89,24 @@ const popoverRef = ref<HTMLElement | null>(null)
 
 /** 当前实际使用的弹出位置（可能因翻转而改变） */
 const currentPlacement = ref<Placement>(props.placement)
-
 /** 弹出层的位置坐标（相对于视口） */
 const popoverPosition = ref({ top: 0, left: 0 })
 
-/** 弹出层的动态样式，用于固定定位 */
+/** 弹出层的动态样式（固定定位） */
 const popoverStyle = computed(() => ({
   top: `${popoverPosition.value.top}px`,
   left: `${popoverPosition.value.left}px`,
 }))
 
 // ==================== 定时器管理 ====================
+
 /** 清除所有定时器 */
 const clearTimers = () => {
   if (showTimer) clearTimeout(showTimer)
   if (hideTimer) clearTimeout(hideTimer)
 }
 
-/** 取消隐藏定时器（鼠标移入内容区时调用） */
+/** 取消隐藏定时器（鼠标移入内容区时调用，防止误关闭） */
 const cancelHideTimer = () => {
   if (hideTimer) {
     clearTimeout(hideTimer)
@@ -123,6 +123,7 @@ const startHideTimer = () => {
 }
 
 // ==================== 显示/隐藏逻辑 ====================
+
 /**
  * 显示弹出层
  * 延迟后设置 visible=true，并在下一帧更新位置
@@ -134,7 +135,7 @@ const show = () => {
     visible.value = true
     await nextTick()
     updatePosition()
-  }, props.delay)
+  }, props.showDelay)
 }
 
 /**
@@ -153,11 +154,12 @@ const onMouseEnter = () => show()
 const onMouseLeave = () => startHideTimer()
 
 // ==================== 位置计算核心 ====================
+
 /**
- * 根据当前放置方向重新计算位置（用于翻转后的修正）
- * @param placement 目标放置方向
- * @param triggerRect 触发元素的边界矩形
- * @param popoverRect 弹出层的边界矩形
+ * 根据目标方向重新计算位置（用于翻转后的修正）
+ * @param placement - 目标放置方向
+ * @param triggerRect - 触发元素的边界矩形
+ * @param popoverRect - 弹出层的边界矩形
  */
 const recalculatePosition = (
   placement: Placement,
@@ -166,6 +168,7 @@ const recalculatePosition = (
 ) => {
   let top = 0
   let left = 0
+
   switch (placement) {
     case "top":
       top = triggerRect.top - popoverRect.height - props.offset
@@ -184,14 +187,17 @@ const recalculatePosition = (
       left = triggerRect.right + props.offset
       break
   }
+
   popoverPosition.value = { top, left }
 }
 
 /**
- * 更新弹出层位置（支持自动翻转和边界修正）
+ * 更新弹出层位置
+ * 支持自动翻转和边界修正，确保弹出层始终在视口内
  */
 const updatePosition = () => {
-  if (!triggerRef.value || !popoverRef.value) return
+  // SSR 环境或 DOM 未准备好时跳过
+  if (!isBrowser || !triggerRef.value || !popoverRef.value) return
 
   const triggerRect = triggerRef.value.getBoundingClientRect()
   const popoverRect = popoverRef.value.getBoundingClientRect()
@@ -237,19 +243,17 @@ const updatePosition = () => {
     popoverPosition.value = { top, left }
   }
 
-  // 3. 边界修正（确保弹出层完全在视口内，不超出边缘）
+  // 3. 边界修正（确保弹出层完全在视口内）
   const finalRect = popoverRef.value.getBoundingClientRect()
   let finalTop = top
   let finalLeft = left
 
-  // 水平方向修正
   if (finalLeft < 0) {
     finalLeft = 0
   } else if (finalLeft + finalRect.width > viewportWidth) {
     finalLeft = viewportWidth - finalRect.width
   }
 
-  // 垂直方向修正
   if (finalTop < 0) {
     finalTop = 0
   } else if (finalTop + finalRect.height > viewportHeight) {
@@ -260,28 +264,28 @@ const updatePosition = () => {
 }
 
 // ==================== 事件监听与生命周期 ====================
-/**
- * 滚动时更新位置
- */
+
+/** 滚动时更新弹出层位置 */
 const handleScroll = () => {
   if (visible.value) updatePosition()
 }
 
-/**
- * 窗口大小变化时更新位置
- */
+/** 窗口大小变化时更新弹出层位置 */
 const handleResize = () => {
   if (visible.value) updatePosition()
 }
 
+/** DOM 变化观察器（监听内容变动导致尺寸改变） */
 let observer: MutationObserver | null = null
 
 onMounted(() => {
-  // 监听滚动和窗口大小变化
+  // 只在浏览器环境执行
+  if (!isBrowser) return
+
   window.addEventListener("scroll", handleScroll, true)
   window.addEventListener("resize", handleResize)
 
-  // 监听 DOM 变化（例如内容变动导致尺寸改变）
+  // 监听 DOM 变化，内容变动时自动更新位置
   observer = new MutationObserver(() => {
     if (visible.value) updatePosition()
   })
@@ -289,10 +293,17 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  // 清理事件监听和 MutationObserver
+  // 只在浏览器环境执行清理
+  if (!isBrowser) return
+
   window.removeEventListener("scroll", handleScroll, true)
   window.removeEventListener("resize", handleResize)
-  if (observer) observer.disconnect()
+
+  if (observer) {
+    observer.disconnect()
+    observer = null
+  }
+
   clearTimers()
 })
 </script>
