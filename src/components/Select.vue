@@ -124,8 +124,6 @@ type Size = "sm" | "md" | "lg"
  * 组件 Props 接口
  */
 interface Props {
-  /** 选中的值（v-model） */
-  modelValue?: string | number
   /** 选项列表，支持对象数组、字符串数组、数字数组 */
   options?: any[]
   /** 占位文本 */
@@ -151,7 +149,6 @@ interface Props {
 // ==================== Props 默认值 ====================
 
 const props = withDefaults(defineProps<Props>(), {
-  modelValue: "",
   options: () => [],
   placeholder: "",
   size: "md",
@@ -161,14 +158,15 @@ const props = withDefaults(defineProps<Props>(), {
   valueKey: "value",
   filterable: false,
   emptyText: "暂无数据",
-  maxHeight: 240, // 默认最大高度 240px，约显示 6-8 个选项
+  maxHeight: 240,
 })
+
+/** v-model 双向绑定（当前选中的值） */
+const modelValue = defineModel<string | number>({ default: "" })
 
 // ==================== Emits 定义 ====================
 
 const emit = defineEmits<{
-  /** 值变化（v-model） */
-  "update:modelValue": [value: string | number]
   /** 值变化事件 */
   change: [value: string | number]
   /** 搜索输入事件 */
@@ -226,7 +224,7 @@ const getValue = (item: any): any => {
  */
 const isSelected = (item: any): boolean => {
   const itemValue = getValue(item)
-  return String(itemValue) === String(props.modelValue)
+  return String(itemValue) === String(modelValue.value)
 }
 
 /**
@@ -234,10 +232,10 @@ const isSelected = (item: any): boolean => {
  * 用于在搜索模式下显示选中项的标签
  */
 const selectedOption = computed(() => {
-  if (props.modelValue === undefined || props.modelValue === "") return null
+  if (modelValue.value === undefined || modelValue.value === "") return null
   return props.options.find((item) => {
     const itemValue = getValue(item)
-    return String(itemValue) === String(props.modelValue)
+    return String(itemValue) === String(modelValue.value)
   })
 })
 
@@ -361,7 +359,7 @@ const selectOption = (item: any) => {
   if (item.disabled) return
 
   const value = getValue(item)
-  emit("update:modelValue", value)
+  modelValue.value = value
   emit("change", value)
 
   // 选择后退出编辑模式，关闭下拉，清空搜索状态
@@ -444,7 +442,7 @@ const handleNativeChange = (event: Event) => {
   const finalValue =
     originalItem !== undefined ? getValue(originalItem) : rawValue
 
-  emit("update:modelValue", finalValue)
+  modelValue.value = finalValue
   emit("change", finalValue)
 }
 
@@ -455,7 +453,7 @@ const handleNativeChange = (event: Event) => {
  * 当父组件直接修改 modelValue 时，需要同步清空搜索文本
  */
 watch(
-  () => props.modelValue,
+  () => modelValue.value,
   () => {
     if (searchText.value) {
       searchText.value = ""

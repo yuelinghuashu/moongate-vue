@@ -22,34 +22,43 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: "Switch", inheritAttrs: false })
+defineOptions({ name: 'Switch', inheritAttrs: false })
 
-type Size = "sm" | "md" | "lg"
+type Size = 'sm' | 'md' | 'lg'
 
 interface Props {
-  modelValue?: boolean
+  /** 开关标签文字 */
   label?: string
+  /** 尺寸大小 */
   size?: Size
+  /** 是否禁用 */
   disabled?: boolean
+  /** 是否显示错误状态 */
   error?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  modelValue: false,
-  label: "",
-  size: "md",
+  label: '',
+  size: 'md',
   disabled: false,
   error: false,
 })
 
+/** v-model 双向绑定（开关状态） */
+const modelValue = defineModel<boolean>({ default: false })
+
 const emit = defineEmits<{
-  "update:modelValue": [value: boolean]
+  /** 值变化时触发（原生事件透传） */
   change: [event: Event]
 }>()
 
+/**
+ * 处理开关变化事件
+ * 更新 v-model 并透传原生 change 事件
+ */
 const handleChange = (event: Event) => {
   const target = event.target as HTMLInputElement
-  emit("update:modelValue", target.checked)
-  emit("change", event)
+  modelValue.value = target.checked
+  emit('change', event)
 }
 </script>

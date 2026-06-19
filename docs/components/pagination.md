@@ -15,7 +15,7 @@ const page = ref(1)
 </script>
 
 <template>
-  <Pagination v-model:current-page="page" :total-pages="10" />
+  <Pagination v-model="page" :total-pages="10" />
   <p style="margin-top: 12px; color: var(--ui-text-dim);">
     当前页码: {{ page }}
   </p>
@@ -43,15 +43,11 @@ const page2 = ref(1)
   <div style="display: flex; flex-direction: column; gap: 16px;">
     <div>
       <p style="margin-bottom: 8px;">显示快速跳转按钮（默认）</p>
-      <Pagination v-model:current-page="page1" :total-pages="50" />
+      <Pagination v-model="page1" :total-pages="50" />
     </div>
     <div>
       <p style="margin-bottom: 8px;">隐藏快速跳转按钮</p>
-      <Pagination
-        v-model:current-page="page2"
-        :total-pages="50"
-        :show-quick-jump="false"
-      />
+      <Pagination v-model="page2" :total-pages="50" :show-quick-jump="false" />
     </div>
   </div>
 </template>
@@ -78,7 +74,7 @@ const page = ref(1)
     <div>
       <p style="margin-bottom: 8px;">中文自定义</p>
       <Pagination
-        v-model:current-page="page"
+        v-model="page"
         :total-pages="50"
         prev-text="上一页"
         next-text="下一页"
@@ -89,7 +85,7 @@ const page = ref(1)
     <div>
       <p style="margin-bottom: 8px;">英文环境</p>
       <Pagination
-        v-model:current-page="page"
+        v-model="page"
         :total-pages="50"
         prev-text="Prev"
         next-text="Next"
@@ -119,9 +115,9 @@ const page3 = ref(1)
 
 <template>
   <div style="display: flex; flex-direction: column; gap: 16px;">
-    <Pagination v-model:current-page="page1" :total-pages="10" size="sm" />
-    <Pagination v-model:current-page="page2" :total-pages="10" size="md" />
-    <Pagination v-model:current-page="page3" :total-pages="10" size="lg" />
+    <Pagination v-model="page1" :total-pages="10" size="sm" />
+    <Pagination v-model="page2" :total-pages="10" size="md" />
+    <Pagination v-model="page3" :total-pages="10" size="lg" />
   </div>
 </template>
 ```
@@ -152,7 +148,7 @@ const page = ref(5)
 
 <template>
   <div>
-    <Pagination v-model:current-page="page" :total-pages="50" />
+    <Pagination v-model="page" :total-pages="50" />
     <p style="margin-top: 12px; color: var(--ui-text-dim);">
       提示：点击当前页码即可编辑，按回车或失去焦点跳转
     </p>
@@ -168,9 +164,9 @@ const page = ref(5)
 
 | 属性            | 类型                   | 默认值     | 说明                       |
 | --------------- | ---------------------- | ---------- | -------------------------- |
-| `currentPage`   | `number`               | —          | 当前页码（v-model）        |
-| `totalPages`    | `number`               | —          | 总页数                     |
-| `size`          | `'sm' \| 'md' \| 'lg'` | `'md'`     | 尺寸                       |
+| `v-model`       | `number`               | —          | 当前页码（双向绑定）       |
+| `totalPages`    | `number`               | —          | 总页数（必填）             |
+| `size`          | `'sm' \| 'md' \| 'lg'` | `'md'`     | 按钮尺寸                   |
 | `prevText`      | `string`               | `'上一页'` | 上一页按钮文字             |
 | `nextText`      | `string`               | `'下一页'` | 下一页按钮文字             |
 | `showQuickJump` | `boolean`              | `true`     | 是否显示快速跳转首尾页按钮 |
@@ -179,10 +175,9 @@ const page = ref(5)
 
 ### Events
 
-| 事件                 | 参数             | 说明                      |
-| -------------------- | ---------------- | ------------------------- |
-| `update:currentPage` | `(page: number)` | 页码变化时触发（v-model） |
-| `change`             | `(page: number)` | 页码变化时触发            |
+| 事件     | 参数             | 说明           |
+| -------- | ---------------- | -------------- |
+| `change` | `(page: number)` | 页码变化时触发 |
 
 ## 完整示例
 
@@ -204,7 +199,7 @@ const handleChange = (newPage) => {
 <template>
   <div>
     <Pagination
-      v-model:current-page="page"
+      v-model="page"
       :total-pages="total"
       size="md"
       prev-text="上一页"

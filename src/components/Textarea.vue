@@ -17,22 +17,20 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: "Textarea", inheritAttrs: false })
+defineOptions({ name: 'Textarea', inheritAttrs: false })
 
-import { ref } from "vue"
+import { ref } from 'vue'
 
-type Size = "sm" | "md" | "lg"
+type Size = 'sm' | 'md' | 'lg'
 
 interface Props {
-  /** 输入框的值（v-model） */
-  modelValue?: string
   /** 占位文本 */
   placeholder?: string
   /** 是否禁用 */
   disabled?: boolean
   /** 是否只读 */
   readonly?: boolean
-  /** 尺寸 */
+  /** 尺寸大小 */
   size?: Size
   /** 显示行数（默认 3 行） */
   rows?: number
@@ -41,41 +39,59 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  modelValue: "",
-  placeholder: "",
+  placeholder: '',
   disabled: false,
   readonly: false,
-  size: "md",
+  size: 'md',
   rows: 3,
   error: false,
 })
 
+/** v-model 双向绑定（文本框值） */
+const modelValue = defineModel<string>({ default: '' })
+
 const emit = defineEmits<{
-  "update:modelValue": [value: string]
+  /** 输入时触发（原生事件透传） */
   input: [event: Event]
+  /** 值变化时触发（原生事件透传） */
   change: [event: Event]
+  /** 获得焦点时触发（原生事件透传） */
   focus: [event: FocusEvent]
+  /** 失去焦点时触发（原生事件透传） */
   blur: [event: FocusEvent]
 }>()
 
 const textareaRef = ref<HTMLTextAreaElement>()
 
+/**
+ * 处理输入事件
+ * 更新 v-model 并透传原生 input 事件
+ */
 const handleInput = (event: Event) => {
   const target = event.target as HTMLTextAreaElement
-  emit("update:modelValue", target.value)
-  emit("input", event)
+  modelValue.value = target.value
+  emit('input', event)
 }
 
+/**
+ * 值变化事件透传
+ */
 const handleChange = (event: Event) => {
-  emit("change", event)
+  emit('change', event)
 }
 
+/**
+ * 失去焦点事件透传
+ */
 const handleBlur = (event: FocusEvent) => {
-  emit("blur", event)
+  emit('blur', event)
 }
 
+/**
+ * 获得焦点事件透传
+ */
 const handleFocus = (event: FocusEvent) => {
-  emit("focus", event)
+  emit('focus', event)
 }
 
 // 暴露 textarea 元素引用，方便外部操作（如手动聚焦）

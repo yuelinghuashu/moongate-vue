@@ -27,7 +27,7 @@ import { Button } from "moongate-vue"
 ```vue
 <template>
   <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-    <!-- 使用插槽（优先级更高，最灵活） -->
+    <!-- 使用插槽（优先级更高，更灵活） -->
     <Button>
       <template #icon>🔍</template>
       搜索
@@ -58,7 +58,16 @@ const IconHome = () => "🏠" // 临时占位，请替换为实际图标组件
 
 ```vue
 <template>
-  <Button loading label="提交中" />
+  <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+    <Button loading label="加载中" />
+    <Button loading :show-label-while-loading="true" label="加载中" />
+    <Button
+      loading
+      :show-label-while-loading="true"
+      loading-label="提交中..."
+      label="提交"
+    />
+  </div>
 </template>
 
 <script setup>
@@ -187,20 +196,24 @@ import { Button } from "moongate-vue"
 
 :::
 
+---
+
 ## API
 
 ### Props
 
-| 属性       | 类型                                             | 默认值      | 说明                      |
-| ---------- | ------------------------------------------------ | ----------- | ------------------------- |
-| `label`    | `string`                                         | `''`        | 按钮文字                  |
-| `variant`  | `'filled' \| 'outline'`                          | `'filled'`  | 视觉变体                  |
-| `color`    | `'primary' \| 'success' \| 'warning' \| 'error'` | `'primary'` | 主题色                    |
-| `size`     | `'sm' \| 'md' \| 'lg'`                           | `'md'`      | 按钮尺寸                  |
-| `disabled` | `boolean`                                        | `false`     | 是否禁用                  |
-| `loading`  | `boolean`                                        | `false`     | 是否加载中                |
-| `block`    | `boolean`                                        | `false`     | 是否为块级（宽度 100%）   |
-| `icon`     | `string \| Component`                            | —           | 图标（字符串或 Vue 组件） |
+| 属性名                  | 类型                                             | 默认值      | 说明                                     |
+| ----------------------- | ------------------------------------------------ | ----------- | ---------------------------------------- |
+| `label`                 | `string`                                         | `''`        | 按钮文字                                 |
+| `variant`               | `'filled' \| 'outline'`                          | `'filled'`  | 视觉变体                                 |
+| `color`                 | `'primary' \| 'success' \| 'warning' \| 'error'` | `'primary'` | 主题色                                   |
+| `size`                  | `'sm' \| 'md' \| 'lg'`                           | `'md'`      | 按钮尺寸                                 |
+| `disabled`              | `boolean`                                        | `false`     | 是否禁用                                 |
+| `loading`               | `boolean`                                        | `false`     | 是否加载中                               |
+| `block`                 | `boolean`                                        | `false`     | 是否为块级（宽度 100%）                  |
+| `icon`                  | `string \| Component`                            | —           | 图标（字符串或 Vue 组件）                |
+| `showLabelWhileLoading` | `boolean`                                        | `false`     | 加载时是否保留文字（默认只显示加载动画） |
+| `loadingLabel`          | `string`                                         | —           | 加载时的自定义文字（默认复用 `label`）   |
 
 ### Slots
 
@@ -215,9 +228,15 @@ import { Button } from "moongate-vue"
 | ------- | --------------------- | -------------------------------- |
 | `click` | `(event: MouseEvent)` | 点击回调（禁用或加载时不会触发） |
 
+---
+
 ## 注意事项
 
 - `label` prop 与默认插槽同时存在时，**默认插槽优先**
 - `icon` prop 与 `#icon` 插槽同时存在时，**插槽优先**
-- `loading` 状态下，按钮自动禁用，图标和文字会被加载动画替代
+- `loading` 状态下：
+  - 按钮自动禁用，`click` 事件不会触发
+  - 默认只显示加载动画，文字和图标均被隐藏
+  - 如需在加载时保留文字，可设置 `showLabelWhileLoading` 为 `true`
+  - 如需自定义加载时的文字，可设置 `loadingLabel`（例如 `"提交中..."`）
 - `icon` prop 支持传入 Vue 组件（如 `:icon="IconHome"`）或字符串（如 `icon="✓"`）

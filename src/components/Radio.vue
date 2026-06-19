@@ -30,16 +30,19 @@ import { computed } from "vue"
 type Size = "sm" | "md" | "lg"
 
 interface Props {
-  modelValue?: string | number
+  /** 单选框标签文字 */
   label?: string
+  /** 单选框的值 */
   value?: string | number
+  /** 尺寸大小 */
   size?: Size
+  /** 是否禁用 */
   disabled?: boolean
+  /** 是否显示错误状态 */
   error?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  modelValue: undefined,
   label: "",
   value: undefined,
   size: "md",
@@ -47,19 +50,30 @@ const props = withDefaults(defineProps<Props>(), {
   error: false,
 })
 
+/** v-model 双向绑定（当前选中的值） */
+const modelValue = defineModel<string | number>()
+
 const emit = defineEmits<{
-  "update:modelValue": [value: string | number]
+  /** 值变化时触发（原生事件透传） */
   change: [event: Event]
 }>()
 
+/**
+ * 计算当前单选框是否选中
+ * 当 modelValue 等于当前 value 时选中
+ */
 const isChecked = computed(() => {
-  return props.modelValue === props.value
+  return modelValue.value === props.value
 })
 
+/**
+ * 处理单选框变化事件
+ * 选中时更新 v-model 为当前 value
+ */
 const handleChange = (event: Event) => {
   const target = event.target as HTMLInputElement
   if (target.checked && props.value !== undefined) {
-    emit("update:modelValue", props.value)
+    modelValue.value = props.value
   }
   emit("change", event)
 }

@@ -1,7 +1,6 @@
 <template>
   <Teleport to="body">
     <div
-      v-if="visible"
       v-bind="attrsWithoutClass"
       :class="[
         'mg-toast-container',
@@ -9,111 +8,134 @@
         { 'mg-toast-container-bottom': position === 'bottom' },
       ]"
     >
-      <div
-        class="mg-toast"
-        :class="[`mg-toast-${type}`, { 'mg-toast-slide-out': isLeaving }]"
-      >
-        <span class="mg-toast-icon">
-          <slot name="icon">
-            <span v-if="icon">{{ icon }}</span>
-            <span v-else-if="type === 'success'">✓</span>
-            <span v-else-if="type === 'error'">✗</span>
-            <span v-else-if="type === 'warning'">⚠</span>
-            <span v-else-if="type === 'info'">ℹ</span>
-          </slot>
-        </span>
-        <span class="mg-toast-message">
-          <slot>{{ message }}</slot>
-        </span>
-        <button v-if="closable" class="mg-toast-close" @click="handleClose">
-          &times;
-        </button>
-      </div>
+      <Transition name="mg-toast">
+        <div
+          v-if="modelValue"
+          class="mg-toast"
+          :class="[`mg-toast-${type}`]"
+        >
+          <span class="mg-toast-icon">
+            <slot name="icon">
+              <span v-if="icon">{{ icon }}</span>
+              <span v-else-if="type === 'success'">✓</span>
+              <span v-else-if="type === 'error'">✗</span>
+              <span v-else-if="type === 'warning'">⚠</span>
+              <span v-else-if="type === 'info'">ℹ</span>
+            </slot>
+          </span>
+          <span class="mg-toast-message">
+            <slot>{{ message }}</slot>
+          </span>
+          <button v-if="closable" class="mg-toast-close" @click="handleClose">
+            &times;
+          </button>
+        </div>
+      </Transition>
     </div>
   </Teleport>
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: "Toast", inheritAttrs: false })
+defineOptions({ name: 'Toast', inheritAttrs: false })
 
-import { ref, watch, onMounted } from "vue"
-import { useAttrsWithClass } from "../composables/useAttrsWithClass"
+import { watch, onMounted, onBeforeUnmount } from 'vue'
+import { useAttrsWithClass } from '../composables/useAttrsWithClass'
 
-type ToastType = "success" | "error" | "warning" | "info"
-type ToastPosition = "top" | "bottom"
+type ToastType = 'success' | 'error' | 'warning' | 'info'
+type ToastPosition = 'top' | 'bottom'
 
 interface Props {
-  modelValue?: boolean
+  /** 消息内容 */
   message?: string
+  /** 消息类型 */
   type?: ToastType
+  /** 持续时间（毫秒），0 表示不自动关闭 */
   duration?: number
+  /** 是否显示关闭按钮 */
   closable?: boolean
+  /** 显示位置 */
   position?: ToastPosition
+  /** 自定义图标 */
   icon?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  modelValue: false,
-  message: "",
-  type: "info",
+  message: '',
+  type: 'info',
   duration: 3000,
   closable: false,
-  position: "top",
-  icon: "",
+  position: 'top',
+  icon: '',
 })
 
+/** v-model 双向绑定（控制显示/隐藏） */
+const modelValue = defineModel<boolean>({ default: false })
+
 const emit = defineEmits<{
-  "update:modelValue": [value: boolean]
+  /** 关闭事件 */
   close: []
 }>()
-
-const visible = ref(props.modelValue)
-const isLeaving = ref(false)
 
 // 处理外部属性透传（无内部动态类，仅合并外部 class）
 const { attrsWithoutClass, mergedClass } = useAttrsWithClass(() => ({}))
 
-watch(
-  () => props.modelValue,
-  (val) => {
-    if (val) {
-      visible.value = true
-      isLeaving.value = false
-      startTimer()
-    } else {
-      closeToast()
-    }
-  },
-)
-
 let timer: ReturnType<typeof setTimeout> | null = null
 
+/**
+ * 启动自动关闭定时器
+ */
 const startTimer = () => {
-  if (props.duration > 0) {
+  clearTimer()
+  if (props.duration > 0 && modelValue.value) {
     timer = setTimeout(() => {
-      closeToast()
+      handleClose()
     }, props.duration)
   }
 }
 
-const closeToast = () => {
-  isLeaving.value = true
-  setTimeout(() => {
-    visible.value = false
-    isLeaving.value = false
-    emit("update:modelValue", false)
-    emit("close")
-  }, 300)
+/**
+ * 清除定时器
+ */
+const clearTimer = () => {
+  if (timer) {
+    clearTimeout(timer)
+    timer = null
+  }
 }
 
+/**
+ * 关闭 Toast
+ * 由 Transition 组件自动处理 DOM 移除，只需修改 modelValue
+ */
 const handleClose = () => {
-  if (timer) clearTimeout(timer)
-  closeToast()
+  clearTimer()
+  modelValue.value = false
+  emit('close')
 }
 
+// 监听 modelValue 变化，控制定时器启停
+watch(
+  () => modelValue.value,
+  (val) => {
+    if (val) {
+      // 打开：启动自动关闭定时器
+      startTimer()
+    } else {
+      // 关闭：清除定时器
+      clearTimer()
+    }
+  },
+)
+
+// 组件挂载时，如果初始为显示状态，启动定时器
 onMounted(() => {
-  if (visible.value) {
+  if (modelValue.value) {
     startTimer()
   }
+})
+
+// 组件卸载时清理定时器
+onBeforeUnmount(() => {
+  clearTimer()
 })
 </script>

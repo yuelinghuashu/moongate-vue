@@ -73,17 +73,14 @@
 <script setup lang="ts">
 defineOptions({ name: "Pagination", inheritAttrs: false })
 
-
 import { ref, nextTick } from "vue"
 
 type Size = "sm" | "md" | "lg"
 
 interface Props {
-  /** 当前页码 */
-  currentPage: number
   /** 总页数 */
   totalPages: number
-  /** 尺寸 */
+  /** 尺寸大小 */
   size?: Size
   /** 上一页按钮文字 */
   prevText?: string
@@ -106,13 +103,16 @@ const props = withDefaults(defineProps<Props>(), {
   lastText: "»",
 })
 
+/** v-model 双向绑定（当前页码）*/
+const currentPage = defineModel<number>({ required: true })
+
 const emit = defineEmits<{
-  "update:currentPage": [page: number]
+  /** 页码变化时触发 */
   change: [page: number]
 }>()
 
 const isEditing = ref(false)
-const inputPage = ref(props.currentPage)
+const inputPage = ref(currentPage.value)
 const inputRef = ref<HTMLInputElement | null>(null)
 
 /**
@@ -123,8 +123,8 @@ const goToPage = (page: number) => {
   let newPage = page
   if (newPage < 1) newPage = 1
   if (newPage > props.totalPages) newPage = props.totalPages
-  if (newPage === props.currentPage) return
-  emit("update:currentPage", newPage)
+  if (newPage === currentPage.value) return
+  currentPage.value = newPage
   emit("change", newPage)
 }
 
@@ -132,8 +132,8 @@ const goToPage = (page: number) => {
  * 上一页
  */
 const goToPrev = () => {
-  if (props.currentPage > 1) {
-    goToPage(props.currentPage - 1)
+  if (currentPage.value > 1) {
+    goToPage(currentPage.value - 1)
   }
 }
 
@@ -141,8 +141,8 @@ const goToPrev = () => {
  * 下一页
  */
 const goToNext = () => {
-  if (props.currentPage < props.totalPages) {
-    goToPage(props.currentPage + 1)
+  if (currentPage.value < props.totalPages) {
+    goToPage(currentPage.value + 1)
   }
 }
 
@@ -162,10 +162,11 @@ const goToLast = () => {
 
 /**
  * 开始编辑页码
+ * 点击当前页码数字时，切换为输入框模式
  */
 const startEdit = () => {
   isEditing.value = true
-  inputPage.value = props.currentPage
+  inputPage.value = currentPage.value
   nextTick(() => {
     inputRef.value?.focus()
     inputRef.value?.select()
@@ -174,13 +175,14 @@ const startEdit = () => {
 
 /**
  * 提交跳转
+ * 输入框失去焦点或按下回车时，校验并跳转
  */
 const commitJump = () => {
   isEditing.value = false
   const newPage = parseInt(String(inputPage.value), 10)
 
   if (isNaN(newPage)) {
-    inputPage.value = props.currentPage
+    inputPage.value = currentPage.value
     return
   }
 

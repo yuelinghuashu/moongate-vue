@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: "tabs", inheritAttrs: false })
+defineOptions({ name: "Tabs", inheritAttrs: false })
 
 import { ref, watch } from "vue"
 
@@ -50,52 +50,79 @@ type Size = "sm" | "md" | "lg"
 type Variant = "line" | "card"
 
 export interface TabItem {
+  /** 标签文字 */
   label: string
+  /** 标签图标 */
   icon?: string
+  /** 标签内容 */
   content?: string
+  /** 是否禁用 */
   disabled?: boolean
 }
 
 interface Props {
+  /** 标签列表 */
   tabs?: TabItem[]
-  modelValue?: number
+  /** 尺寸大小 */
   size?: Size
+  /** 视觉变体 */
   variant?: Variant
+  /** 是否懒加载（只有激活的面板才会渲染内容） */
   lazy?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   tabs: () => [],
-  modelValue: 0,
   size: "md",
   variant: "line",
   lazy: false,
 })
 
+/**
+ * v-model 双向绑定（当前激活的标签索引）
+ * 使用 defineModel 替代 props.modelValue + emit('update:modelValue')
+ */
+const modelValue = defineModel<number>({ default: 0 })
+
 const emit = defineEmits<{
-  "update:modelValue": [value: number]
+  /** 标签切换时触发 */
   change: [index: number, tab: TabItem]
 }>()
 
-const activeTab = ref(props.modelValue)
+/**
+ * 当前激活的标签索引
+ * 使用 ref 存储内部状态，通过 watch 与 modelValue 双向同步
+ */
+const activeTab = ref(modelValue.value)
 
-// 记录已渲染过的面板索引（用于懒加载）
+/**
+ * 记录已渲染过的面板索引（用于懒加载）
+ * 初始时记录当前激活的面板
+ */
 const renderedPanels = ref<Set<number>>(new Set([activeTab.value]))
 
-// 监听外部 v-model 变化
+/**
+ * 监听外部 modelValue 变化，同步到内部 activeTab
+ */
 watch(
-  () => props.modelValue,
+  () => modelValue.value,
   (val) => {
     if (val !== activeTab.value) {
       activeTab.value = val
+      // 懒加载：外部切换时也要记录面板
+      if (props.lazy) {
+        renderedPanels.value.add(val)
+      }
     }
   },
 )
 
-// 监听内部变化，同步到外部并记录渲染
+/**
+ * 监听内部 activeTab 变化，同步到外部 modelValue
+ */
 watch(activeTab, (val) => {
-  if (val !== props.modelValue) {
-    emit("update:modelValue", val)
+  if (val !== modelValue.value) {
+    modelValue.value = val
   }
   // 懒加载：记录已渲染的面板
   if (props.lazy) {
@@ -103,10 +130,18 @@ watch(activeTab, (val) => {
   }
 })
 
+/**
+ * 处理标签点击
+ * @param index - 点击的标签索引
+ */
 const handleTabClick = (index: number) => {
+  // 禁用状态或已激活不处理
   if (props.tabs[index]?.disabled) return
   if (activeTab.value === index) return
+
+  // 更新激活索引（触发 watch 同步到外部）
   activeTab.value = index
+  // 触发 change 事件
   emit("change", index, props.tabs[index])
 }
 </script>
