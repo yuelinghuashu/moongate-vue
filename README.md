@@ -17,6 +17,7 @@ Moongate Vue 是一个受月亮启发的极简 Vue 3 组件库。设计令牌驱
 - ✨ **极简 API** — 每个组件 2-8 个 props，易学易用
 - 🚀 **零依赖** — 无需额外配置，开箱即用
 - 🎨 **代码美化** — 内置行内代码和代码块样式，适配深色/浅色模式
+- ⚡ **SSR 就绪** — 完美适配 Nuxt 4 / VitePress 等服务端渲染场景
 
 ## 安装
 
@@ -25,6 +26,8 @@ npm install moongate-vue
 # 或
 pnpm add moongate-vue
 ```
+
+> 💡 Moongate Vue 完全支持服务端渲染（SSR），可无缝集成 Nuxt 3 和 VitePress，无需额外配置。
 
 ### 版本要求
 
@@ -180,3 +183,17 @@ Moongate Vue 基于完整的设计令牌系统：
 - [实现细节](https://moongate.top/docs/css-first-component-library)
 - [Bundlephobia 分析](https://bundlephobia.com/package/moongate-vue)
 - [在线文档](https://vue.moongate.top)
+
+## ☕ 赞助支持
+
+<details>
+<summary>如果 Moongate Vue 帮你节省了开发时间，欢迎请我喝杯咖啡 ☕</summary>
+
+你的支持会让我更有动力持续维护、迭代新组件、完善文档。
+
+<img src="./assets/ali-pay.jpg" width="200" height="280" alt="支付宝收款码" />
+<img src="./assets/wechat-pay.jpg" width="200" height="280" alt="微信收款码" />
+
+> 赞助费用将用于组件维护、新功能开发与文档完善。感谢每一份心意 ❤️
+
+</details>

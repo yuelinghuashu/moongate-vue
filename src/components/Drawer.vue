@@ -54,8 +54,6 @@ type Placement = "left" | "right" | "top" | "bottom"
 type Size = "sm" | "md" | "lg" | "xl" | "full"
 
 interface Props {
-  /** 是否显示（v-model 双向绑定） */
-  modelValue?: boolean
   /** 抽屉弹出方向 */
   placement?: Placement
   /** 抽屉尺寸（宽度/高度） */
@@ -69,7 +67,6 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  modelValue: false,
   placement: "right",
   size: "md",
   title: "",
@@ -102,7 +99,7 @@ const handleKeydown = (event: KeyboardEvent) => {
  * 检查是否在浏览器环境
  * SSR 时 document 不存在
  */
-const isBrowser = typeof document !== 'undefined'
+const isBrowser = typeof document !== "undefined"
 
 /**
  * 监听 modelValue 变化
