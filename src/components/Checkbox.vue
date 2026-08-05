@@ -22,11 +22,11 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: "Checkbox", inheritAttrs: false })
+defineOptions({ name: 'Checkbox', inheritAttrs: false })
 
-import { computed } from "vue"
+import { computed } from 'vue'
 
-type Size = "sm" | "md" | "lg"
+type Size = 'sm' | 'md' | 'lg'
 
 interface Props {
   /** 复选框标签文字 */
@@ -42,9 +42,9 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  label: "",
+  label: '',
   value: undefined,
-  size: "md",
+  size: 'md',
   disabled: false,
   error: false,
 })

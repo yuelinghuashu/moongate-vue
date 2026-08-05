@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import { Input } from "moongate-vue"
+import { Input } from 'moongate-vue'
 </script>
 ```
 
@@ -28,10 +28,10 @@ import { Input } from "moongate-vue"
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Input } from "moongate-vue"
+import { ref } from 'vue'
+import { Input } from 'moongate-vue'
 
-const value = ref("")
+const value = ref('')
 </script>
 
 <template>
@@ -64,7 +64,7 @@ const value = ref("")
 </template>
 
 <script setup>
-import { Input } from "moongate-vue"
+import { Input } from 'moongate-vue'
 </script>
 ```
 
@@ -84,7 +84,7 @@ import { Input } from "moongate-vue"
 </template>
 
 <script setup>
-import { Input } from "moongate-vue"
+import { Input } from 'moongate-vue'
 </script>
 ```
 
@@ -100,25 +100,19 @@ import { Input } from "moongate-vue"
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Input } from "moongate-vue"
+import { ref } from 'vue'
+import { Input } from 'moongate-vue'
 
-const username = ref("")
-const usernameError = ref("用户名不能为空")
+const username = ref('')
+const usernameError = ref('用户名不能为空')
 </script>
 
 <template>
   <div style="display: flex; flex-direction: column; gap: 4px; width: 320px;">
-    <Input
-      v-model="username"
-      :error="!!usernameError"
-      placeholder="请输入用户名"
-    />
-    <span
-      v-if="usernameError"
-      style="color: var(--ui-error); font-size: 12px;"
-      >{{ usernameError }}</span
-    >
+    <Input v-model="username" :error="!!usernameError" placeholder="请输入用户名" />
+    <span v-if="usernameError" style="color: var(--ui-error); font-size: 12px;">
+      {{ usernameError }}
+    </span>
   </div>
 </template>
 ```
@@ -131,26 +125,19 @@ const usernameError = ref("用户名不能为空")
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Input } from "moongate-vue"
+import { ref } from 'vue'
+import { Input } from 'moongate-vue'
 
-const email = ref("")
-const emailError = ref("邮箱格式错误")
+const email = ref('')
+const emailError = ref('邮箱格式错误')
 </script>
 
 <template>
   <div style="display: flex; align-items: center; gap: 8px; width: 400px;">
-    <Input
-      v-model="email"
-      :error="!!emailError"
-      placeholder="请输入邮箱"
-      style="flex: 1;"
-    />
-    <span
-      v-if="emailError"
-      style="color: var(--ui-error); font-size: 12px; white-space: nowrap;"
-      >{{ emailError }}</span
-    >
+    <Input v-model="email" :error="!!emailError" placeholder="请输入邮箱" style="flex: 1;" />
+    <span v-if="emailError" style="color: var(--ui-error); font-size: 12px; white-space: nowrap;">
+      {{ emailError }}
+    </span>
   </div>
 </template>
 ```
@@ -174,7 +161,7 @@ const emailError = ref("邮箱格式错误")
 </template>
 
 <script setup>
-import { Input } from "moongate-vue"
+import { Input } from 'moongate-vue'
 </script>
 ```
 
@@ -194,7 +181,7 @@ import { Input } from "moongate-vue"
 </template>
 
 <script setup>
-import { Input } from "moongate-vue"
+import { Input } from 'moongate-vue'
 </script>
 ```
 

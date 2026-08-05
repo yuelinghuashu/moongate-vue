@@ -44,7 +44,7 @@
 
 /* 选中后的勾选图标（使用伪元素） */
 .mg-checkbox-input:checked + .mg-checkbox-box::after {
-  content: "";
+  content: '';
   width: 0.5rem;
   height: 0.5rem;
   background-color: white;

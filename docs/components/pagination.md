@@ -8,17 +8,15 @@
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Pagination } from "moongate-vue"
+import { ref } from 'vue'
+import { Pagination } from 'moongate-vue'
 
 const page = ref(1)
 </script>
 
 <template>
   <Pagination v-model="page" :total-pages="10" />
-  <p style="margin-top: 12px; color: var(--ui-text-dim);">
-    当前页码: {{ page }}
-  </p>
+  <p style="margin-top: 12px; color: var(--ui-text-dim);">当前页码: {{ page }}</p>
 </template>
 ```
 
@@ -32,8 +30,8 @@ const page = ref(1)
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Pagination } from "moongate-vue"
+import { ref } from 'vue'
+import { Pagination } from 'moongate-vue'
 
 const page1 = ref(1)
 const page2 = ref(1)
@@ -63,8 +61,8 @@ const page2 = ref(1)
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Pagination } from "moongate-vue"
+import { ref } from 'vue'
+import { Pagination } from 'moongate-vue'
 
 const page = ref(1)
 </script>
@@ -105,8 +103,8 @@ const page = ref(1)
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Pagination } from "moongate-vue"
+import { ref } from 'vue'
+import { Pagination } from 'moongate-vue'
 
 const page1 = ref(1)
 const page2 = ref(1)
@@ -140,8 +138,8 @@ const page3 = ref(1)
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Pagination } from "moongate-vue"
+import { ref } from 'vue'
+import { Pagination } from 'moongate-vue'
 
 const page = ref(5)
 </script>
@@ -185,8 +183,8 @@ const page = ref(5)
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Pagination } from "moongate-vue"
+import { ref } from 'vue'
+import { Pagination } from 'moongate-vue'
 
 const page = ref(1)
 const total = ref(50)
@@ -208,9 +206,7 @@ const handleChange = (newPage) => {
       last-text="尾页"
       @change="handleChange"
     />
-    <p style="margin-top: 12px; color: var(--ui-text-dim);">
-      当前页码: {{ page }}
-    </p>
+    <p style="margin-top: 12px; color: var(--ui-text-dim);">当前页码: {{ page }}</p>
   </div>
 </template>
 ```

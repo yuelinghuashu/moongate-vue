@@ -71,11 +71,11 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: "Pagination", inheritAttrs: false })
+defineOptions({ name: 'Pagination', inheritAttrs: false })
 
-import { ref, nextTick } from "vue"
+import { ref, nextTick } from 'vue'
 
-type Size = "sm" | "md" | "lg"
+type Size = 'sm' | 'md' | 'lg'
 
 interface Props {
   /** 总页数 */
@@ -95,12 +95,12 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  size: "md",
-  prevText: "上一页",
-  nextText: "下一页",
+  size: 'md',
+  prevText: '上一页',
+  nextText: '下一页',
   showQuickJump: true,
-  firstText: "«",
-  lastText: "»",
+  firstText: '«',
+  lastText: '»',
 })
 
 /** v-model 双向绑定（当前页码）*/
@@ -125,7 +125,7 @@ const goToPage = (page: number) => {
   if (newPage > props.totalPages) newPage = props.totalPages
   if (newPage === currentPage.value) return
   currentPage.value = newPage
-  emit("change", newPage)
+  emit('change', newPage)
 }
 
 /**

@@ -87,8 +87,7 @@
   border: var(--ui-physics-border-crease) solid var(--ui-border);
   border-radius: var(--ui-radius-none);
   color: var(--ui-text);
-  padding: var(--ui-spacing-sm) var(--ui-spacing-xl) var(--ui-spacing-sm)
-    var(--ui-spacing-sm);
+  padding: var(--ui-spacing-sm) var(--ui-spacing-xl) var(--ui-spacing-sm) var(--ui-spacing-sm);
   transition: border-color var(--ui-motion-duration-neural) ease;
   font-size: inherit;
   line-height: 1.4;
@@ -130,8 +129,7 @@
 
 /* 尺寸变体 - 搜索模式 */
 .mg-select-sm .mg-select-input {
-  padding: var(--ui-spacing-xs) var(--ui-spacing-xl) var(--ui-spacing-xs)
-    var(--ui-spacing-sm);
+  padding: var(--ui-spacing-xs) var(--ui-spacing-xl) var(--ui-spacing-xs) var(--ui-spacing-sm);
   font-size: var(--ui-typography-size-small);
 }
 .mg-select-sm .mg-select-arrow {
@@ -143,14 +141,12 @@
 }
 
 .mg-select-md .mg-select-input {
-  padding: var(--ui-spacing-sm) var(--ui-spacing-xl) var(--ui-spacing-sm)
-    var(--ui-spacing-md);
+  padding: var(--ui-spacing-sm) var(--ui-spacing-xl) var(--ui-spacing-sm) var(--ui-spacing-md);
   font-size: var(--ui-typography-size-body);
 }
 
 .mg-select-lg .mg-select-input {
-  padding: var(--ui-spacing-md) var(--ui-spacing-2xl) var(--ui-spacing-md)
-    var(--ui-spacing-lg);
+  padding: var(--ui-spacing-md) var(--ui-spacing-2xl) var(--ui-spacing-md) var(--ui-spacing-lg);
   font-size: 1.125rem;
 }
 .mg-select-lg .mg-select-arrow svg {
@@ -206,7 +202,8 @@
 /* 下拉动画 */
 .mg-select-dropdown-enter-active,
 .mg-select-dropdown-leave-active {
-  transition: opacity var(--ui-motion-duration-fluid) ease,
+  transition:
+    opacity var(--ui-motion-duration-fluid) ease,
     transform var(--ui-motion-duration-fluid) ease;
 }
 

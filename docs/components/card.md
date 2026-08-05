@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import { Card } from "moongate-vue"
+import { Card } from 'moongate-vue'
 </script>
 ```
 
@@ -46,7 +46,7 @@ import { Card } from "moongate-vue"
 </template>
 
 <script setup>
-import { Card, Button } from "moongate-vue"
+import { Card, Button } from 'moongate-vue'
 </script>
 ```
 
@@ -69,7 +69,7 @@ import { Card, Button } from "moongate-vue"
 </template>
 
 <script setup>
-import { Card } from "moongate-vue"
+import { Card } from 'moongate-vue'
 </script>
 ```
 
@@ -104,7 +104,7 @@ import { Card } from "moongate-vue"
 </template>
 
 <script setup>
-import { Card } from "moongate-vue"
+import { Card } from 'moongate-vue'
 </script>
 ```
 
@@ -130,9 +130,7 @@ import { Card } from "moongate-vue"
       <Card as="li" hoverable>
         <div style="display: flex; align-items: center; gap: 8px;">
           <span>《设计令牌与原子化 CSS》</span>
-          <span style="color: var(--text-dim, #666); font-size: 14px;"
-            >2026-04-19</span
-          >
+          <span style="color: var(--text-dim, #666); font-size: 14px;">2026-04-19</span>
         </div>
       </Card>
     </ul>
@@ -146,7 +144,7 @@ import { Card } from "moongate-vue"
 </template>
 
 <script setup>
-import { Card } from "moongate-vue"
+import { Card } from 'moongate-vue'
 </script>
 ```
 
@@ -167,11 +165,9 @@ import { Card } from "moongate-vue"
           style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;"
         >
           <Badge color="primary">P3</Badge>
-          <time
-            datetime="2026-04-20"
-            style="color: var(--text-dim, #666); font-size: 14px;"
-            >2026-04-20</time
-          >
+          <time datetime="2026-04-20" style="color: var(--text-dim, #666); font-size: 14px;">
+            2026-04-20
+          </time>
         </div>
         <RouterLink to="/post/1" class="mg-link" style="display: block;">
           <h2 style="margin: 0; font-size: 1.25rem; font-weight: 600;">
@@ -184,25 +180,18 @@ import { Card } from "moongate-vue"
         <p
           style="margin: 0; color: var(--text-dim, #666); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;"
         >
-          深入工业级构建脚本，掌握颜色标准化、WCAG
-          对比度校验、循环引用检测、自动生成 CSS 变量...
+          深入工业级构建脚本，掌握颜色标准化、WCAG 对比度校验、循环引用检测、自动生成 CSS 变量...
         </p>
       </RouterLink>
 
       <template #footer>
         <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px;">
-          <RouterLink
-            to="/tag/vue"
-            class="nav-link"
-            style="text-decoration: none;"
-            >#Vue</RouterLink
-          >
-          <RouterLink
-            to="/tag/css"
-            class="nav-link"
-            style="text-decoration: none;"
-            >#CSS</RouterLink
-          >
+          <RouterLink to="/tag/vue" class="nav-link" style="text-decoration: none;">
+            #Vue
+          </RouterLink>
+          <RouterLink to="/tag/css" class="nav-link" style="text-decoration: none;">
+            #CSS
+          </RouterLink>
         </div>
       </template>
     </Card>
@@ -210,7 +199,7 @@ import { Card } from "moongate-vue"
 </template>
 
 <script setup>
-import { Card, Badge } from "moongate-vue"
+import { Card, Badge } from 'moongate-vue'
 </script>
 ```
 

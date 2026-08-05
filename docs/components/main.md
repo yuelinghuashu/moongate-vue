@@ -19,7 +19,7 @@
 </template>
 
 <script setup>
-import { Main, Container } from "moongate-vue"
+import { Main, Container } from 'moongate-vue'
 </script>
 ```
 

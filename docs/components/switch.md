@@ -8,8 +8,8 @@
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Switch } from "moongate-vue"
+import { ref } from 'vue'
+import { Switch } from 'moongate-vue'
 
 const darkMode = ref(false)
 </script>
@@ -17,7 +17,7 @@ const darkMode = ref(false)
 <template>
   <div>
     <Switch v-model="darkMode" label="深色模式" />
-    <p style="margin-top: 12px;">当前状态: {{ darkMode ? "开启" : "关闭" }}</p>
+    <p style="margin-top: 12px;">当前状态: {{ darkMode ? '开启' : '关闭' }}</p>
   </div>
 </template>
 ```
@@ -30,8 +30,8 @@ const darkMode = ref(false)
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Switch } from "moongate-vue"
+import { ref } from 'vue'
+import { Switch } from 'moongate-vue'
 
 const valueSm = ref(false)
 const valueMd = ref(false)
@@ -55,7 +55,7 @@ const valueLg = ref(false)
 
 ```vue
 <script setup>
-import { Switch } from "moongate-vue"
+import { Switch } from 'moongate-vue'
 </script>
 
 <template>
@@ -76,8 +76,8 @@ import { Switch } from "moongate-vue"
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Switch } from "moongate-vue"
+import { ref } from 'vue'
+import { Switch } from 'moongate-vue'
 
 const agree = ref(false)
 </script>
@@ -103,8 +103,8 @@ const agree = ref(false)
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Switch } from "moongate-vue"
+import { ref } from 'vue'
+import { Switch } from 'moongate-vue'
 
 const notifications = ref(false)
 </script>
@@ -112,14 +112,10 @@ const notifications = ref(false)
 <template>
   <Switch v-model="notifications">
     <template #label>
-      <span style="display: flex; align-items: center; gap: 4px;"
-        >🔔 接收通知</span
-      >
+      <span style="display: flex; align-items: center; gap: 4px;">🔔 接收通知</span>
     </template>
   </Switch>
-  <p style="margin-top: 12px;">
-    通知状态: {{ notifications ? "开启" : "关闭" }}
-  </p>
+  <p style="margin-top: 12px;">通知状态: {{ notifications ? '开启' : '关闭' }}</p>
 </template>
 ```
 

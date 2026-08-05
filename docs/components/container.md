@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import { Container } from "moongate-vue"
+import { Container } from 'moongate-vue'
 </script>
 ```
 
@@ -58,7 +58,7 @@ import { Container } from "moongate-vue"
 </template>
 
 <script setup>
-import { Container } from "moongate-vue"
+import { Container } from 'moongate-vue'
 </script>
 ```
 
@@ -68,27 +68,27 @@ import { Container } from "moongate-vue"
 
 ### Props
 
-| 属性 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
+| 属性   | 类型                                                       | 默认值 | 说明         |
+| ------ | ---------------------------------------------------------- | ------ | ------------ |
 | `size` | `'sm' \| 'md' \| 'lg' \| 'xl' \| '2xl' \| '3xl' \| 'full'` | `'lg'` | 容器最大宽度 |
 
 ### Slots
 
-| 名称 | 说明 |
-|------|------|
+| 名称      | 说明     |
+| --------- | -------- |
 | `default` | 容器内容 |
 
 ## 尺寸对照表
 
-| 尺寸 | 最大宽度 | 适用场景 |
-|------|----------|----------|
-| `sm` | 640px | 窄内容（侧边栏） |
-| `md` | 768px | 平板 |
-| `lg` | 1024px | 笔记本（默认） |
-| `xl` | 1280px | 标准桌面 |
-| `2xl` | 1536px | 大屏幕 |
-| `3xl` | 1920px | 2K 屏幕 |
-| `full` | 100% | 全宽（无限制） |
+| 尺寸   | 最大宽度 | 适用场景         |
+| ------ | -------- | ---------------- |
+| `sm`   | 640px    | 窄内容（侧边栏） |
+| `md`   | 768px    | 平板             |
+| `lg`   | 1024px   | 笔记本（默认）   |
+| `xl`   | 1280px   | 标准桌面         |
+| `2xl`  | 1536px   | 大屏幕           |
+| `3xl`  | 1920px   | 2K 屏幕          |
+| `full` | 100%     | 全宽（无限制）   |
 
 ## 注意事项
 

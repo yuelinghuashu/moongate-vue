@@ -8,7 +8,7 @@
 
 ```vue
 <script setup>
-import { Popover, Button } from "moongate-vue"
+import { Popover, Button } from 'moongate-vue'
 </script>
 
 <template>
@@ -37,16 +37,16 @@ import { Popover, Button } from "moongate-vue"
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Popover } from "moongate-vue"
+import { ref } from 'vue'
+import { Popover } from 'moongate-vue'
 
 const languages = [
-  { code: "zh", name: "中文" },
-  { code: "en", name: "English" },
-  { code: "ja", name: "日本語" },
+  { code: 'zh', name: '中文' },
+  { code: 'en', name: 'English' },
+  { code: 'ja', name: '日本語' },
 ]
 
-const currentLang = ref("zh")
+const currentLang = ref('zh')
 
 const setLanguage = (code) => {
   currentLang.value = code

@@ -11,8 +11,9 @@
   z-index: var(--ui-z-index-modal, 1000);
   opacity: 0;
   visibility: hidden;
-  transition: opacity var(--ui-motion-duration-fluid, 300ms) ease,
-              visibility var(--ui-motion-duration-fluid, 300ms) ease;
+  transition:
+    opacity var(--ui-motion-duration-fluid, 300ms) ease,
+    visibility var(--ui-motion-duration-fluid, 300ms) ease;
 }
 
 .mg-modal-overlay-open {
@@ -28,7 +29,9 @@
   max-height: 80vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
   transform: scale(0.95);
   transition: transform var(--ui-motion-duration-fluid, 300ms) ease;
 }
@@ -114,7 +117,7 @@
     width: 95%;
     max-height: 90vh;
   }
-  
+
   .mg-modal-sm,
   .mg-modal-md,
   .mg-modal-lg,

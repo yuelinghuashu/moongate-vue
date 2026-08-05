@@ -3,8 +3,8 @@
 layout: home
 
 hero:
-  name: "Moongate Vue"
-  text: "极简 Vue 3 组件库"
+  name: 'Moongate Vue'
+  text: '极简 Vue 3 组件库'
   tagline: 推开月之门，10KB 的极简秩序。
   image:
     src: /logo.svg

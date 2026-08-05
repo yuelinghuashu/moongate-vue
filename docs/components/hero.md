@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import { Hero, Button } from "moongate-vue"
+import { Hero, Button } from 'moongate-vue'
 </script>
 ```
 
@@ -68,7 +68,7 @@ import { Hero, Button } from "moongate-vue"
 </template>
 
 <script setup>
-import { Hero } from "moongate-vue"
+import { Hero } from 'moongate-vue'
 </script>
 ```
 
@@ -78,18 +78,18 @@ import { Hero } from "moongate-vue"
 
 ### Props
 
-| 属性 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `title` | `string` | - | 标题文字 |
-| `description` | `string` | - | 描述文字 |
+| 属性          | 类型     | 默认值 | 说明     |
+| ------------- | -------- | ------ | -------- |
+| `title`       | `string` | -      | 标题文字 |
+| `description` | `string` | -      | 描述文字 |
 
 ### Slots
 
-| 名称 | 说明 |
-|------|------|
-| `title` | 自定义标题内容（优先级高于 `title` prop） |
+| 名称          | 说明                                            |
+| ------------- | ----------------------------------------------- |
+| `title`       | 自定义标题内容（优先级高于 `title` prop）       |
 | `description` | 自定义描述内容（优先级高于 `description` prop） |
-| `actions` | 操作区域，通常放置按钮 |
+| `actions`     | 操作区域，通常放置按钮                          |
 
 ## 响应式
 

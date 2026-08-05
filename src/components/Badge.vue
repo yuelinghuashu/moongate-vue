@@ -1,18 +1,14 @@
 <template>
-  <span
-    v-bind="$attrs"
-    class="mg-badge"
-    :class="[`mg-badge-${color}`, `mg-badge-${size}`]"
-  >
+  <span v-bind="$attrs" class="mg-badge" :class="[`mg-badge-${color}`, `mg-badge-${size}`]">
     <slot>{{ label }}</slot>
   </span>
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: "Badge", inheritAttrs: false })
+defineOptions({ name: 'Badge', inheritAttrs: false })
 
-type Color = "primary" | "success" | "warning" | "error"
-type Size = "sm" | "md"
+type Color = 'primary' | 'success' | 'warning' | 'error'
+type Size = 'sm' | 'md'
 
 interface Props {
   label?: string
@@ -21,8 +17,8 @@ interface Props {
 }
 
 withDefaults(defineProps<Props>(), {
-  label: "",
-  color: "primary",
-  size: "md",
+  label: '',
+  color: 'primary',
+  size: 'md',
 })
 </script>

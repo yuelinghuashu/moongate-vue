@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import { Divider } from "moongate-vue"
+import { Divider } from 'moongate-vue'
 </script>
 ```
 
@@ -36,7 +36,7 @@ import { Divider } from "moongate-vue"
 </template>
 
 <script setup>
-import { Divider } from "moongate-vue"
+import { Divider } from 'moongate-vue'
 </script>
 ```
 
@@ -55,7 +55,7 @@ import { Divider } from "moongate-vue"
 </template>
 
 <script setup>
-import { Divider } from "moongate-vue"
+import { Divider } from 'moongate-vue'
 </script>
 ```
 
@@ -79,7 +79,7 @@ import { Divider } from "moongate-vue"
 </template>
 
 <script setup>
-import { Divider } from "moongate-vue"
+import { Divider } from 'moongate-vue'
 </script>
 ```
 

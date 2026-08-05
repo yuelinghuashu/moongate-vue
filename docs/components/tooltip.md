@@ -16,7 +16,7 @@ Tooltip 提示组件，用于在鼠标悬停时显示提示信息。
 </template>
 
 <script setup>
-import { Tooltip, Button } from "moongate-vue"
+import { Tooltip, Button } from 'moongate-vue'
 </script>
 ```
 
@@ -45,7 +45,7 @@ import { Tooltip, Button } from "moongate-vue"
 </template>
 
 <script setup>
-import { Tooltip, Button } from "moongate-vue"
+import { Tooltip, Button } from 'moongate-vue'
 </script>
 ```
 
@@ -65,7 +65,7 @@ import { Tooltip, Button } from "moongate-vue"
 </template>
 
 <script setup>
-import { Tooltip, Button } from "moongate-vue"
+import { Tooltip, Button } from 'moongate-vue'
 </script>
 ```
 
@@ -93,7 +93,7 @@ import { Tooltip, Button } from "moongate-vue"
 </template>
 
 <script setup>
-import { Tooltip, Button } from "moongate-vue"
+import { Tooltip, Button } from 'moongate-vue'
 </script>
 ```
 
@@ -115,7 +115,7 @@ import { Tooltip, Button } from "moongate-vue"
 </template>
 
 <script setup>
-import { Tooltip, Button } from "moongate-vue"
+import { Tooltip, Button } from 'moongate-vue'
 </script>
 ```
 
@@ -125,19 +125,19 @@ import { Tooltip, Button } from "moongate-vue"
 
 ### Props
 
-| 属性 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `content` | `string` | `''` | 提示内容 |
-| `placement` | `'top' \| 'bottom' \| 'left' \| 'right'` | `'top'` | 提示位置 |
-| `delay` | `number` | `0` | 显示延迟（毫秒） |
-| `offset` | `number` | `8` | 与触发元素的偏移量（像素） |
+| 属性        | 类型                                     | 默认值  | 说明                       |
+| ----------- | ---------------------------------------- | ------- | -------------------------- |
+| `content`   | `string`                                 | `''`    | 提示内容                   |
+| `placement` | `'top' \| 'bottom' \| 'left' \| 'right'` | `'top'` | 提示位置                   |
+| `delay`     | `number`                                 | `0`     | 显示延迟（毫秒）           |
+| `offset`    | `number`                                 | `8`     | 与触发元素的偏移量（像素） |
 
 ### Slots
 
-| 名称 | 说明 |
-|------|------|
-| `trigger` | 触发元素（如使用默认插槽则自动包裹） |
-| `default` | 触发元素的默认插槽（优先级低于 `trigger`） |
+| 名称      | 说明                                        |
+| --------- | ------------------------------------------- |
+| `trigger` | 触发元素（如使用默认插槽则自动包裹）        |
+| `default` | 触发元素的默认插槽（优先级低于 `trigger`）  |
 | `content` | 自定义提示内容（优先级高于 `content` prop） |
 
 ## 注意事项

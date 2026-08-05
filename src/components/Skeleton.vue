@@ -35,25 +35,21 @@
         v-for="i in rows"
         :key="i"
         class="mg-skeleton-line"
-        :class="[
-          i === 1 && title
-            ? 'mg-skeleton-title'
-            : `mg-skeleton-line-${rowSize}`,
-        ]"
+        :class="[i === 1 && title ? 'mg-skeleton-title' : `mg-skeleton-line-${rowSize}`]"
       />
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: "Skeleton", inheritAttrs: false })
+defineOptions({ name: 'Skeleton', inheritAttrs: false })
 
-import { computed } from "vue"
+import { computed } from 'vue'
 
-type SkeletonType = "default" | "card" | "list"
-type AvatarType = "circle" | "square"
-type AvatarSize = "sm" | "md" | "lg"
-type RowSize = "sm" | "md" | "lg"
+type SkeletonType = 'default' | 'card' | 'list'
+type AvatarType = 'circle' | 'square'
+type AvatarSize = 'sm' | 'md' | 'lg'
+type RowSize = 'sm' | 'md' | 'lg'
 
 interface Props {
   type?: SkeletonType
@@ -69,19 +65,17 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  type: "default",
+  type: 'default',
   rows: 4,
   avatar: false,
-  avatarShape: "circle",
-  avatarSize: "md",
+  avatarShape: 'circle',
+  avatarSize: 'md',
   title: false,
-  rowSize: "md",
+  rowSize: 'md',
 })
 
 const avatarClass = computed(() => [
   `mg-skeleton-avatar-${props.avatarSize}`,
-  props.avatarShape === "circle"
-    ? "mg-skeleton-avatar-circle"
-    : "mg-skeleton-avatar-square",
+  props.avatarShape === 'circle' ? 'mg-skeleton-avatar-circle' : 'mg-skeleton-avatar-square',
 ])
 </script>

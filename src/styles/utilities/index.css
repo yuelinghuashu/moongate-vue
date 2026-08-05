@@ -24,11 +24,7 @@ ol {
 /* 月晕效果 */
 .mg-lunar-halo {
   box-shadow: 0 8px 24px -4px
-    color-mix(
-      in srgb,
-      var(--ui-primary),
-      transparent calc(100% - var(--ui-glow-alpha) * 100%)
-    );
+    color-mix(in srgb, var(--ui-primary), transparent calc(100% - var(--ui-glow-alpha) * 100%));
 }
 
 /* ---------- 语义颜色工具类 ---------- */

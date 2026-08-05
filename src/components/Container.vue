@@ -5,15 +5,15 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: "Container", inheritAttrs: false })
+defineOptions({ name: 'Container', inheritAttrs: false })
 
-type Size = "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full"
+type Size = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | 'full'
 
 interface Props {
   size?: Size
 }
 
 withDefaults(defineProps<Props>(), {
-  size: "lg",
+  size: 'lg',
 })
 </script>

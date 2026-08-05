@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { Badge } from "moongate-vue"
+import { Badge } from 'moongate-vue'
 </script>
 ```
 
@@ -36,7 +36,7 @@ import { Badge } from "moongate-vue"
 </template>
 
 <script setup>
-import { Badge } from "moongate-vue"
+import { Badge } from 'moongate-vue'
 </script>
 ```
 
@@ -56,15 +56,13 @@ import { Badge } from "moongate-vue"
     </Badge>
 
     <Badge color="success">
-      <span style="display: flex; align-items: center; gap: 4px;"
-        >✓ 已完成</span
-      >
+      <span style="display: flex; align-items: center; gap: 4px;">✓ 已完成</span>
     </Badge>
   </div>
 </template>
 
 <script setup>
-import { Badge } from "moongate-vue"
+import { Badge } from 'moongate-vue'
 </script>
 ```
 
@@ -83,9 +81,7 @@ import { Badge } from "moongate-vue"
           style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;"
         >
           <Badge color="primary">P3</Badge>
-          <time style="color: var(--text-dim, #666); font-size: 14px;"
-            >2026-04-20</time
-          >
+          <time style="color: var(--text-dim, #666); font-size: 14px;">2026-04-20</time>
         </div>
         <h3 style="margin: 0;">文章标题</h3>
       </template>
@@ -95,7 +91,7 @@ import { Badge } from "moongate-vue"
 </template>
 
 <script setup>
-import { Badge, Card } from "moongate-vue"
+import { Badge, Card } from 'moongate-vue'
 </script>
 ```
 

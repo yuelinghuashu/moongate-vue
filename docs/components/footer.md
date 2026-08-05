@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import { Footer, Container } from "moongate-vue"
+import { Footer, Container } from 'moongate-vue'
 </script>
 ```
 

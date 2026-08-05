@@ -31,7 +31,7 @@
 
 /* 圆点始终存在，通过可见性控制，避免布局偏移 */
 .mg-radio-circle::after {
-  content: "";
+  content: '';
   display: block;
   width: 0.5rem;
   height: 0.5rem;

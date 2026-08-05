@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import { Skeleton } from "moongate-vue"
+import { Skeleton } from 'moongate-vue'
 </script>
 ```
 
@@ -34,7 +34,7 @@ import { Skeleton } from "moongate-vue"
 </template>
 
 <script setup>
-import { Skeleton } from "moongate-vue"
+import { Skeleton } from 'moongate-vue'
 </script>
 ```
 
@@ -54,7 +54,7 @@ import { Skeleton } from "moongate-vue"
 </template>
 
 <script setup>
-import { Skeleton } from "moongate-vue"
+import { Skeleton } from 'moongate-vue'
 </script>
 ```
 
@@ -74,7 +74,7 @@ import { Skeleton } from "moongate-vue"
 </template>
 
 <script setup>
-import { Skeleton } from "moongate-vue"
+import { Skeleton } from 'moongate-vue'
 </script>
 ```
 
@@ -92,7 +92,7 @@ import { Skeleton } from "moongate-vue"
 </template>
 
 <script setup>
-import { Skeleton } from "moongate-vue"
+import { Skeleton } from 'moongate-vue'
 </script>
 ```
 
@@ -104,8 +104,8 @@ import { Skeleton } from "moongate-vue"
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Button, Skeleton } from "moongate-vue"
+import { ref } from 'vue'
+import { Button, Skeleton } from 'moongate-vue'
 
 const loading = ref(false)
 
@@ -123,9 +123,7 @@ const loadData = () => {
     <Button @click="loadData" :loading="loading" label="加载数据" />
     <div style="margin-top: 16px; width: 320px;">
       <Skeleton v-if="loading" :rows="3" title />
-      <div v-else style="padding: 16px; background-color: var(--ui-bg-muted);">
-        真实内容已加载
-      </div>
+      <div v-else style="padding: 16px; background-color: var(--ui-bg-muted);">真实内容已加载</div>
     </div>
   </div>
 </template>

@@ -8,13 +8,13 @@
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Tabs } from "moongate-vue"
+import { ref } from 'vue'
+import { Tabs } from 'moongate-vue'
 
 const tabs = [
-  { label: "技术文章", content: "技术文章内容..." },
-  { label: "生活随笔", content: "生活随笔内容..." },
-  { label: "工具推荐", content: "工具推荐内容..." },
+  { label: '技术文章', content: '技术文章内容...' },
+  { label: '生活随笔', content: '生活随笔内容...' },
+  { label: '工具推荐', content: '工具推荐内容...' },
 ]
 const active = ref(0)
 </script>
@@ -34,13 +34,13 @@ const active = ref(0)
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Tabs, Badge } from "moongate-vue"
+import { ref } from 'vue'
+import { Tabs, Badge } from 'moongate-vue'
 
 const tabs = [
-  { label: "最新", badgeColor: "primary", badgeLabel: "最新文章" },
-  { label: "热门", badgeColor: "success", badgeLabel: "热门文章" },
-  { label: "推荐", badgeColor: "warning", badgeLabel: "推荐阅读" },
+  { label: '最新', badgeColor: 'primary', badgeLabel: '最新文章' },
+  { label: '热门', badgeColor: 'success', badgeLabel: '热门文章' },
+  { label: '推荐', badgeColor: 'warning', badgeLabel: '推荐阅读' },
 ]
 const active = ref(0)
 </script>
@@ -67,13 +67,13 @@ const active = ref(0)
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Tabs } from "moongate-vue"
+import { ref } from 'vue'
+import { Tabs } from 'moongate-vue'
 
 const tabs = [
-  { label: "标签一", content: "第一个面板内容（首次打开时渲染）" },
-  { label: "标签二", content: "第二个面板内容（首次打开时渲染）" },
-  { label: "标签三", content: "第三个面板内容（首次打开时渲染）" },
+  { label: '标签一', content: '第一个面板内容（首次打开时渲染）' },
+  { label: '标签二', content: '第二个面板内容（首次打开时渲染）' },
+  { label: '标签三', content: '第三个面板内容（首次打开时渲染）' },
 ]
 const active = ref(0)
 </script>
@@ -91,13 +91,13 @@ const active = ref(0)
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Tabs } from "moongate-vue"
+import { ref } from 'vue'
+import { Tabs } from 'moongate-vue'
 
 const tabs = [
-  { label: "标签一", content: "卡片风格面板内容一" },
-  { label: "标签二", content: "卡片风格面板内容二" },
-  { label: "标签三", content: "卡片风格面板内容三" },
+  { label: '标签一', content: '卡片风格面板内容一' },
+  { label: '标签二', content: '卡片风格面板内容二' },
+  { label: '标签三', content: '卡片风格面板内容三' },
 ]
 const active = ref(0)
 </script>
@@ -115,13 +115,13 @@ const active = ref(0)
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Tabs } from "moongate-vue"
+import { ref } from 'vue'
+import { Tabs } from 'moongate-vue'
 
 const tabs = [
-  { label: "标签一", content: "内容一" },
-  { label: "标签二", content: "内容二" },
-  { label: "标签三", content: "内容三" },
+  { label: '标签一', content: '内容一' },
+  { label: '标签二', content: '内容二' },
+  { label: '标签三', content: '内容三' },
 ]
 const activeSm = ref(0)
 const activeMd = ref(0)
@@ -154,13 +154,13 @@ const activeLg = ref(0)
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Tabs } from "moongate-vue"
+import { ref } from 'vue'
+import { Tabs } from 'moongate-vue'
 
 const tabs = [
-  { label: "首页", icon: "🏠", content: "首页内容" },
-  { label: "关于", icon: "ℹ️", content: "关于内容" },
-  { label: "联系", icon: "📧", content: "联系内容" },
+  { label: '首页', icon: '🏠', content: '首页内容' },
+  { label: '关于', icon: 'ℹ️', content: '关于内容' },
+  { label: '联系', icon: '📧', content: '联系内容' },
 ]
 const active = ref(0)
 </script>
@@ -178,13 +178,13 @@ const active = ref(0)
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Tabs } from "moongate-vue"
+import { ref } from 'vue'
+import { Tabs } from 'moongate-vue'
 
 const tabs = [
-  { label: "可点击", content: "可点击标签页内容" },
-  { label: "已禁用", disabled: true, content: "这个面板不会显示" },
-  { label: "可点击", content: "可点击标签页内容" },
+  { label: '可点击', content: '可点击标签页内容' },
+  { label: '已禁用', disabled: true, content: '这个面板不会显示' },
+  { label: '可点击', content: '可点击标签页内容' },
 ]
 const active = ref(0)
 </script>
@@ -202,13 +202,13 @@ const active = ref(0)
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Tabs } from "moongate-vue"
+import { ref } from 'vue'
+import { Tabs } from 'moongate-vue'
 
 const tabs = [
-  { label: "标签一", content: "标签一内容" },
-  { label: "标签二", content: "标签二内容" },
-  { label: "标签三", content: "标签三内容" },
+  { label: '标签一', content: '标签一内容' },
+  { label: '标签二', content: '标签二内容' },
+  { label: '标签三', content: '标签三内容' },
 ]
 const active = ref(0)
 
@@ -220,9 +220,7 @@ const handleTabChange = (index, tab) => {
 <template>
   <div>
     <Tabs :tabs="tabs" v-model="active" @change="handleTabChange" />
-    <p style="margin-top: 12px; color: var(--ui-text-dim);">
-      当前激活索引: {{ active }}
-    </p>
+    <p style="margin-top: 12px; color: var(--ui-text-dim);">当前激活索引: {{ active }}</p>
   </div>
 </template>
 ```

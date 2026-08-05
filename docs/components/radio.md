@@ -10,10 +10,10 @@
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Radio } from "moongate-vue"
+import { ref } from 'vue'
+import { Radio } from 'moongate-vue'
 
-const gender = ref("male")
+const gender = ref('male')
 </script>
 
 <template>
@@ -33,10 +33,10 @@ const gender = ref("male")
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Radio } from "moongate-vue"
+import { ref } from 'vue'
+import { Radio } from 'moongate-vue'
 
-const size = ref("medium")
+const size = ref('medium')
 </script>
 
 <template>
@@ -57,14 +57,14 @@ const size = ref("medium")
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Radio } from "moongate-vue"
+import { ref } from 'vue'
+import { Radio } from 'moongate-vue'
 
-const selected = ref("option1")
+const selected = ref('option1')
 const options = [
-  { label: "选项一", value: "option1" },
-  { label: "选项二", value: "option2" },
-  { label: "选项三", value: "option3" },
+  { label: '选项一', value: 'option1' },
+  { label: '选项二', value: 'option2' },
+  { label: '选项三', value: 'option3' },
 ]
 </script>
 
@@ -90,10 +90,10 @@ const options = [
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Radio } from "moongate-vue"
+import { ref } from 'vue'
+import { Radio } from 'moongate-vue'
 
-const radioSize = ref("md")
+const radioSize = ref('md')
 </script>
 
 <template>
@@ -114,21 +114,16 @@ const radioSize = ref("md")
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Radio } from "moongate-vue"
+import { ref } from 'vue'
+import { Radio } from 'moongate-vue'
 
-const disabledSelected = ref("disabled2")
+const disabledSelected = ref('disabled2')
 </script>
 
 <template>
   <div style="display: flex; gap: 16px; flex-wrap: wrap;">
     <Radio disabled value="disabled1" label="已禁用（未选中）" />
-    <Radio
-      disabled
-      value="disabled2"
-      label="已禁用（选中）"
-      :model-value="disabledSelected"
-    />
+    <Radio disabled value="disabled2" label="已禁用（选中）" :model-value="disabledSelected" />
   </div>
 </template>
 ```
@@ -143,10 +138,10 @@ const disabledSelected = ref("disabled2")
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Radio } from "moongate-vue"
+import { ref } from 'vue'
+import { Radio } from 'moongate-vue'
 
-const agree = ref("")
+const agree = ref('')
 </script>
 
 <template>

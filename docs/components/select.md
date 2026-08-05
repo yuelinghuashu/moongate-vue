@@ -8,21 +8,21 @@
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Select } from "moongate-vue"
+import { ref } from 'vue'
+import { Select } from 'moongate-vue'
 
-const category = ref("")
+const category = ref('')
 const categories = [
-  { label: "技术文章", value: "tech" },
-  { label: "生活随笔", value: "life" },
-  { label: "工具推荐", value: "tools" },
+  { label: '技术文章', value: 'tech' },
+  { label: '生活随笔', value: 'life' },
+  { label: '工具推荐', value: 'tools' },
 ]
 </script>
 
 <template>
   <div style="width: 240px;">
     <Select v-model="category" :options="categories" placeholder="请选择分类" />
-    <p style="margin-top: 8px;">当前选中: {{ category || "未选择" }}</p>
+    <p style="margin-top: 8px;">当前选中: {{ category || '未选择' }}</p>
   </div>
 </template>
 ```
@@ -37,14 +37,14 @@ const categories = [
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Select } from "moongate-vue"
+import { ref } from 'vue'
+import { Select } from 'moongate-vue'
 
-const category = ref("")
+const category = ref('')
 const categories = [
-  { name: "技术文章", id: "tech" },
-  { name: "生活随笔", id: "life" },
-  { name: "工具推荐", id: "tools" },
+  { name: '技术文章', id: 'tech' },
+  { name: '生活随笔', id: 'life' },
+  { name: '工具推荐', id: 'tools' },
 ]
 </script>
 
@@ -57,7 +57,7 @@ const categories = [
       value-key="id"
       placeholder="请选择分类"
     />
-    <p style="margin-top: 8px;">当前选中: {{ category || "未选择" }}</p>
+    <p style="margin-top: 8px;">当前选中: {{ category || '未选择' }}</p>
   </div>
 </template>
 ```
@@ -70,17 +70,17 @@ const categories = [
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Select } from "moongate-vue"
+import { ref } from 'vue'
+import { Select } from 'moongate-vue'
 
-const color = ref("")
-const colors = ["红", "绿", "蓝"]
+const color = ref('')
+const colors = ['红', '绿', '蓝']
 </script>
 
 <template>
   <div style="width: 240px;">
     <Select v-model="color" :options="colors" placeholder="选择颜色" />
-    <p style="margin-top: 8px;">当前选中: {{ color || "未选择" }}</p>
+    <p style="margin-top: 8px;">当前选中: {{ color || '未选择' }}</p>
   </div>
 </template>
 ```
@@ -93,8 +93,8 @@ const colors = ["红", "绿", "蓝"]
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Select } from "moongate-vue"
+import { ref } from 'vue'
+import { Select } from 'moongate-vue'
 
 const number = ref(0)
 const numbers = [10, 20, 30]
@@ -103,7 +103,7 @@ const numbers = [10, 20, 30]
 <template>
   <div style="width: 240px;">
     <Select v-model="number" :options="numbers" placeholder="选择数字" />
-    <p style="margin-top: 8px;">当前选中: {{ number || "未选择" }}</p>
+    <p style="margin-top: 8px;">当前选中: {{ number || '未选择' }}</p>
   </div>
 </template>
 ```
@@ -118,21 +118,21 @@ const numbers = [10, 20, 30]
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Select } from "moongate-vue"
+import { ref } from 'vue'
+import { Select } from 'moongate-vue'
 
-const value = ref("")
+const value = ref('')
 const options = [
-  { label: "苹果", value: "apple" },
-  { label: "香蕉", value: "banana" },
-  { label: "橙子", value: "orange" },
+  { label: '苹果', value: 'apple' },
+  { label: '香蕉', value: 'banana' },
+  { label: '橙子', value: 'orange' },
 ]
 </script>
 
 <template>
   <div style="width: 240px;">
     <Select v-model="value" :options="options" placeholder="请选择" />
-    <p style="margin-top: 8px;">当前选中: {{ value || "未选择" }}</p>
+    <p style="margin-top: 8px;">当前选中: {{ value || '未选择' }}</p>
   </div>
 </template>
 ```
@@ -147,28 +147,23 @@ const options = [
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Select } from "moongate-vue"
+import { ref } from 'vue'
+import { Select } from 'moongate-vue'
 
-const value = ref("")
+const value = ref('')
 const options = [
-  { label: "苹果", value: "apple" },
-  { label: "香蕉", value: "banana" },
-  { label: "橙子", value: "orange" },
-  { label: "葡萄", value: "grape" },
-  { label: "西瓜", value: "watermelon" },
+  { label: '苹果', value: 'apple' },
+  { label: '香蕉', value: 'banana' },
+  { label: '橙子', value: 'orange' },
+  { label: '葡萄', value: 'grape' },
+  { label: '西瓜', value: 'watermelon' },
 ]
 </script>
 
 <template>
   <div style="width: 240px;">
-    <Select
-      v-model="value"
-      :options="options"
-      filterable
-      placeholder="搜索水果"
-    />
-    <p style="margin-top: 8px;">当前选中: {{ value || "未选择" }}</p>
+    <Select v-model="value" :options="options" filterable placeholder="搜索水果" />
+    <p style="margin-top: 8px;">当前选中: {{ value || '未选择' }}</p>
   </div>
 </template>
 ```
@@ -192,10 +187,10 @@ const options = [
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Select } from "moongate-vue"
+import { ref } from 'vue'
+import { Select } from 'moongate-vue'
 
-const value = ref("")
+const value = ref('')
 const options = ref([])
 const loading = ref(false)
 
@@ -208,8 +203,8 @@ const searchUsers = async (keyword) => {
   // 模拟远程搜索
   await new Promise((resolve) => setTimeout(resolve, 300))
   options.value = [
-    { label: `用户: ${keyword}1`, value: "user1" },
-    { label: `用户: ${keyword}2`, value: "user2" },
+    { label: `用户: ${keyword}1`, value: 'user1' },
+    { label: `用户: ${keyword}2`, value: 'user2' },
   ]
   loading.value = false
 }
@@ -239,13 +234,13 @@ const searchUsers = async (keyword) => {
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Select } from "moongate-vue"
+import { ref } from 'vue'
+import { Select } from 'moongate-vue'
 
-const userId = ref("")
+const userId = ref('')
 const users = [
-  { label: "张三", value: "zhang", avatar: "👤", email: "zhang@example.com" },
-  { label: "李四", value: "li", avatar: "👤", email: "li@example.com" },
+  { label: '张三', value: 'zhang', avatar: '👤', email: 'zhang@example.com' },
+  { label: '李四', value: 'li', avatar: '👤', email: 'li@example.com' },
 ]
 </script>
 
@@ -256,9 +251,7 @@ const users = [
         <div style="display: flex; align-items: center; gap: 8px;">
           <span>{{ item.avatar }}</span>
           <span>{{ label }}</span>
-          <span style="color: var(--ui-text-dim); font-size: 12px;">{{
-            item.email
-          }}</span>
+          <span style="color: var(--ui-text-dim); font-size: 12px;">{{ item.email }}</span>
         </div>
       </template>
     </Select>
@@ -276,24 +269,19 @@ const users = [
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Select } from "moongate-vue"
+import { ref } from 'vue'
+import { Select } from 'moongate-vue'
 
-const value = ref("")
+const value = ref('')
 const options = [
-  { label: "苹果", value: "apple" },
-  { label: "香蕉", value: "banana" },
+  { label: '苹果', value: 'apple' },
+  { label: '香蕉', value: 'banana' },
 ]
 </script>
 
 <template>
   <div style="width: 240px;">
-    <Select
-      v-model="value"
-      :options="options"
-      filterable
-      empty-text="未找到匹配项"
-    >
+    <Select v-model="value" :options="options" filterable empty-text="未找到匹配项">
       <template #empty>
         <div style="text-align: center; padding: 8px;">
           <span>🔍 没有找到相关选项</span>
@@ -320,19 +308,19 @@ const options = [
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Select } from "moongate-vue"
+import { ref } from 'vue'
+import { Select } from 'moongate-vue'
 
-const value = ref("")
+const value = ref('')
 const options = [
-  { label: "选项一", value: "1" },
-  { label: "选项二", value: "2" },
-  { label: "选项三", value: "3" },
-  { label: "选项四", value: "4" },
-  { label: "选项五", value: "5" },
-  { label: "选项六", value: "6" },
-  { label: "选项七", value: "7" },
-  { label: "选项八", value: "8" },
+  { label: '选项一', value: '1' },
+  { label: '选项二', value: '2' },
+  { label: '选项三', value: '3' },
+  { label: '选项四', value: '4' },
+  { label: '选项五', value: '5' },
+  { label: '选项六', value: '6' },
+  { label: '选项七', value: '7' },
+  { label: '选项八', value: '8' },
 ]
 </script>
 
@@ -357,43 +345,28 @@ const options = [
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Select } from "moongate-vue"
+import { ref } from 'vue'
+import { Select } from 'moongate-vue'
 
-const value1 = ref("")
-const value2 = ref("")
-const value3 = ref("")
+const value1 = ref('')
+const value2 = ref('')
+const value3 = ref('')
 const options = [
-  { label: "选项一", value: "1" },
-  { label: "选项二", value: "2" },
+  { label: '选项一', value: '1' },
+  { label: '选项二', value: '2' },
 ]
 </script>
 
 <template>
   <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
     <div style="width: 200px;">
-      <Select
-        v-model="value1"
-        size="sm"
-        :options="options"
-        placeholder="小号"
-      />
+      <Select v-model="value1" size="sm" :options="options" placeholder="小号" />
     </div>
     <div style="width: 200px;">
-      <Select
-        v-model="value2"
-        size="md"
-        :options="options"
-        placeholder="中号"
-      />
+      <Select v-model="value2" size="md" :options="options" placeholder="中号" />
     </div>
     <div style="width: 200px;">
-      <Select
-        v-model="value3"
-        size="lg"
-        :options="options"
-        placeholder="大号"
-      />
+      <Select v-model="value3" size="lg" :options="options" placeholder="大号" />
     </div>
   </div>
 </template>
@@ -407,11 +380,11 @@ const options = [
 
 ```vue
 <script setup>
-import { Select } from "moongate-vue"
+import { Select } from 'moongate-vue'
 
 const options = [
-  { label: "选项一", value: "1" },
-  { label: "选项二", value: "2" },
+  { label: '选项一', value: '1' },
+  { label: '选项二', value: '2' },
 ]
 </script>
 
@@ -432,25 +405,20 @@ const options = [
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Select } from "moongate-vue"
+import { ref } from 'vue'
+import { Select } from 'moongate-vue'
 
-const agree = ref("")
+const agree = ref('')
 const options = [
-  { label: "同意", value: "yes" },
-  { label: "不同意", value: "no" },
+  { label: '同意', value: 'yes' },
+  { label: '不同意', value: 'no' },
 ]
 </script>
 
 <template>
   <div>
     <div style="width: 240px;">
-      <Select
-        v-model="agree"
-        :error="!agree"
-        :options="options"
-        placeholder="请选择"
-      />
+      <Select v-model="agree" :error="!agree" :options="options" placeholder="请选择" />
     </div>
     <span
       v-if="!agree"
@@ -472,21 +440,21 @@ const options = [
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Select } from "moongate-vue"
+import { ref } from 'vue'
+import { Select } from 'moongate-vue'
 
-const status = ref("")
+const status = ref('')
 const options = [
-  { label: "启用", value: "active" },
-  { label: "禁用", value: "inactive", disabled: true },
-  { label: "待审核", value: "pending" },
+  { label: '启用', value: 'active' },
+  { label: '禁用', value: 'inactive', disabled: true },
+  { label: '待审核', value: 'pending' },
 ]
 </script>
 
 <template>
   <div style="width: 240px;">
     <Select v-model="status" :options="options" placeholder="请选择状态" />
-    <p style="margin-top: 8px;">当前选中: {{ status || "未选择" }}</p>
+    <p style="margin-top: 8px;">当前选中: {{ status || '未选择' }}</p>
   </div>
 </template>
 ```
@@ -531,7 +499,7 @@ const options = [
 Select 组件支持泛型类型推断，可手动标注 `options` 的类型以获得更好的类型提示：
 
 ```typescript
-import type { SelectOption } from "moongate-vue"
+import type { SelectOption } from 'moongate-vue'
 
 interface User {
   id: number
@@ -541,8 +509,8 @@ interface User {
 
 // 手动标注 options 类型
 const options: SelectOption<User>[] = [
-  { label: "张三", value: { id: 1, name: "张三", email: "zhang@example.com" } },
-  { label: "李四", value: { id: 2, name: "李四", email: "li@example.com" } },
+  { label: '张三', value: { id: 1, name: '张三', email: 'zhang@example.com' } },
+  { label: '李四', value: { id: 2, name: '李四', email: 'li@example.com' } },
 ]
 ```
 

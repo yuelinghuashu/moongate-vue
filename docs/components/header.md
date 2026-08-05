@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import { Header, Container } from "moongate-vue"
+import { Header, Container } from 'moongate-vue'
 </script>
 ```
 
@@ -47,7 +47,7 @@ import { Header, Container } from "moongate-vue"
 </template>
 
 <script setup>
-import { Header, Container } from "moongate-vue"
+import { Header, Container } from 'moongate-vue'
 </script>
 ```
 

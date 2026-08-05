@@ -42,12 +42,12 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: "Tabs", inheritAttrs: false })
+defineOptions({ name: 'Tabs', inheritAttrs: false })
 
-import { ref, watch } from "vue"
+import { ref, watch } from 'vue'
 
-type Size = "sm" | "md" | "lg"
-type Variant = "line" | "card"
+type Size = 'sm' | 'md' | 'lg'
+type Variant = 'line' | 'card'
 
 export interface TabItem {
   /** 标签文字 */
@@ -73,8 +73,8 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   tabs: () => [],
-  size: "md",
-  variant: "line",
+  size: 'md',
+  variant: 'line',
   lazy: false,
 })
 
@@ -142,6 +142,6 @@ const handleTabClick = (index: number) => {
   // 更新激活索引（触发 watch 同步到外部）
   activeTab.value = index
   // 触发 change 事件
-  emit("change", index, props.tabs[index])
+  emit('change', index, props.tabs[index])
 }
 </script>

@@ -14,9 +14,9 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: "Divider", inheritAttrs: false })
+defineOptions({ name: 'Divider', inheritAttrs: false })
 
-import { useSlots, computed } from "vue"
+import { useSlots, computed } from 'vue'
 
 const slots = useSlots()
 const hasDefaul = computed(() => !!slots.default)

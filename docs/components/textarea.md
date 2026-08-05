@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import { Textarea } from "moongate-vue"
+import { Textarea } from 'moongate-vue'
 </script>
 ```
 
@@ -28,16 +28,16 @@ import { Textarea } from "moongate-vue"
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Textarea } from "moongate-vue"
+import { ref } from 'vue'
+import { Textarea } from 'moongate-vue'
 
-const comment = ref("")
+const comment = ref('')
 </script>
 
 <template>
   <div style="width: 320px;">
     <Textarea v-model="comment" placeholder="写下你的评论..." />
-    <p style="margin-top: 8px;">输入内容: {{ comment || "暂无" }}</p>
+    <p style="margin-top: 8px;">输入内容: {{ comment || '暂无' }}</p>
   </div>
 </template>
 ```
@@ -58,7 +58,7 @@ const comment = ref("")
 </template>
 
 <script setup>
-import { Textarea } from "moongate-vue"
+import { Textarea } from 'moongate-vue'
 </script>
 ```
 
@@ -72,20 +72,15 @@ import { Textarea } from "moongate-vue"
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Textarea } from "moongate-vue"
+import { ref } from 'vue'
+import { Textarea } from 'moongate-vue'
 
-const content = ref("")
+const content = ref('')
 </script>
 
 <template>
   <div style="width: 320px;">
-    <Textarea
-      v-model="content"
-      class="auto-grow"
-      placeholder="内容越多，高度越高"
-      :rows="1"
-    />
+    <Textarea v-model="content" class="auto-grow" placeholder="内容越多，高度越高" :rows="1" />
   </div>
 </template>
 
@@ -107,9 +102,7 @@ const content = ref("")
 
 ```vue
 <template>
-  <div
-    style="display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap;"
-  >
+  <div style="display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap;">
     <div style="width: 200px;">
       <Textarea size="sm" placeholder="小号" rows="2" />
     </div>
@@ -123,7 +116,7 @@ const content = ref("")
 </template>
 
 <script setup>
-import { Textarea } from "moongate-vue"
+import { Textarea } from 'moongate-vue'
 </script>
 ```
 
@@ -143,7 +136,7 @@ import { Textarea } from "moongate-vue"
 </template>
 
 <script setup>
-import { Textarea } from "moongate-vue"
+import { Textarea } from 'moongate-vue'
 </script>
 ```
 
@@ -155,26 +148,19 @@ import { Textarea } from "moongate-vue"
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Textarea } from "moongate-vue"
+import { ref } from 'vue'
+import { Textarea } from 'moongate-vue'
 
-const content = ref("")
-const contentError = ref("内容不能为空")
+const content = ref('')
+const contentError = ref('内容不能为空')
 </script>
 
 <template>
   <div style="display: flex; flex-direction: column; gap: 4px; width: 320px;">
-    <Textarea
-      v-model="content"
-      :error="!!contentError"
-      placeholder="请输入内容"
-      rows="2"
-    />
-    <span
-      v-if="contentError"
-      style="color: var(--ui-error); font-size: 12px;"
-      >{{ contentError }}</span
-    >
+    <Textarea v-model="content" :error="!!contentError" placeholder="请输入内容" rows="2" />
+    <span v-if="contentError" style="color: var(--ui-error); font-size: 12px;">
+      {{ contentError }}
+    </span>
   </div>
 </template>
 ```
@@ -198,7 +184,7 @@ const contentError = ref("内容不能为空")
 </template>
 
 <script setup>
-import { Textarea } from "moongate-vue"
+import { Textarea } from 'moongate-vue'
 </script>
 ```
 

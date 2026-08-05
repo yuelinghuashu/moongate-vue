@@ -10,7 +10,7 @@ export interface TableColumn<T = any> {
   /** 列宽度（如 '100px' 或 '10%'） */
   width?: string
   /** 文本对齐方式 */
-  align?: "left" | "center" | "right"
+  align?: 'left' | 'center' | 'right'
   /** 是否可排序 */
   sortable?: boolean
   /** 自定义标题字段名（当 title 未提供时使用） */
@@ -26,7 +26,7 @@ export interface SortParams {
   /** 排序字段 */
   key: string
   /** 排序方向 */
-  order: "asc" | "desc"
+  order: 'asc' | 'desc'
 }
 
 /**

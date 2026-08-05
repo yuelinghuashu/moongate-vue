@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import { Checkbox } from "moongate-vue"
+import { Checkbox } from 'moongate-vue'
 </script>
 ```
 
@@ -28,8 +28,8 @@ import { Checkbox } from "moongate-vue"
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Checkbox } from "moongate-vue"
+import { ref } from 'vue'
+import { Checkbox } from 'moongate-vue'
 
 const agreed = ref(false)
 </script>
@@ -37,7 +37,7 @@ const agreed = ref(false)
 <template>
   <div>
     <Checkbox v-model="agreed" label="我已阅读并同意" />
-    <p>当前状态: {{ agreed ? "✅ 已同意" : "⬜ 未同意" }}</p>
+    <p>当前状态: {{ agreed ? '✅ 已同意' : '⬜ 未同意' }}</p>
   </div>
 </template>
 ```
@@ -52,14 +52,14 @@ const agreed = ref(false)
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Checkbox } from "moongate-vue"
+import { ref } from 'vue'
+import { Checkbox } from 'moongate-vue'
 
 const colors = ref([])
 const options = [
-  { label: "红色", value: "red" },
-  { label: "绿色", value: "green" },
-  { label: "蓝色", value: "blue" },
+  { label: '红色', value: 'red' },
+  { label: '绿色', value: 'green' },
+  { label: '蓝色', value: 'blue' },
 ]
 </script>
 
@@ -74,7 +74,7 @@ const options = [
         :label="item.label"
       />
     </div>
-    <p>已选: {{ colors.join(", ") }}</p>
+    <p>已选: {{ colors.join(', ') }}</p>
   </div>
 </template>
 ```
@@ -95,7 +95,7 @@ const options = [
 </template>
 
 <script setup>
-import { Checkbox } from "moongate-vue"
+import { Checkbox } from 'moongate-vue'
 </script>
 ```
 
@@ -114,7 +114,7 @@ import { Checkbox } from "moongate-vue"
 </template>
 
 <script setup>
-import { Checkbox } from "moongate-vue"
+import { Checkbox } from 'moongate-vue'
 </script>
 ```
 
@@ -128,8 +128,8 @@ import { Checkbox } from "moongate-vue"
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Checkbox } from "moongate-vue"
+import { ref } from 'vue'
+import { Checkbox } from 'moongate-vue'
 
 const agree = ref(false)
 </script>
@@ -151,13 +151,14 @@ const agree = ref(false)
 <template>
   <Checkbox>
     <span style="display: flex; align-items: center; gap: 4px;">
-      我已阅读<a href="/terms" class="mg-link">《用户协议》</a>
+      我已阅读
+      <a href="/terms" class="mg-link">《用户协议》</a>
     </span>
   </Checkbox>
 </template>
 
 <script setup>
-import { Checkbox } from "moongate-vue"
+import { Checkbox } from 'moongate-vue'
 </script>
 ```
 

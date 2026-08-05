@@ -14,21 +14,9 @@ const message = useMessage()
 
 <template>
   <div class="flex gap-2">
-    <Button 
-      variant="filled" 
-      color="primary" 
-      @click="message.success('操作成功')"
-    >
-      主要按钮
-    </Button>
-    
-    <Button 
-      variant="outline" 
-      color="error" 
-      @click="message.error('操作失败')"
-    >
-      危险操作
-    </Button>
+    <Button variant="filled" color="primary" @click="message.success('操作成功')">主要按钮</Button>
+
+    <Button variant="outline" color="error" @click="message.error('操作失败')">危险操作</Button>
   </div>
 </template>
 ```

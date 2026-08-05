@@ -1,10 +1,7 @@
 <template>
   <label
     class="mg-radio"
-    :class="[
-      `mg-radio-${size}`,
-      { 'mg-radio-disabled': disabled, 'mg-radio-error': error },
-    ]"
+    :class="[`mg-radio-${size}`, { 'mg-radio-disabled': disabled, 'mg-radio-error': error }]"
   >
     <input
       type="radio"
@@ -23,11 +20,11 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: "Radio", inheritAttrs: false })
+defineOptions({ name: 'Radio', inheritAttrs: false })
 
-import { computed } from "vue"
+import { computed } from 'vue'
 
-type Size = "sm" | "md" | "lg"
+type Size = 'sm' | 'md' | 'lg'
 
 interface Props {
   /** 单选框标签文字 */
@@ -43,9 +40,9 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  label: "",
+  label: '',
   value: undefined,
-  size: "md",
+  size: 'md',
   disabled: false,
   error: false,
 })
@@ -75,6 +72,6 @@ const handleChange = (event: Event) => {
   if (target.checked && props.value !== undefined) {
     modelValue.value = props.value
   }
-  emit("change", event)
+  emit('change', event)
 }
 </script>

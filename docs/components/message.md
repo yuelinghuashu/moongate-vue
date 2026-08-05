@@ -8,18 +8,18 @@
 
 ```vue
 <script setup>
-import { useMessage, Button } from "moongate-vue"
+import { useMessage, Button } from 'moongate-vue'
 
 const message = useMessage()
 
-const handleSuccess = () => message.success("保存成功")
-const handleError = () => message.error("保存失败，请重试")
-const handleWarning = () => message.warning("内容不能为空")
-const handleInfo = () => message.info("正在加载...")
+const handleSuccess = () => message.success('保存成功')
+const handleError = () => message.error('保存失败，请重试')
+const handleWarning = () => message.warning('内容不能为空')
+const handleInfo = () => message.info('正在加载...')
 const handleCustom = () =>
   message.show({
-    message: "自定义提示",
-    type: "success",
+    message: '自定义提示',
+    type: 'success',
     duration: 5000,
     closable: true,
   })
@@ -46,19 +46,19 @@ const handleCustom = () =>
 
 ```vue
 <script setup>
-import { useMessage, Button } from "moongate-vue"
+import { useMessage, Button } from 'moongate-vue'
 
 const message = useMessage()
 
 const handleSuccess = () => {
   if (import.meta.client) {
-    message.success("操作成功")
+    message.success('操作成功')
   }
 }
 
 const handleError = () => {
   if (process.client) {
-    message.error("操作失败")
+    message.error('操作失败')
   }
 }
 </script>
@@ -78,7 +78,7 @@ const handleError = () => {
 创建 `plugins/message.client.ts`：
 
 ```typescript
-import { useMessage as useMessageCore } from "moongate-vue"
+import { useMessage as useMessageCore } from 'moongate-vue'
 
 export default defineNuxtPlugin(() => {
   const message = useMessageCore()
@@ -95,14 +95,14 @@ export default defineNuxtPlugin(() => {
 
 ```vue
 <script setup>
-import { Button } from "moongate-vue"
+import { Button } from 'moongate-vue'
 
 // 在 Nuxt 环境中使用 $message
 // const { $message } = useNuxtApp()
 
 const handleClick = () => {
   // $message.success("操作成功")
-  console.log("在 Nuxt 环境中，$message 可用")
+  console.log('在 Nuxt 环境中，$message 可用')
 }
 </script>
 
@@ -119,8 +119,8 @@ const handleClick = () => {
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Button, Message } from "moongate-vue"
+import { ref } from 'vue'
+import { Button, Message } from 'moongate-vue'
 
 const show = ref(false)
 </script>
@@ -141,8 +141,8 @@ const show = ref(false)
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Button, Message } from "moongate-vue"
+import { ref } from 'vue'
+import { Button, Message } from 'moongate-vue'
 
 const show = ref(false)
 </script>

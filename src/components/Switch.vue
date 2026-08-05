@@ -1,10 +1,7 @@
 <template>
   <label
     class="mg-switch"
-    :class="[
-      `mg-switch-${size}`,
-      { 'mg-switch-disabled': disabled, 'mg-switch-error': error },
-    ]"
+    :class="[`mg-switch-${size}`, { 'mg-switch-disabled': disabled, 'mg-switch-error': error }]"
   >
     <input
       type="checkbox"

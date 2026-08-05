@@ -172,7 +172,7 @@ Moongate Vue 的所有样式都基于 CSS 变量（设计令牌）构建。你�
   --ui-spacing-md: 16px;
 
   /* 修改字体 */
-  --ui-typography-family-sans: "Noto Sans SC", system-ui, sans-serif;
+  --ui-typography-family-sans: 'Noto Sans SC', system-ui, sans-serif;
 }
 
 /* 暗色模式定制 */

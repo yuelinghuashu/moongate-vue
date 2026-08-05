@@ -8,21 +8,21 @@
 
 ```vue
 <script setup>
-import { useToast, Button } from "moongate-vue"
+import { useToast, Button } from 'moongate-vue'
 
 const toast = useToast()
 
-const handleSuccess = () => toast.success("评论发布成功")
-const handleError = () => toast.error("发布失败，请重试")
-const handleWarning = () => toast.warning("内容不能为空")
-const handleInfo = () => toast.info("正在加载...")
+const handleSuccess = () => toast.success('评论发布成功')
+const handleError = () => toast.error('发布失败，请重试')
+const handleWarning = () => toast.warning('内容不能为空')
+const handleInfo = () => toast.info('正在加载...')
 const handleCustom = () =>
   toast.show({
-    message: "自定义提示",
-    type: "success",
+    message: '自定义提示',
+    type: 'success',
     duration: 5000,
     closable: true,
-    position: "bottom",
+    position: 'bottom',
   })
 </script>
 
@@ -47,19 +47,19 @@ const handleCustom = () =>
 
 ```vue
 <script setup>
-import { useToast, Button } from "moongate-vue"
+import { useToast, Button } from 'moongate-vue'
 
 const toast = useToast()
 
 const handleSuccess = () => {
   if (import.meta.client) {
-    toast.success("操作成功")
+    toast.success('操作成功')
   }
 }
 
 const handleError = () => {
   if (process.client) {
-    toast.error("操作失败")
+    toast.error('操作失败')
   }
 }
 </script>
@@ -79,7 +79,7 @@ const handleError = () => {
 创建 `plugins/toast.client.ts`：
 
 ```typescript
-import { useToast as useToastCore } from "moongate-vue"
+import { useToast as useToastCore } from 'moongate-vue'
 
 export default defineNuxtPlugin(() => {
   const toast = useToastCore()
@@ -96,14 +96,14 @@ export default defineNuxtPlugin(() => {
 
 ```vue
 <script setup>
-import { Button } from "moongate-vue"
+import { Button } from 'moongate-vue'
 
 // 在 Nuxt 环境中使用 $toast
 // const { $toast } = useNuxtApp()
 
 const handleClick = () => {
   // $toast.success("操作成功")
-  console.log("在 Nuxt 环境中，$toast 可用")
+  console.log('在 Nuxt 环境中，$toast 可用')
 }
 </script>
 
@@ -120,8 +120,8 @@ const handleClick = () => {
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Button, Toast } from "moongate-vue"
+import { ref } from 'vue'
+import { Button, Toast } from 'moongate-vue'
 
 const show = ref(false)
 </script>
@@ -142,8 +142,8 @@ const show = ref(false)
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Button, Toast } from "moongate-vue"
+import { ref } from 'vue'
+import { Button, Toast } from 'moongate-vue'
 
 const show = ref(false)
 </script>

@@ -21,10 +21,10 @@
 <template>
   <div style="display: flex; gap: 16px; flex-wrap: wrap;">
     <!-- 内部链接 -->
-    <RouterLink to="/about" class="mg-link"> 关于我们 </RouterLink>
+    <RouterLink to="/about" class="mg-link">关于我们</RouterLink>
 
     <!-- 外部链接（新窗口打开，注意添加安全属性） -->
-    <a href="https://example.com" target="_blank" class="mg-link"> 外部网站 </a>
+    <a href="https://example.com" target="_blank" class="mg-link">外部网站</a>
   </div>
 </template>
 ```
@@ -40,16 +40,8 @@
 ```vue
 <template>
   <div style="display: flex; gap: 16px; flex-wrap: wrap;">
-    <RouterLink to="/login" class="mg-link" style="color: var(--ui-primary);">
-      登录
-    </RouterLink>
-    <RouterLink
-      to="/register"
-      class="mg-link"
-      style="color: var(--ui-success);"
-    >
-      注册
-    </RouterLink>
+    <RouterLink to="/login" class="mg-link" style="color: var(--ui-primary);">登录</RouterLink>
+    <RouterLink to="/register" class="mg-link" style="color: var(--ui-success);">注册</RouterLink>
   </div>
 </template>
 ```
@@ -86,9 +78,7 @@
 <template>
   <div style="display: flex; gap: 8px; flex-wrap: wrap;">
     <RouterLink to="/" class="nav-link" active-class="active">首页</RouterLink>
-    <RouterLink to="/about" class="nav-link" active-class="active"
-      >关于</RouterLink
-    >
+    <RouterLink to="/about" class="nav-link" active-class="active">关于</RouterLink>
   </div>
 </template>
 

@@ -12,7 +12,11 @@
 
 ```vue
 <template>
-  <p>这是行内代码 <code>const a = 1</code> 示例。</p>
+  <p>
+    这是行内代码
+    <code>const a = 1</code>
+    示例。
+  </p>
 </template>
 ```
 
@@ -82,7 +86,11 @@ function hello() {
     <p>ContentRenderer 输出的 Markdown 内容会自动获得样式：</p>
     <!-- 示例：模拟 ContentRenderer 输出的内容 -->
     <div class="markdown-content">
-      <p>这是行内代码 <code>console.log('hello')</code> 示例。</p>
+      <p>
+        这是行内代码
+        <code>console.log('hello')</code>
+        示例。
+      </p>
       <pre><code>
 function greet() {
   return 'Hello World'
