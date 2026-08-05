@@ -11,8 +11,13 @@ node_modules
 docs/.vitepress/cache
 dist
 dist-ssr
+coverage
+coverage/
 *.local
 temp-types/
+assets/
+assets/*
+!.gitkeep
 
 # Editor directories and files
 .vscode/*

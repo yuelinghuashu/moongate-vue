@@ -2,30 +2,28 @@
   <Teleport to="body">
     <div
       v-if="modelValue"
+      ref="overlayRef"
       v-bind="attrsWithoutClass"
-      :class="[
-        'mg-modal-overlay',
-        mergedClass,
-        { 'mg-modal-overlay-open': modelValue },
-      ]"
+      :class="['mg-modal-overlay', mergedClass, { 'mg-modal-overlay-open': modelValue }]"
       @click.self="handleOverlayClick"
     >
       <div
         class="mg-modal"
         :class="`mg-modal-${size}`"
         role="dialog"
-        :aria-label="title"
+        :aria-labelledby="titleId"
         aria-modal="true"
       >
         <!-- 头部 -->
         <div class="mg-modal-header">
-          <h3 class="mg-modal-title">
+          <h3 class="mg-modal-title" :id="titleId">
             <slot name="title">{{ title }}</slot>
           </h3>
           <button
             v-if="closable"
+            type="button"
             class="mg-modal-close"
-            aria-label="关闭"
+            :aria-label="closeAriaLabel"
             @click="handleClose"
           >
             &times;
@@ -47,12 +45,19 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: "Modal", inheritAttrs: false })
+import { ref, watch, useId } from 'vue'
+import { useAttrsWithClass } from '../composables/useAttrsWithClass'
+import { useOverlayBehavior } from '../composables/useScrollLock'
 
-import { watch, onBeforeUnmount } from "vue"
-import { useAttrsWithClass } from "../composables/useAttrsWithClass"
+defineOptions({ name: 'Modal', inheritAttrs: false })
 
-type Size = "sm" | "md" | "lg" | "xl"
+defineSlots<{
+  default: () => any
+  title: () => any
+  footer: () => any
+}>()
+
+type Size = 'sm' | 'md' | 'lg' | 'xl'
 
 interface Props {
   /** 模态框标题 */
@@ -63,13 +68,22 @@ interface Props {
   closable?: boolean
   /** 点击遮罩层是否关闭 */
   closeOnOverlay?: boolean
+  /** 关闭按钮的 aria-label */
+  closeAriaLabel?: string
+  /** 是否启用 ESC 键关闭，默认 true */
+  enableEsc?: boolean
+  /** 是否启用焦点陷阱，默认 true */
+  enableFocusTrap?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  title: "",
-  size: "md",
+  title: '',
+  size: 'md',
   closable: true,
   closeOnOverlay: true,
+  closeAriaLabel: '关闭',
+  enableEsc: true,
+  enableFocusTrap: true,
 })
 
 /** v-model 双向绑定（控制显示/隐藏） */
@@ -82,53 +96,45 @@ const emit = defineEmits<{
   close: []
 }>()
 
+/** 浮层容器 DOM 引用（焦点陷阱作用域） */
+const overlayRef = ref<HTMLElement | null>(null)
+
+/** 标题元素的唯一 ID（用于 aria-labelledby，SSR 安全） */
+const titleId = useId()
+
 // 处理外部属性透传（无内部动态类，仅合并外部 class）
 const { attrsWithoutClass, mergedClass } = useAttrsWithClass(() => ({}))
 
-/**
- * 检查是否在浏览器环境
- * SSR 时 document 不存在
- */
-const isBrowser = typeof document !== 'undefined'
+// 统一管理滚动锁定 + ESC 关闭 + 焦点陷阱
+useOverlayBehavior(modelValue as unknown as import('vue').Ref<boolean>, overlayRef, handleClose, {
+  enableEsc: props.enableEsc,
+  enableFocusTrap: props.enableFocusTrap,
+})
 
 /**
  * 监听 modelValue 变化
- * - 打开时：触发 open 事件，禁止 body 滚动
- * - 关闭时：触发 close 事件，恢复 body 滚动
+ * - 打开时：触发 open 事件
+ * - 关闭时：触发 close 事件
  */
 watch(
   () => modelValue.value,
   (val) => {
-    // SSR 环境下跳过 DOM 操作
-    if (!isBrowser) return
-
     if (val) {
-      emit("open")
-      document.body.style.overflow = "hidden"
+      emit('open')
     } else {
-      emit("close")
-      document.body.style.overflow = ""
+      emit('close')
     }
   },
   { immediate: true },
 )
 
-/**
- * 组件卸载时清理
- * 防止组件非正常卸载时 body 滚动锁死
- */
-onBeforeUnmount(() => {
-  if (!isBrowser) return
-  document.body.style.overflow = ""
-})
-
 /** 关闭模态框 */
-const handleClose = () => {
+function handleClose() {
   modelValue.value = false
 }
 
 /** 点击遮罩层关闭 */
-const handleOverlayClick = () => {
+function handleOverlayClick() {
   if (props.closeOnOverlay) {
     handleClose()
   }

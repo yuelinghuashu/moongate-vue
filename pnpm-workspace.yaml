@@ -1,0 +1,7 @@
+packages:
+  - '.'
+
+allowBuilds:
+  esbuild: true
+  vitepress-theme-demoblock: true
+  vue-demi: true

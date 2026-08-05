@@ -1,95 +1,52 @@
-import { createApp } from "vue"
-import Toast from "../components/Toast.vue"
+// composables/useToast.ts
+import Toast from '../components/Toast.vue'
+import { createOverlay } from './createOverlay'
+import type { OverlayProps } from './createOverlay'
 
-export interface ToastOptions {
+export interface ToastOptions extends OverlayProps {
   /** 消息内容 */
   message: string
   /** 类型 */
-  type?: "success" | "error" | "warning" | "info"
+  type?: 'success' | 'error' | 'warning' | 'info'
   /** 持续时间（毫秒），0 表示不自动关闭 */
   duration?: number
   /** 是否显示关闭按钮 */
   closable?: boolean
   /** 位置 */
-  position?: "top" | "bottom"
+  position?: 'top' | 'bottom'
   /** 自定义图标 */
   icon?: string
 }
 
-let toastContainer: HTMLDivElement | null = null
-let currentToastApp: ReturnType<typeof createApp> | null = null
-
-/** 检查是否在浏览器环境 */
-const isBrowser = typeof document !== 'undefined' && typeof window !== 'undefined'
-
+/**
+ * 显示通知
+ * 支持同时显示多条（堆叠）
+ */
 const showToast = (options: ToastOptions) => {
-  // SSR 环境下不执行
-  if (!isBrowser) return
-
-  // 完全销毁之前的实例和容器
-  if (currentToastApp) {
-    currentToastApp.unmount()
-    currentToastApp = null
-  }
-
-  if (toastContainer) {
-    toastContainer.remove()
-    toastContainer = null
-  }
-
-  // 创建新容器
-  toastContainer = document.createElement("div")
-  document.body.appendChild(toastContainer)
-
-  // 创建 Toast 组件实例
-  const toastApp = createApp(Toast, {
-    modelValue: true,
-    message: options.message,
-    type: options.type || "info",
-    duration: options.duration ?? 3000,
-    closable: options.closable ?? false,
-    position: options.position ?? "top",
-    icon: options.icon ?? "",
-    onClose: () => {
-      toastApp.unmount()
-      if (toastContainer) {
-        toastContainer.remove()
-        toastContainer = null
-      }
-      currentToastApp = null
-    },
-    "onUpdate:modelValue": (val: boolean) => {
-      if (!val) {
-        toastApp.unmount()
-        if (toastContainer) {
-          toastContainer.remove()
-          toastContainer = null
-        }
-        currentToastApp = null
-      }
-    },
-  })
-
-  toastApp.mount(toastContainer)
-  currentToastApp = toastApp
+  const position = options.position || 'top'
+  const containerClass =
+    position === 'bottom' ? 'mg-toast-container mg-toast-container-bottom' : 'mg-toast-container'
+  return createOverlay(Toast, options, containerClass)
 }
 
-// 便捷方法
+/**
+ * 通知组合式函数
+ */
 export const useToast = () => {
   return {
     /** 显示通知 */
     show: showToast,
     /** 成功通知 */
-    success: (message: string, options?: Partial<Omit<ToastOptions, "message" | "type">>) =>
-      showToast({ message, type: "success", ...options }),
+    success: (message: string, options?: Partial<Omit<ToastOptions, 'message' | 'type'>>) =>
+      showToast({ message, type: 'success', ...options }),
     /** 错误通知 */
-    error: (message: string, options?: Partial<Omit<ToastOptions, "message" | "type">>) =>
-      showToast({ message, type: "error", ...options }),
+    error: (message: string, options?: Partial<Omit<ToastOptions, 'message' | 'type'>>) =>
+      showToast({ message, type: 'error', ...options }),
     /** 警告通知 */
-    warning: (message: string, options?: Partial<Omit<ToastOptions, "message" | "type">>) =>
-      showToast({ message, type: "warning", ...options }),
+    warning: (message: string, options?: Partial<Omit<ToastOptions, 'message' | 'type'>>) =>
+      showToast({ message, type: 'warning', ...options }),
     /** 信息通知 */
-    info: (message: string, options?: Partial<Omit<ToastOptions, "message" | "type">>) =>
-      showToast({ message, type: "info", ...options }),
+    info: (message: string, options?: Partial<Omit<ToastOptions, 'message' | 'type'>>) =>
+      showToast({ message, type: 'info', ...options }),
   }
 }

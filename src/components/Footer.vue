@@ -4,6 +4,6 @@
   </footer>
 </template>
 
-<script setup>
-defineOptions({ name: "Footer", inheritAttrs: false })
+<script setup lang="ts">
+defineOptions({ name: 'Footer', inheritAttrs: false })
 </script>

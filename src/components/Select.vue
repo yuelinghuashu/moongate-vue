@@ -2,10 +2,7 @@
   <div
     v-bind="$attrs"
     class="mg-select-wrapper"
-    :class="[
-      `mg-select-${size}`,
-      { 'mg-select-error': error, 'mg-select-disabled': disabled },
-    ]"
+    :class="[`mg-select-${size}`, { 'mg-select-error': error, 'mg-select-disabled': disabled }]"
   >
     <!-- ==================== 可搜索模式 ==================== -->
     <div v-if="filterable" class="mg-select-filterable">
@@ -68,7 +65,7 @@
             :class="{
               'mg-select-option-selected': isSelected(item),
               'mg-select-option-focused': focusedIndex === index,
-              'mg-select-option-disabled': item.disabled,
+              'mg-select-option-disabled': isOptionDisabled(item),
             }"
             @click="selectOption(item)"
             @mouseenter="focusedIndex = index"
@@ -97,7 +94,7 @@
         v-for="item in options"
         :key="getValue(item)"
         :value="getValue(item)"
-        :disabled="item.disabled"
+        :disabled="isOptionDisabled(item)"
       >
         {{ getLabel(item) }}
       </option>
@@ -106,9 +103,9 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: "Select", inheritAttrs: false })
+import { ref, computed, watch, nextTick } from 'vue'
 
-import { ref, computed, watch, nextTick } from "vue"
+defineOptions({ name: 'Select', inheritAttrs: false })
 
 // ==================== 类型定义 ====================
 
@@ -118,14 +115,17 @@ import { ref, computed, watch, nextTick } from "vue"
  * - md: 中号（默认）
  * - lg: 大号
  */
-type Size = "sm" | "md" | "lg"
+type Size = 'sm' | 'md' | 'lg'
 
-/**
- * 组件 Props 接口
- */
+/** 选项值的类型 */
+export type SelectValue = string | number
+
+/** 选项类型：基本类型值或对象 */
+export type SelectOption = string | number | Record<string, any>
+
 interface Props {
   /** 选项列表，支持对象数组、字符串数组、数字数组 */
-  options?: any[]
+  options?: SelectOption[]
   /** 占位文本 */
   placeholder?: string
   /** 尺寸 */
@@ -150,25 +150,25 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   options: () => [],
-  placeholder: "",
-  size: "md",
+  placeholder: '',
+  size: 'md',
   disabled: false,
   error: false,
-  labelKey: "label",
-  valueKey: "value",
+  labelKey: 'label',
+  valueKey: 'value',
   filterable: false,
-  emptyText: "暂无数据",
+  emptyText: '暂无数据',
   maxHeight: 240,
 })
 
 /** v-model 双向绑定（当前选中的值） */
-const modelValue = defineModel<string | number>({ default: "" })
+const modelValue = defineModel<SelectValue>({ default: '' })
 
 // ==================== Emits 定义 ====================
 
 const emit = defineEmits<{
   /** 值变化事件 */
-  change: [value: string | number]
+  change: [value: SelectValue]
   /** 搜索输入事件 */
   search: [value: string]
 }>()
@@ -185,14 +185,15 @@ const emit = defineEmits<{
  * 2. 对象类型：取 labelKey 对应的值
  * 3. 都不存在则转字符串
  */
-const getLabel = (item: any): string => {
-  if (item === null || item === undefined) return ""
+const getLabel = (item: SelectOption): string => {
+  if (item === null || item === undefined) return ''
   // 基本类型（string, number, boolean）直接转字符串
-  if (typeof item !== "object") {
+  if (typeof item !== 'object') {
     return String(item)
   }
   // 对象类型：根据 labelKey 取值
-  const label = item[props.labelKey]
+  const obj = item as Record<string, any>
+  const label = props.labelKey ? obj[props.labelKey] : undefined
   return label !== undefined ? String(label) : String(item)
 }
 
@@ -206,15 +207,24 @@ const getLabel = (item: any): string => {
  * 2. 对象类型：取 valueKey 对应的值
  * 3. 都不存在则返回 item 本身
  */
-const getValue = (item: any): any => {
-  if (item === null || item === undefined) return undefined
+const getValue = (item: SelectOption): SelectValue => {
+  if (item === null || item === undefined) return ''
   // 基本类型直接返回
-  if (typeof item !== "object") {
-    return item
+  if (typeof item !== 'object') {
+    return item as SelectValue
   }
   // 对象类型：根据 valueKey 取值
-  const val = item[props.valueKey]
-  return val !== undefined ? val : item
+  const obj = item as Record<string, any>
+  const val = props.valueKey ? obj[props.valueKey] : undefined
+  return val !== undefined ? (val as SelectValue) : String(item)
+}
+
+/**
+ * 检查选项是否禁用
+ * 只有对象类型选项才可能有 disabled 字段
+ */
+const isOptionDisabled = (item: SelectOption): boolean => {
+  return typeof item === 'object' && item !== null && !!item.disabled
 }
 
 /**
@@ -222,7 +232,7 @@ const getValue = (item: any): any => {
  * @param item - 选项对象或基本类型值
  * @returns 是否选中
  */
-const isSelected = (item: any): boolean => {
+const isSelected = (item: SelectOption): boolean => {
   const itemValue = getValue(item)
   return String(itemValue) === String(modelValue.value)
 }
@@ -232,7 +242,7 @@ const isSelected = (item: any): boolean => {
  * 用于在搜索模式下显示选中项的标签
  */
 const selectedOption = computed(() => {
-  if (modelValue.value === undefined || modelValue.value === "") return null
+  if (modelValue.value === undefined || modelValue.value === '') return null
   return props.options.find((item) => {
     const itemValue = getValue(item)
     return String(itemValue) === String(modelValue.value)
@@ -244,7 +254,7 @@ const selectedOption = computed(() => {
 /** 下拉面板是否打开 */
 const isOpen = ref(false)
 /** 用户输入的搜索文本 */
-const searchText = ref("")
+const searchText = ref('')
 /** 当前高亮选项的索引（用于键盘导航） */
 const focusedIndex = ref(-1)
 /** 输入框 DOM 引用 */
@@ -269,7 +279,7 @@ const displayValue = computed(() => {
   if (selectedOption.value) {
     return getLabel(selectedOption.value)
   }
-  return ""
+  return ''
 })
 
 /**
@@ -300,7 +310,7 @@ const handleSearchInput = (event: Event) => {
   isEditing.value = true
   isOpen.value = true
   focusedIndex.value = -1
-  emit("search", searchText.value)
+  emit('search', searchText.value)
 }
 
 /**
@@ -311,7 +321,7 @@ const handleInputFocus = () => {
   if (props.disabled) return
   isEditing.value = true
   isOpen.value = true
-  searchText.value = ""
+  searchText.value = ''
   focusedIndex.value = -1
 }
 
@@ -337,13 +347,13 @@ const toggleDropdown = () => {
     // 关闭下拉
     isEditing.value = false
     isOpen.value = false
-    searchText.value = ""
+    searchText.value = ''
     focusedIndex.value = -1
   } else {
     // 打开下拉
     isEditing.value = true
     isOpen.value = true
-    searchText.value = ""
+    searchText.value = ''
     focusedIndex.value = -1
     nextTick(() => {
       inputRef.value?.focus()
@@ -355,17 +365,17 @@ const toggleDropdown = () => {
  * 选择选项
  * @param item - 选中的选项
  */
-const selectOption = (item: any) => {
-  if (item.disabled) return
+const selectOption = (item: SelectOption) => {
+  if (isOptionDisabled(item)) return
 
   const value = getValue(item)
   modelValue.value = value
-  emit("change", value)
+  emit('change', value)
 
   // 选择后退出编辑模式，关闭下拉，清空搜索状态
   isEditing.value = false
   isOpen.value = false
-  searchText.value = ""
+  searchText.value = ''
   focusedIndex.value = -1
 }
 
@@ -404,7 +414,7 @@ const handleKeyEnter = () => {
 const handleKeyEsc = () => {
   isEditing.value = false
   isOpen.value = false
-  searchText.value = ""
+  searchText.value = ''
   focusedIndex.value = -1
 }
 
@@ -414,10 +424,10 @@ const handleKeyEsc = () => {
  */
 const scrollToFocusedOption = () => {
   nextTick(() => {
-    const options = dropdownRef.value?.querySelectorAll(".mg-select-option")
+    const options = dropdownRef.value?.querySelectorAll('.mg-select-option')
     const focusedOption = options?.[focusedIndex.value] as HTMLElement
     if (focusedOption) {
-      focusedOption.scrollIntoView({ block: "nearest" })
+      focusedOption.scrollIntoView({ block: 'nearest' })
     }
   })
 }
@@ -436,14 +446,11 @@ const handleNativeChange = (event: Event) => {
   const rawValue = target.value
 
   // 类型回溯：在原始 options 中找回原始类型
-  const originalItem = props.options?.find(
-    (item) => String(getValue(item)) === rawValue,
-  )
-  const finalValue =
-    originalItem !== undefined ? getValue(originalItem) : rawValue
+  const originalItem = props.options?.find((item) => String(getValue(item)) === rawValue)
+  const finalValue = originalItem !== undefined ? getValue(originalItem) : rawValue
 
   modelValue.value = finalValue
-  emit("change", finalValue)
+  emit('change', finalValue)
 }
 
 // ==================== 监听器 ====================
@@ -456,7 +463,7 @@ watch(
   () => modelValue.value,
   () => {
     if (searchText.value) {
-      searchText.value = ""
+      searchText.value = ''
     }
   },
 )
@@ -466,7 +473,7 @@ watch(
  * 当搜索文本为空时，保持下拉打开，显示所有选项
  */
 watch(searchText, (newVal) => {
-  if (isEditing.value && newVal === "") {
+  if (isEditing.value && newVal === '') {
     isOpen.value = true
   }
 })

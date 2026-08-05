@@ -1,5 +1,5 @@
 // composables/useAttrsWithClass.ts
-import { useAttrs, computed, toValue, type MaybeRefOrGetter } from 'vue'
+import { useAttrs, computed, toValue } from 'vue'
 
 /**
  * 可接受的类名类型：字符串、数组、或者对象（键为类名，值为布尔条件）
@@ -45,9 +45,7 @@ type ClassValue = string | any[] | Record<string, boolean>
  * </template>
  * ```
  */
-export function useAttrsWithClass(
-  internalClassFactory: () => ClassValue,
-) {
+export function useAttrsWithClass(internalClassFactory: () => ClassValue) {
   // 获取组件的所有属性（包括外部传入的 class、style、id 等）
   const attrs = useAttrs()
   // 从 attrs 中分离出 class，其余属性用于后续透传
@@ -58,10 +56,7 @@ export function useAttrsWithClass(
 
   // 合并外部 class 和内部 class
   // 使用 toValue 解包 internalClass（虽然它是 ComputedRef，但为了统一处理直接使用 toValue 也很安全）
-  const mergedClass = computed(() => [
-    externalClass,
-    toValue(internalClass),
-  ])
+  const mergedClass = computed(() => [externalClass, toValue(internalClass)])
 
   // 返回需要绑定到组件根元素上的属性和合并后的 class
   return {

@@ -20,10 +20,7 @@
         v-if="visible"
         ref="popoverRef"
         class="mg-popover"
-        :class="[
-          `mg-popover-${currentPlacement}`,
-          { 'mg-popover-visible': visible },
-        ]"
+        :class="[`mg-popover-${currentPlacement}`, { 'mg-popover-visible': visible }]"
         :style="popoverStyle"
         @mouseenter="cancelHideTimer"
         @mouseleave="startHideTimer"
@@ -36,14 +33,14 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: "Popover" })
+defineOptions({ name: 'Popover' })
 
-import { ref, computed, onMounted, onUnmounted, nextTick } from "vue"
+import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 
 // ==================== 类型定义 ====================
 
 /** 弹出层位置 */
-type Placement = "top" | "bottom" | "left" | "right"
+type Placement = 'top' | 'bottom' | 'left' | 'right'
 
 /** 组件 Props 接口 */
 interface Props {
@@ -60,7 +57,7 @@ interface Props {
 // ==================== Props ====================
 
 const props = withDefaults(defineProps<Props>(), {
-  placement: "bottom",
+  placement: 'bottom',
   showDelay: 0,
   hideDelay: 100,
   offset: 8,
@@ -69,8 +66,7 @@ const props = withDefaults(defineProps<Props>(), {
 // ==================== SSR 环境判断 ====================
 
 /** 是否在浏览器环境（SSR 安全） */
-const isBrowser =
-  typeof window !== "undefined" && typeof document !== "undefined"
+const isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined'
 
 // ==================== 响应式状态 ====================
 
@@ -119,6 +115,7 @@ const startHideTimer = () => {
   cancelHideTimer()
   hideTimer = setTimeout(() => {
     visible.value = false
+    disableResizeObserver()
   }, props.hideDelay)
 }
 
@@ -135,16 +132,8 @@ const show = () => {
     visible.value = true
     await nextTick()
     updatePosition()
+    enableResizeObserver()
   }, props.showDelay)
-}
-
-/**
- * 隐藏弹出层
- * 清除显示定时器，并启动隐藏延迟
- */
-const hide = () => {
-  clearTimers()
-  startHideTimer()
 }
 
 /** 鼠标进入触发元素时显示 */
@@ -161,28 +150,24 @@ const onMouseLeave = () => startHideTimer()
  * @param triggerRect - 触发元素的边界矩形
  * @param popoverRect - 弹出层的边界矩形
  */
-const recalculatePosition = (
-  placement: Placement,
-  triggerRect: DOMRect,
-  popoverRect: DOMRect,
-) => {
+const recalculatePosition = (placement: Placement, triggerRect: DOMRect, popoverRect: DOMRect) => {
   let top = 0
   let left = 0
 
   switch (placement) {
-    case "top":
+    case 'top':
       top = triggerRect.top - popoverRect.height - props.offset
       left = triggerRect.left + (triggerRect.width - popoverRect.width) / 2
       break
-    case "bottom":
+    case 'bottom':
       top = triggerRect.bottom + props.offset
       left = triggerRect.left + (triggerRect.width - popoverRect.width) / 2
       break
-    case "left":
+    case 'left':
       top = triggerRect.top + (triggerRect.height - popoverRect.height) / 2
       left = triggerRect.left - popoverRect.width - props.offset
       break
-    case "right":
+    case 'right':
       top = triggerRect.top + (triggerRect.height - popoverRect.height) / 2
       left = triggerRect.right + props.offset
       break
@@ -210,25 +195,25 @@ const updatePosition = () => {
 
   // 1. 根据期望方向计算初始位置，并检测是否超出视口
   switch (props.placement) {
-    case "top":
+    case 'top':
       top = triggerRect.top - popoverRect.height - props.offset
       left = triggerRect.left + (triggerRect.width - popoverRect.width) / 2
-      if (top < 0) finalPlacement = "bottom"
+      if (top < 0) finalPlacement = 'bottom'
       break
-    case "bottom":
+    case 'bottom':
       top = triggerRect.bottom + props.offset
       left = triggerRect.left + (triggerRect.width - popoverRect.width) / 2
-      if (top + popoverRect.height > viewportHeight) finalPlacement = "top"
+      if (top + popoverRect.height > viewportHeight) finalPlacement = 'top'
       break
-    case "left":
+    case 'left':
       top = triggerRect.top + (triggerRect.height - popoverRect.height) / 2
       left = triggerRect.left - popoverRect.width - props.offset
-      if (left < 0) finalPlacement = "right"
+      if (left < 0) finalPlacement = 'right'
       break
-    case "right":
+    case 'right':
       top = triggerRect.top + (triggerRect.height - popoverRect.height) / 2
       left = triggerRect.right + props.offset
-      if (left + popoverRect.width > viewportWidth) finalPlacement = "left"
+      if (left + popoverRect.width > viewportWidth) finalPlacement = 'left'
       break
   }
 
@@ -275,34 +260,40 @@ const handleResize = () => {
   if (visible.value) updatePosition()
 }
 
-/** DOM 变化观察器（监听内容变动导致尺寸改变） */
-let observer: MutationObserver | null = null
+/** 尺寸变化观察器（仅监听 popover 自身，避免全局 MutationObserver 性能开销） */
+let resizeObserver: ResizeObserver | null = null
+
+const enableResizeObserver = () => {
+  if (!isBrowser || resizeObserver || !popoverRef.value) return
+  resizeObserver = new ResizeObserver(() => {
+    if (visible.value) updatePosition()
+  })
+  resizeObserver.observe(popoverRef.value)
+}
+
+const disableResizeObserver = () => {
+  if (resizeObserver) {
+    resizeObserver.disconnect()
+    resizeObserver = null
+  }
+}
 
 onMounted(() => {
   // 只在浏览器环境执行
   if (!isBrowser) return
 
-  window.addEventListener("scroll", handleScroll, true)
-  window.addEventListener("resize", handleResize)
-
-  // 监听 DOM 变化，内容变动时自动更新位置
-  observer = new MutationObserver(() => {
-    if (visible.value) updatePosition()
-  })
-  observer.observe(document.body, { childList: true, subtree: true })
+  window.addEventListener('scroll', handleScroll, true)
+  window.addEventListener('resize', handleResize)
 })
 
 onUnmounted(() => {
   // 只在浏览器环境执行清理
   if (!isBrowser) return
 
-  window.removeEventListener("scroll", handleScroll, true)
-  window.removeEventListener("resize", handleResize)
+  window.removeEventListener('scroll', handleScroll, true)
+  window.removeEventListener('resize', handleResize)
 
-  if (observer) {
-    observer.disconnect()
-    observer = null
-  }
+  disableResizeObserver()
 
   clearTimers()
 })

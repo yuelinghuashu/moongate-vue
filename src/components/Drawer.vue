@@ -2,6 +2,7 @@
   <Teleport to="body">
     <div
       v-if="modelValue"
+      ref="overlayRef"
       v-bind="attrsWithoutClass"
       :class="['mg-drawer-root', mergedClass]"
     >
@@ -14,20 +15,20 @@
       <!-- 抽屉内容 -->
       <div
         class="mg-drawer"
-        :class="[
-          `mg-drawer-${placement}`,
-          `mg-drawer-${size}`,
-          { 'mg-drawer-open': modelValue },
-        ]"
+        :class="[`mg-drawer-${placement}`, `mg-drawer-${size}`, { 'mg-drawer-open': modelValue }]"
+        role="dialog"
+        :aria-labelledby="titleId"
+        aria-modal="true"
       >
         <div class="mg-drawer-header">
           <slot name="header">
-            <span class="mg-drawer-title">{{ title }}</span>
+            <span class="mg-drawer-title" :id="titleId">{{ title }}</span>
           </slot>
           <button
             v-if="closable"
             class="mg-drawer-close"
             type="button"
+            :aria-label="closeAriaLabel"
             @click="handleClose"
           >
             &times;
@@ -45,13 +46,20 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: "Drawer", inheritAttrs: false })
+import { ref, watch, useId } from 'vue'
+import { useAttrsWithClass } from '../composables/useAttrsWithClass'
+import { useOverlayBehavior } from '../composables/useScrollLock'
 
-import { watch, onBeforeUnmount } from "vue"
-import { useAttrsWithClass } from "../composables/useAttrsWithClass"
+defineOptions({ name: 'Drawer', inheritAttrs: false })
 
-type Placement = "left" | "right" | "top" | "bottom"
-type Size = "sm" | "md" | "lg" | "xl" | "full"
+defineSlots<{
+  default: () => any
+  header: () => any
+  footer: () => any
+}>()
+
+type Placement = 'left' | 'right' | 'top' | 'bottom'
+type Size = 'sm' | 'md' | 'lg' | 'xl' | 'full'
 
 interface Props {
   /** 抽屉弹出方向 */
@@ -64,14 +72,23 @@ interface Props {
   closable?: boolean
   /** 点击遮罩层是否关闭 */
   closeOnOverlay?: boolean
+  /** 关闭按钮的 aria-label */
+  closeAriaLabel?: string
+  /** 是否启用 ESC 键关闭，默认 true */
+  enableEsc?: boolean
+  /** 是否启用焦点陷阱，默认 true */
+  enableFocusTrap?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  placement: "right",
-  size: "md",
-  title: "",
+  placement: 'right',
+  size: 'md',
+  title: '',
   closable: true,
   closeOnOverlay: true,
+  closeAriaLabel: '关闭抽屉',
+  enableEsc: true,
+  enableFocusTrap: true,
 })
 
 /** v-model 双向绑定（由 defineModel 自动处理 update:modelValue） */
@@ -86,57 +103,37 @@ const emit = defineEmits<{
 
 const { attrsWithoutClass, mergedClass } = useAttrsWithClass(() => ({}))
 
-/**
- * 处理键盘事件（ESC 键关闭）
- */
-const handleKeydown = (event: KeyboardEvent) => {
-  if (event.key === "Escape" && modelValue.value) {
-    handleClose()
-  }
-}
+/** 浮层容器 DOM 引用（焦点陷阱作用域） */
+const overlayRef = ref<HTMLElement | null>(null)
 
-/**
- * 检查是否在浏览器环境
- * SSR 时 document 不存在
- */
-const isBrowser = typeof document !== "undefined"
+/** 标题元素的唯一 ID（用于 aria-labelledby，SSR 安全） */
+const titleId = useId()
+
+// 统一管理滚动锁定 + ESC 关闭 + 焦点陷阱（支持多实例计数器）
+useOverlayBehavior(modelValue as unknown as import('vue').Ref<boolean>, overlayRef, handleClose, {
+  enableEsc: props.enableEsc,
+  enableFocusTrap: props.enableFocusTrap,
+})
 
 /**
  * 监听 modelValue 变化
- * - 打开时：触发 open 事件，禁止 body 滚动，添加键盘监听
- * - 关闭时：触发 close 事件，恢复 body 滚动，移除键盘监听
+ * - 打开时：触发 open 事件
+ * - 关闭时：触发 close 事件
  */
 watch(
   () => modelValue.value,
   (val) => {
-    // SSR 环境下跳过 DOM 操作
-    if (!isBrowser) return
-
     if (val) {
-      emit("open")
-      document.body.style.overflow = "hidden"
-      document.addEventListener("keydown", handleKeydown)
+      emit('open')
     } else {
-      emit("close")
-      document.body.style.overflow = ""
-      document.removeEventListener("keydown", handleKeydown)
+      emit('close')
     }
   },
   { immediate: true },
 )
 
-/**
- * 组件卸载时清理
- * 防止组件非正常卸载时 body 滚动锁死或键盘监听残留
- */
-onBeforeUnmount(() => {
-  if (!isBrowser) return
-  document.body.style.overflow = ""
-  document.removeEventListener("keydown", handleKeydown)
-})
-
 /** 关闭抽屉 */
-const handleClose = () => {
+function handleClose() {
   modelValue.value = false
 }
 </script>

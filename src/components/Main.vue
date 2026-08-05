@@ -4,6 +4,6 @@
   </main>
 </template>
 
-<script setup>
-defineOptions({ name: "Main", inheritAttrs: false })
+<script setup lang="ts">
+defineOptions({ name: 'Main', inheritAttrs: false })
 </script>

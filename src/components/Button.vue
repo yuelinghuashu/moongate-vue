@@ -1,6 +1,7 @@
 <template>
   <button
     v-bind="$attrs"
+    :type="type"
     class="mg-button"
     :class="[
       `mg-button-${variant}-${color}`,
@@ -13,7 +14,7 @@
     <!-- 加载状态 -->
     <template v-if="loading">
       <span class="mg-button-loading-icon" />
-      <!-- 🆕 根据开关决定是否显示 label -->
+      <!-- 根据开关决定是否显示 label -->
       <span v-if="showLabelWhileLoading" class="mg-button-label">
         <slot name="loading-label">{{ loadingLabel || label }}</slot>
       </span>
@@ -35,18 +36,15 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: "Button", inheritAttrs: false })
+import { useSlots, computed } from 'vue'
+import type { Component } from 'vue'
 
-import { useSlots, computed } from "vue"
-import type { Component } from "vue"
+defineOptions({ name: 'Button', inheritAttrs: false })
 
-const slots = useSlots()
-const hasIconSlot = computed(() => !!slots.icon)
-const hasLabel = computed(() => props.label !== undefined || !!slots.default)
-
-type Variant = "filled" | "outline"
-type Color = "primary" | "success" | "warning" | "error"
-type Size = "sm" | "md" | "lg"
+type Variant = 'filled' | 'outline'
+type Color = 'primary' | 'success' | 'warning' | 'error'
+type Size = 'sm' | 'md' | 'lg'
+type ButtonType = 'button' | 'submit' | 'reset'
 
 interface Props {
   /** 按钮文字 */
@@ -57,6 +55,8 @@ interface Props {
   color?: Color
   /** 按钮大小 */
   size?: Size
+  /** 原生按钮类型，默认 button 防止表单意外提交 */
+  type?: ButtonType
   /** 是否禁用 */
   disabled?: boolean
   /** 是否加载中 */
@@ -72,15 +72,29 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  label: "",
-  variant: "filled",
-  color: "primary",
-  size: "sm",
+  label: '',
+  variant: 'filled',
+  color: 'primary',
+  size: 'sm',
+  type: 'button',
   disabled: false,
   loading: false,
   showLabelWhileLoading: false,
   block: false,
 })
+
+defineSlots<{
+  /** 按钮文字内容（优先于 label prop） */
+  default: () => any
+  /** 按钮图标 */
+  icon: () => any
+  /** 加载状态下的文字（优先于 loadingLabel prop） */
+  'loading-label': () => any
+}>()
+
+const slots = useSlots()
+const hasIconSlot = computed(() => !!slots.icon)
+const hasLabel = computed(() => props.label !== undefined || !!slots.default)
 
 const emit = defineEmits<{
   click: [event: MouseEvent]
@@ -88,6 +102,6 @@ const emit = defineEmits<{
 
 const handleClick = (event: MouseEvent) => {
   if (props.disabled || props.loading) return
-  emit("click", event)
+  emit('click', event)
 }
 </script>

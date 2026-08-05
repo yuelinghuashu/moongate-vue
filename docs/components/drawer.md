@@ -8,8 +8,8 @@
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Button, Drawer } from "moongate-vue"
+import { ref } from 'vue'
+import { Button, Drawer } from 'moongate-vue'
 
 const open = ref(false)
 </script>
@@ -32,8 +32,8 @@ const open = ref(false)
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Drawer } from "moongate-vue"
+import { ref } from 'vue'
+import { Drawer } from 'moongate-vue'
 
 const openLeft = ref(false)
 const openRight = ref(false)
@@ -72,8 +72,8 @@ const openBottom = ref(false)
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Button, Drawer } from "moongate-vue"
+import { ref } from 'vue'
+import { Button, Drawer } from 'moongate-vue'
 
 const openSm = ref(false)
 const openMd = ref(false)
@@ -117,8 +117,8 @@ const openFull = ref(false)
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Button, Drawer } from "moongate-vue"
+import { ref } from 'vue'
+import { Button, Drawer } from 'moongate-vue'
 
 const open = ref(false)
 </script>
@@ -150,14 +150,17 @@ const open = ref(false)
 
 ### Props
 
-| 属性             | 类型                                     | 默认值    | 说明                |
-| ---------------- | ---------------------------------------- | --------- | ------------------- |
-| `modelValue`     | `boolean`                                | `false`   | 是否显示（v-model） |
-| `placement`      | `'left' \| 'right' \| 'top' \| 'bottom'` | `'right'` | 抽屉方向            |
-| `size`           | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'full'` | `'md'`    | 尺寸                |
-| `title`          | `string`                                 | `''`      | 标题文本            |
-| `closable`       | `boolean`                                | `true`    | 是否显示关闭按钮    |
-| `closeOnOverlay` | `boolean`                                | `true`    | 点击遮罩层是否关闭  |
+| 属性              | 类型                                     | 默认值       | 说明                              |
+| ----------------- | ---------------------------------------- | ------------ | --------------------------------- |
+| `modelValue`      | `boolean`                                | `false`      | 是否显示（v-model）               |
+| `placement`       | `'left' \| 'right' \| 'top' \| 'bottom'` | `'right'`    | 抽屉方向                          |
+| `size`            | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'full'` | `'md'`       | 尺寸                              |
+| `title`           | `string`                                 | `''`         | 标题文本                          |
+| `closable`        | `boolean`                                | `true`       | 是否显示关闭按钮                  |
+| `closeOnOverlay`  | `boolean`                                | `true`       | 点击遮罩层是否关闭                |
+| `closeAriaLabel`  | `string`                                 | `'关闭抽屉'` | 关闭按钮的无障碍标签              |
+| `enableEsc`       | `boolean`                                | `true`       | 是否启用 ESC 键关闭               |
+| `enableFocusTrap` | `boolean`                                | `true`       | 是否启用焦点陷阱（键盘 Tab 循环） |
 
 ### Slots
 
@@ -182,3 +185,6 @@ const open = ref(false)
 - 当 `size="full"` 且 `placement="left"/"right"` 时，抽屉会占满全屏，遮罩层将不可见，建议避免此组合或根据实际需求调整。
 
 - 抽屉打开时会自动锁定 body 滚动，关闭时恢复。
+- 支持按 ESC 键关闭（可通过 `enableEsc` 禁用）。
+- 打开时自动启用焦点陷阱（可通过 `enableFocusTrap` 禁用）。
+- 包含完整的 ARIA 无障碍属性。

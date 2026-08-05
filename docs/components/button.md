@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import { Button } from "moongate-vue"
+import { Button } from 'moongate-vue'
 </script>
 ```
 
@@ -42,11 +42,11 @@ import { Button } from "moongate-vue"
 </template>
 
 <script setup>
-import { Button } from "moongate-vue"
+import { Button } from 'moongate-vue'
 
 // 请根据实际使用的图标库导入 IconHome 组件
 // 示例：import { IconHome } from "lucide-vue-next"
-const IconHome = () => "🏠" // 临时占位，请替换为实际图标组件
+const IconHome = () => '🏠' // 临时占位，请替换为实际图标组件
 </script>
 ```
 
@@ -61,17 +61,12 @@ const IconHome = () => "🏠" // 临时占位，请替换为实际图标组件
   <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
     <Button loading label="加载中" />
     <Button loading :show-label-while-loading="true" label="加载中" />
-    <Button
-      loading
-      :show-label-while-loading="true"
-      loading-label="提交中..."
-      label="提交"
-    />
+    <Button loading :show-label-while-loading="true" loading-label="提交中..." label="提交" />
   </div>
 </template>
 
 <script setup>
-import { Button } from "moongate-vue"
+import { Button } from 'moongate-vue'
 </script>
 ```
 
@@ -87,7 +82,7 @@ import { Button } from "moongate-vue"
 </template>
 
 <script setup>
-import { Button } from "moongate-vue"
+import { Button } from 'moongate-vue'
 </script>
 ```
 
@@ -105,7 +100,7 @@ import { Button } from "moongate-vue"
 </template>
 
 <script setup>
-import { Button } from "moongate-vue"
+import { Button } from 'moongate-vue'
 </script>
 ```
 
@@ -125,7 +120,7 @@ import { Button } from "moongate-vue"
 </template>
 
 <script setup>
-import { Button } from "moongate-vue"
+import { Button } from 'moongate-vue'
 </script>
 ```
 
@@ -146,7 +141,7 @@ import { Button } from "moongate-vue"
 </template>
 
 <script setup>
-import { Button } from "moongate-vue"
+import { Button } from 'moongate-vue'
 </script>
 ```
 
@@ -165,7 +160,7 @@ import { Button } from "moongate-vue"
 </template>
 
 <script setup>
-import { Button } from "moongate-vue"
+import { Button } from 'moongate-vue'
 </script>
 ```
 
@@ -178,19 +173,12 @@ import { Button } from "moongate-vue"
 ```vue
 <template>
   <div style="max-width: 400px;">
-    <Button
-      variant="outline"
-      color="error"
-      size="lg"
-      block
-      loading
-      label="删除项目"
-    />
+    <Button variant="outline" color="error" size="lg" block loading label="删除项目" />
   </div>
 </template>
 
 <script setup>
-import { Button } from "moongate-vue"
+import { Button } from 'moongate-vue'
 </script>
 ```
 
@@ -202,25 +190,27 @@ import { Button } from "moongate-vue"
 
 ### Props
 
-| 属性名                  | 类型                                             | 默认值      | 说明                                     |
-| ----------------------- | ------------------------------------------------ | ----------- | ---------------------------------------- |
-| `label`                 | `string`                                         | `''`        | 按钮文字                                 |
-| `variant`               | `'filled' \| 'outline'`                          | `'filled'`  | 视觉变体                                 |
-| `color`                 | `'primary' \| 'success' \| 'warning' \| 'error'` | `'primary'` | 主题色                                   |
-| `size`                  | `'sm' \| 'md' \| 'lg'`                           | `'md'`      | 按钮尺寸                                 |
-| `disabled`              | `boolean`                                        | `false`     | 是否禁用                                 |
-| `loading`               | `boolean`                                        | `false`     | 是否加载中                               |
-| `block`                 | `boolean`                                        | `false`     | 是否为块级（宽度 100%）                  |
-| `icon`                  | `string \| Component`                            | —           | 图标（字符串或 Vue 组件）                |
-| `showLabelWhileLoading` | `boolean`                                        | `false`     | 加载时是否保留文字（默认只显示加载动画） |
-| `loadingLabel`          | `string`                                         | —           | 加载时的自定义文字（默认复用 `label`）   |
+| 属性名                  | 类型                                             | 默认值      | 说明                                         |
+| ----------------------- | ------------------------------------------------ | ----------- | -------------------------------------------- |
+| `label`                 | `string`                                         | `''`        | 按钮文字                                     |
+| `variant`               | `'filled' \| 'outline'`                          | `'filled'`  | 视觉变体                                     |
+| `color`                 | `'primary' \| 'success' \| 'warning' \| 'error'` | `'primary'` | 主题色                                       |
+| `size`                  | `'sm' \| 'md' \| 'lg'`                           | `'sm'`      | 按钮尺寸（默认小号）                         |
+| `type`                  | `'button' \| 'submit' \| 'reset'`                | `'button'`  | 原生按钮类型（默认 button 防止表单意外提交） |
+| `disabled`              | `boolean`                                        | `false`     | 是否禁用                                     |
+| `loading`               | `boolean`                                        | `false`     | 是否加载中                                   |
+| `block`                 | `boolean`                                        | `false`     | 是否为块级（宽度 100%）                      |
+| `icon`                  | `string \| Component`                            | —           | 图标（字符串或 Vue 组件）                    |
+| `showLabelWhileLoading` | `boolean`                                        | `false`     | 加载时是否保留文字（默认只显示加载动画）     |
+| `loadingLabel`          | `string`                                         | —           | 加载时的自定义文字（默认复用 `label`）       |
 
 ### Slots
 
-| 名称      | 说明                                       |
-| --------- | ------------------------------------------ |
-| `default` | 按钮文字（**优先级高于 `label` prop**）    |
-| `icon`    | 左侧图标内容（**优先级高于 `icon` prop**） |
+| 名称            | 说明                                               |
+| --------------- | -------------------------------------------------- |
+| `default`       | 按钮文字（**优先级高于 `label` prop**）            |
+| `icon`          | 左侧图标内容（**优先级高于 `icon` prop**）         |
+| `loading-label` | 加载状态文字（**优先级高于 `loadingLabel` prop**） |
 
 ### Events
 

@@ -6,14 +6,15 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue"
-import Button from "./components/Button.vue"
-import Drawer from "./components/Drawer.vue"
-import Toast from "components/Toast.vue"
-import { useToast } from "./composables/useToast"
+import { ref } from 'vue'
+import Button from './components/Button.vue'
+import Drawer from './components/Drawer.vue'
+import { useToast } from './composables/useToast'
 
 const visible = ref(false)
 
 const toast = useToast()
-toast.success("这是一条成功消息")
+for (let i = 0; i < 10; i++) {
+  toast.success(`Success ${i + 1}`)
+}
 </script>

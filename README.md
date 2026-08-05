@@ -3,139 +3,141 @@
 [![npm version](https://img.shields.io/npm/v/moongate-vue.svg)](https://www.npmjs.com/package/moongate-vue)
 [![npm bundle size](https://img.shields.io/bundlephobia/minzip/moongate-vue)](https://bundlephobia.com/package/moongate-vue)
 [![npm downloads](https://img.shields.io/npm/dm/moongate-vue.svg)](https://www.npmjs.com/package/moongate-vue)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
-Moongate Vue 是一个受月亮启发的极简 Vue 3 组件库。设计令牌驱动，CSS 优先，框架无关。
+**English** | [**中文**](./README.zh-CN.md)
 
-**完整组件库仅 10KB (gzipped)**，比主流组件库轻 10 倍以上。
+Moongate Vue is a moon-inspired, minimal Vue 3 component library. Design-token driven, CSS-first, framework-agnostic.
 
-## 特性
+**The complete library is only 10KB (gzipped)** — over 10x lighter than mainstream component libraries.
 
-- 🌙 **月亮哲学** — 克制、冷静、秩序感
-- 📦 **极致轻量** — 完整组件库仅 **10KB** (gzipped)
-- 🎨 **设计令牌驱动** — 基于 CSS 变量，主题切换 effortless
-- 🔧 **CSS 优先** — 样式与逻辑解耦，可跨框架复用
-- ✨ **极简 API** — 每个组件 2-8 个 props，易学易用
-- 🚀 **零依赖** — 无需额外配置，开箱即用
-- 🎨 **代码美化** — 内置行内代码和代码块样式，适配深色/浅色模式
-- ⚡ **SSR 就绪** — 完美适配 Nuxt 4 / VitePress 等服务端渲染场景
+## Features
 
-## 安装
+- 🌙 **Moon Philosophy** — Restrained, calm, orderly
+- 📦 **Ultra Lightweight** — Complete library only **10KB** (gzipped)
+- 🎨 **Design-Token Driven** — CSS variables based, effortless theme switching
+- 🔧 **CSS-First** — Styles decoupled from logic, reusable across frameworks
+- ✨ **Minimal API** — 2-8 props per component, easy to learn and use
+- 🚀 **Zero Dependencies** — No extra configuration, works out of the box
+- 🎨 **Code Styling** — Built-in inline code & code block styles, supports dark/light mode
+- ⚡ **SSR Ready** — Perfect for Nuxt 4 / VitePress and other server-side rendering scenarios
+- ✅ **Tested** — Vitest + jsdom full coverage: 25 components + 5 composables + SSR regression, 212 tests total
+- 🔧 **Engineering Standards** — ESLint + Prettier unified style, husky pre-commit checks
+- 📚 **Message Stacking** — Message / Toast support multiple concurrent messages, no extra config needed
+
+## Installation
 
 ```bash
 npm install moongate-vue
-# 或
+# or
 pnpm add moongate-vue
 ```
 
-> 💡 Moongate Vue 完全支持服务端渲染（SSR），可无缝集成 Nuxt 3 和 VitePress，无需额外配置。
+> 💡 Moongate Vue fully supports server-side rendering (SSR) and integrates seamlessly with Nuxt 3 and VitePress — no additional configuration required.
 
-### 版本要求
+### Version Requirements
 
-- **Vue**：`^3.3.0` 或更高版本
+- **Vue**: `^3.5.0` or higher (requires SSR-safe features like `useId`)
 
-> 如果你仍在使用 Vue 3.0 - 3.2，请使用 `moongate-vue@1.2.x` 版本。
+> If you're using Vue 3.0 - 3.4, please use `moongate-vue@1.2.x`.
 
-## 快速开始
+## Quick Start
 
 ```vue
 <script setup>
-import { Button, Card, useMessage } from "moongate-vue"
-import "moongate-vue/style.css"
+import { Button, Card, useMessage } from 'moongate-vue'
+import 'moongate-vue/style.css'
 
 const message = useMessage()
 </script>
 
 <template>
-  <Button
-    variant="filled"
-    color="primary"
-    @click="message.success('欢迎使用 Moongate')"
-  >
-    月光按钮
+  <Button variant="filled" color="primary" @click="message.success('Welcome to Moongate')">
+    Moonlight Button
   </Button>
 </template>
 ```
 
-## 📖 在线文档
+## 📖 Documentation
 
-访问 [**Moongate Vue 官方文档**](https://vue.moongate.top) 查看：
+Visit the [**Moongate Vue Official Documentation**](https://vue.moongate.top) for:
 
-- 所有组件 API 与交互示例
-- 设计令牌与主题定制指南
+- All component APIs and interactive examples
+- Design tokens & theming guide
 
-> 文档站与组件库同步更新，建议优先查阅在线文档。
+> The documentation site stays in sync with the library — we recommend consulting the online docs first.
 
-## 组件列表
+## Components
 
-### 基础组件
+### Basic Components
 
-| 组件    | 说明   |
-| ------- | ------ |
-| Button  | 按钮   |
-| Card    | 卡片   |
-| Badge   | 徽章   |
-| Divider | 分割线 |
+| Component | Description    |
+| --------- | -------------- |
+| Button    | Button         |
+| Card      | Card container |
+| Badge     | Badge          |
+| Divider   | Divider line   |
 
-### 表单组件
+### Form Components
 
-| 组件     | 说明     |
-| -------- | -------- |
-| Input    | 输入框   |
-| Textarea | 多行文本 |
-| Checkbox | 复选框   |
-| Radio    | 单选框   |
-| Switch   | 开关     |
-| Select   | 下拉选择 |
+| Component | Description         |
+| --------- | ------------------- |
+| Input     | Input field         |
+| Textarea  | Multi-line textarea |
+| Checkbox  | Checkbox            |
+| Radio     | Radio button        |
+| Switch    | Toggle switch       |
+| Select    | Dropdown select     |
 
-### 数据展示组件
+### Data Display
 
-| 组件       | 说明   |
-| ---------- | ------ |
-| Table      | 表格   |
-| Pagination | 分页   |
-| Tabs       | 标签页 |
+| Component  | Description |
+| ---------- | ----------- |
+| Table      | Data table  |
+| Pagination | Pagination  |
+| Tabs       | Tab panels  |
 
-### 布局组件
+### Layout Components
 
-| 组件      | 说明       |
-| --------- | ---------- |
-| Container | 容器       |
-| Header    | 头部容器   |
-| Main      | 主内容容器 |
-| Footer    | 底部容器   |
-| Hero      | 英雄区     |
+| Component | Description            |
+| --------- | ---------------------- |
+| Container | Container              |
+| Header    | Header container       |
+| Main      | Main content container |
+| Footer    | Footer container       |
+| Hero      | Hero section           |
 
-### 反馈组件
+### Feedback Components
 
-| 组件     | 说明     |
-| -------- | -------- |
-| Modal    | 模态框   |
-| Toast    | 通知     |
-| Message  | 消息提示 |
-| Tooltip  | 提示     |
-| Popover  | 弹出层   |
-| Drawer   | 抽屉     |
-| Skeleton | 骨架屏   |
+| Component | Description  |
+| --------- | ------------ |
+| Modal     | Modal dialog |
+| Toast     | Toast        |
+| Message   | Message      |
+| Tooltip   | Tooltip      |
+| Popover   | Popover      |
+| Drawer    | Drawer panel |
+| Skeleton  | Skeleton     |
 
-## 样式工具
+## Style Utilities
 
-以下为全局样式类，无需导入 Vue 组件，直接使用类名即可：
+These global style classes require no Vue component import — just use the class names directly:
 
-| 样式 | 类名                                              | 说明     |
-| ---- | ------------------------------------------------- | -------- |
-| Link | `.mg-link` / `.nav-link`                          | 链接样式 |
-| Code | `.mg-code` / `.mg-code-inline` / `.mg-code-block` | 代码样式 |
+| Utility | Class                                             | Description |
+| ------- | ------------------------------------------------- | ----------- |
+| Link    | `.mg-link` / `.nav-link`                          | Link styles |
+| Code    | `.mg-code` / `.mg-code-inline` / `.mg-code-block` | Code styles |
 
-> **说明**：总计 **25 个组件 + 2 个样式工具**，覆盖日常开发绝大多数场景。
+> **Note**: **25 components + 2 style utilities** in total, covering most daily development scenarios.
 
-## 设计令牌
+## Design Tokens
 
-Moongate Vue 基于完整的设计令牌系统：
+Moongate Vue is built on a complete design token system:
 
-- `colors.css` — 浅色/深色模式颜色变量
-- `layout.css` — 间距、字体、动效等布局变量
+- `colors.css` — light/dark mode color variables
+- `layout.css` — spacing, typography, motion, and other layout variables
 
-通过覆盖 CSS 变量即可完成主题定制：
+Customize the theme by overriding CSS variables:
 
 ```css
 :root {
@@ -144,56 +146,56 @@ Moongate Vue 基于完整的设计令牌系统：
 }
 ```
 
-## 属性透传
+## Attribute Inheritance
 
-所有组件都支持通过 `v-bind="$attrs"` 透传原生属性到根元素：
+All components pass through native attributes to the root element via `v-bind="$attrs"`:
 
-- `id`、`name`、`data-*`、`aria-*`、`role` 等
-- Input/Textarea 透传到原生输入元素
-- Checkbox/Radio/Switch 透传到隐藏的 `<input>`（无障碍）
-- Button 透传到 `<button>` 元素
+- `id`, `name`, `data-*`, `aria-*`, `role`, etc.
+- Input/Textarea pass through to the native input element
+- Checkbox/Radio/Switch pass through to the hidden `<input>` (accessibility)
+- Button passes through to the `<button>` element
 
-示例：
+Examples:
 
 ```vue
-<!-- 属性自动透传到 <input> -->
+<!-- Attributes auto pass through to <input> -->
 <Input id="email" name="email" type="email" autocomplete="off" />
 
-<!-- 无障碍属性 -->
-<Checkbox name="terms" aria-label="同意用户协议" />
+<!-- Accessibility attributes -->
+<Checkbox name="terms" aria-label="Agree to terms" />
 
-<!-- 自定义数据属性 -->
+<!-- Custom data attributes -->
 <Card data-testid="article-card" hoverable>
-  文章内容
+  Article content
 </Card>
 ```
 
-## 注意事项
+## Notes
 
-- 透传属性不会覆盖组件 Props 中已声明的属性
-- 若需覆盖组件内置行为，请使用对应的 Props（如 `disabled`、`size` 等）
+- Inherited attributes will not override props already declared in the component
+- To override built-in behavior, use the corresponding props (e.g., `disabled`, `size`, etc.)
 
-## 许可证
+## License
 
 [MIT](./LICENSE)
 
-## 相关链接
+## Related Links
 
-- [设计理念](https://moongate.top/docs/design-tokens-vs-atomic-css)
-- [实现细节](https://moongate.top/docs/css-first-component-library)
-- [Bundlephobia 分析](https://bundlephobia.com/package/moongate-vue)
-- [在线文档](https://vue.moongate.top)
+- [Design Philosophy](https://moongate.top/docs/design-tokens-vs-atomic-css)
+- [Implementation Details](https://moongate.top/docs/css-first-component-library)
+- [Bundlephobia Analysis](https://bundlephobia.com/package/moongate-vue)
+- [Online Documentation](https://vue.moongate.top)
 
-## ☕ 赞助支持
+## ☕ Support
 
 <details>
-<summary>如果 Moongate Vue 帮你节省了开发时间，欢迎请我喝杯咖啡 ☕</summary>
+<summary>If Moongate Vue saved you development time, feel free to buy me a coffee ☕</summary>
 
-你的支持会让我更有动力持续维护、迭代新组件、完善文档。
+Your support gives me more motivation to keep maintaining, iterating on new components, and improving documentation.
 
-<img src="./assets/ali-pay.jpg" width="200" height="280" alt="支付宝收款码" />
-<img src="./assets/wechat-pay.jpg" width="200" height="280" alt="微信收款码" />
+<img src="./assets/ali-pay.jpg" width="200" height="280" alt="Alipay QR Code" />
+<img src="./assets/wechat-pay.jpg" width="200" height="280" alt="WeChat Pay QR Code" />
 
-> 赞助费用将用于组件维护、新功能开发与文档完善。感谢每一份心意 ❤️
+> Donations are used for component maintenance, new feature development, and documentation improvements. Thank you for every bit of kindness ❤️
 
 </details>

@@ -1,4 +1,4 @@
-/* ========== 容器 ========== */
+/* ========== 共享容器（由 createOverlay 动态创建） ========== */
 .mg-message-container {
   position: fixed;
   top: var(--ui-spacing-xl, 24px);
@@ -30,7 +30,7 @@
   animation: mg-message-fade-in 0.3s ease;
 }
 
-/* 退出动画 */
+/* 退出动画（由 leaving 状态触发） */
 .mg-message-leave {
   animation: mg-message-fade-out 0.3s ease forwards;
 }

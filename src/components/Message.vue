@@ -1,40 +1,33 @@
 <template>
-  <Teleport to="body">
-    <Transition>
-      <div
-        v-if="modelValue"
-        v-bind="attrsWithoutClass"
-        :class="['mg-message-container', mergedClass]"
-      >
-        <div class="mg-message" :class="[`mg-message-${type}`]">
-          <span class="mg-message-icon">
-            <slot name="icon">
-              <span v-if="icon">{{ icon }}</span>
-              <span v-else-if="type === 'success'">✓</span>
-              <span v-else-if="type === 'error'">✗</span>
-              <span v-else-if="type === 'warning'">⚠</span>
-              <span v-else-if="type === 'info'">ℹ</span>
-            </slot>
-          </span>
-          <span class="mg-message-content">
-            <slot>{{ message }}</slot>
-          </span>
-          <button v-if="closable" class="mg-message-close" @click="handleClose">
-            &times;
-          </button>
-        </div>
-      </div>
-    </Transition>
-  </Teleport>
+  <div
+    v-if="modelValue"
+    v-bind="attrsWithoutClass"
+    class="mg-message"
+    :class="[`mg-message-${type}`, { 'mg-message-leave': leaving }, mergedClass]"
+  >
+    <span class="mg-message-icon">
+      <slot name="icon">
+        <span v-if="icon">{{ icon }}</span>
+        <span v-else-if="type === 'success'">✓</span>
+        <span v-else-if="type === 'error'">✗</span>
+        <span v-else-if="type === 'warning'">⚠</span>
+        <span v-else-if="type === 'info'">ℹ</span>
+      </slot>
+    </span>
+    <span class="mg-message-content">
+      <slot>{{ message }}</slot>
+    </span>
+    <button v-if="closable" class="mg-message-close" @click="handleClose">&times;</button>
+  </div>
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: "Message", inheritAttrs: false })
+defineOptions({ name: 'Message', inheritAttrs: false })
 
-import { watch, onMounted, onUnmounted } from "vue"
-import { useAttrsWithClass } from "../composables/useAttrsWithClass"
+import { watch, onMounted, onUnmounted, ref } from 'vue'
+import { useAttrsWithClass } from '../composables/useAttrsWithClass'
 
-type MessageType = "success" | "error" | "warning" | "info"
+type MessageType = 'success' | 'error' | 'warning' | 'info'
 
 interface Props {
   /** 消息内容 */
@@ -50,11 +43,11 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  message: "",
-  type: "info",
+  message: '',
+  type: 'info',
   duration: 3000,
   closable: false,
-  icon: "",
+  icon: '',
 })
 
 /** v-model 双向绑定（控制显示/隐藏） */
@@ -65,8 +58,11 @@ const emit = defineEmits<{
   close: []
 }>()
 
-// 处理外部属性透传
+// 处理外部属性透传（无内部动态类，仅合并外部 class）
 const { attrsWithoutClass, mergedClass } = useAttrsWithClass(() => ({}))
+
+/** 是否正在退出（触发 CSS 退出动画） */
+const leaving = ref(false)
 
 let timer: ReturnType<typeof setTimeout> | null = null
 
@@ -94,12 +90,12 @@ const clearTimer = () => {
 
 /**
  * 关闭消息
- * 由 Transition 组件自动处理 DOM 移除，只需修改 modelValue
+ * 先播放退出动画，外层的 createOverlay 会在动画结束后清理 DOM
  */
 const handleClose = () => {
   clearTimer()
-  modelValue.value = false
-  emit("close")
+  leaving.value = true
+  emit('close')
 }
 
 // 监听 modelValue 变化，控制定时器启停

@@ -11,14 +11,15 @@
     @input="handleInput"
     @blur="handleBlur"
     @focus="handleFocus"
+    @change="handleChange"
   />
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: "Input", inheritAttrs: false })
+defineOptions({ name: 'Input', inheritAttrs: false })
 
-type Size = "sm" | "md" | "lg"
-type InputType = "text" | "email" | "password" | "number" | "tel" | "url"
+type Size = 'sm' | 'md' | 'lg'
+type InputType = 'text' | 'email' | 'password' | 'number' | 'tel' | 'url'
 
 interface Props {
   /** 输入框类型 */
@@ -36,16 +37,16 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  type: "text",
-  placeholder: "",
+  type: 'text',
+  placeholder: '',
   disabled: false,
   readonly: false,
-  size: "md",
+  size: 'md',
   error: false,
 })
 
 /** v-model 双向绑定值 */
-const modelValue = defineModel<string>({ default: "" })
+const modelValue = defineModel<string>({ default: '' })
 
 const emit = defineEmits<{
   /** 输入时触发（原生事件透传） */
@@ -65,20 +66,27 @@ const emit = defineEmits<{
 const handleInput = (event: Event) => {
   const target = event.target as HTMLInputElement
   modelValue.value = target.value
-  emit("input", event)
+  emit('input', event)
 }
 
 /**
  * 失去焦点事件透传
  */
 const handleBlur = (event: FocusEvent) => {
-  emit("blur", event)
+  emit('blur', event)
 }
 
 /**
  * 获得焦点事件透传
  */
 const handleFocus = (event: FocusEvent) => {
-  emit("focus", event)
+  emit('focus', event)
+}
+
+/**
+ * 值变化事件透传（原生 change 事件）
+ */
+const handleChange = (event: Event) => {
+  emit('change', event)
 }
 </script>

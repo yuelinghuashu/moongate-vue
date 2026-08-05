@@ -10,17 +10,17 @@
 
 ```vue
 <script setup>
-import { Table } from "moongate-vue"
+import { Table } from 'moongate-vue'
 
 const columns = [
-  { key: "name", title: "姓名" },
-  { key: "email", title: "邮箱" },
-  { key: "role", title: "角色" },
+  { key: 'name', title: '姓名' },
+  { key: 'email', title: '邮箱' },
+  { key: 'role', title: '角色' },
 ]
 
 const users = [
-  { name: "张三", email: "zhangsan@example.com", role: "管理员" },
-  { name: "李四", email: "lisi@example.com", role: "编辑" },
+  { name: '张三', email: 'zhangsan@example.com', role: '管理员' },
+  { name: '李四', email: 'lisi@example.com', role: '编辑' },
 ]
 </script>
 
@@ -39,17 +39,17 @@ const users = [
 
 ```vue
 <script setup>
-import { Table } from "moongate-vue"
+import { Table } from 'moongate-vue'
 
 const columns = [
-  { key: "name", title: "姓名" },
-  { key: "email", title: "邮箱" },
-  { key: "role", title: "角色" },
+  { key: 'name', title: '姓名' },
+  { key: 'email', title: '邮箱' },
+  { key: 'role', title: '角色' },
 ]
 
 const users = [
-  { name: "张三", email: "zhangsan@example.com", role: "管理员" },
-  { name: "李四", email: "lisi@example.com", role: "编辑" },
+  { name: '张三', email: 'zhangsan@example.com', role: '管理员' },
+  { name: '李四', email: 'lisi@example.com', role: '编辑' },
 ]
 </script>
 
@@ -70,17 +70,17 @@ const users = [
 
 ```vue
 <script setup>
-import { Table } from "moongate-vue"
+import { Table } from 'moongate-vue'
 
 const columns = [
-  { key: "name", title: "姓名", sortable: true },
-  { key: "age", title: "年龄", sortable: true },
+  { key: 'name', title: '姓名', sortable: true },
+  { key: 'age', title: '年龄', sortable: true },
 ]
 
 const users = [
-  { name: "张三", age: 28 },
-  { name: "李四", age: 22 },
-  { name: "王五", age: 35 },
+  { name: '张三', age: 28 },
+  { name: '李四', age: 22 },
+  { name: '王五', age: 35 },
 ]
 </script>
 
@@ -99,20 +99,20 @@ const users = [
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Table } from "moongate-vue"
+import { ref } from 'vue'
+import { Table } from 'moongate-vue'
 
-const sortKey = ref("name")
-const sortOrder = ref("asc")
+const sortKey = ref('name')
+const sortOrder = ref('asc')
 
 const columns = [
-  { key: "name", title: "姓名", sortable: true },
-  { key: "age", title: "年龄", sortable: true },
+  { key: 'name', title: '姓名', sortable: true },
+  { key: 'age', title: '年龄', sortable: true },
 ]
 
 const users = [
-  { name: "张三", age: 28 },
-  { name: "李四", age: 22 },
+  { name: '张三', age: 28 },
+  { name: '李四', age: 22 },
 ]
 
 const handleSort = ({ key, order }) => {
@@ -133,6 +133,48 @@ const handleSort = ({ key, order }) => {
 
 :::
 
+## 稳定行标识（row-key）
+
+默认情况下，Table 使用**行索引**作为 DOM 的 key。当数据**排序、过滤或更新**时，行索引会变化，
+导致 Vue 无法准确复用已有 DOM 节点，可能出现：
+
+- 单元格内容「跳动」或闪烁
+- 单元格内输入框 / 展开状态错位
+- 动画效果异常
+
+通过 `row-key` 指定数据中的**唯一字段**（如 `id`），可让 Vue 始终正确匹配每一行。
+
+:::demo
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import { Table } from 'moongate-vue'
+
+const columns = [
+  { key: 'name', title: '姓名', sortable: true },
+  { key: 'age', title: '年龄', sortable: true },
+]
+
+const users = ref([
+  { id: 1, name: '张三', age: 28 },
+  { id: 2, name: '李四', age: 22 },
+  { id: 3, name: '王五', age: 35 },
+])
+</script>
+
+<template>
+  <!-- ✅ 推荐：指定唯一 id 作为行标识 -->
+  <Table :columns="columns" :data="users" row-key="id" />
+</template>
+```
+
+:::
+
+> 💡 `rowKey` 指向的字段必须在每行数据中**唯一**（如数据库主键 `id`）。
+> 若数据没有唯一字段，可跳过此 prop（默认按索引处理，简单场景够用）。
+> 在**受控排序**（`:sort-key`）或**数据频繁更新**时，设置 `row-key` 效果尤其明显。
+
 ## 固定表头
 
 当表格数据较多时，可以固定表头，滚动时表头始终可见。
@@ -141,19 +183,19 @@ const handleSort = ({ key, order }) => {
 
 ```vue
 <script setup>
-import { Table } from "moongate-vue"
+import { Table } from 'moongate-vue'
 
 const columns = [
-  { key: "name", title: "姓名" },
-  { key: "email", title: "邮箱" },
-  { key: "role", title: "角色" },
+  { key: 'name', title: '姓名' },
+  { key: 'email', title: '邮箱' },
+  { key: 'role', title: '角色' },
 ]
 
 // 生成 20 条测试数据
 const users = Array.from({ length: 20 }, (_, i) => ({
   name: `用户${i + 1}`,
   email: `user${i + 1}@example.com`,
-  role: i % 2 === 0 ? "管理员" : "编辑",
+  role: i % 2 === 0 ? '管理员' : '编辑',
 }))
 </script>
 
@@ -172,16 +214,16 @@ const users = Array.from({ length: 20 }, (_, i) => ({
 
 ```vue
 <script setup>
-import { Table } from "moongate-vue"
+import { Table } from 'moongate-vue'
 
 const columns = [
-  { key: "user_id", title: "ID", sortable: true },
-  { key: "user_name", title: "姓名" },
+  { key: 'user_id', title: 'ID', sortable: true },
+  { key: 'user_name', title: '姓名' },
 ]
 
 const users = [
-  { user_id: 1, user_name: "张三" },
-  { user_id: 2, user_name: "李四" },
+  { user_id: 1, user_name: '张三' },
+  { user_id: 2, user_name: '李四' },
 ]
 </script>
 
@@ -204,31 +246,28 @@ Table 组件提供两种自定义列内容的方式，你可以根据场景选�
 
 ```vue
 <script setup>
-import { Table, Badge, Button } from "moongate-vue"
+import { Table, Badge, Button } from 'moongate-vue'
 
 const columns = [
-  { key: "name", title: "姓名" },
-  { key: "status", title: "状态" },
-  { key: "actions", title: "操作" },
+  { key: 'name', title: '姓名' },
+  { key: 'status', title: '状态' },
+  { key: 'actions', title: '操作' },
 ]
 
 const users = [
-  { name: "张三", status: "active" },
-  { name: "李四", status: "inactive" },
+  { name: '张三', status: 'active' },
+  { name: '李四', status: 'inactive' },
 ]
 
-const edit = (row) => console.log("编辑", row)
+const edit = (row) => console.log('编辑', row)
 </script>
 
 <template>
   <Table :columns="columns" :data="users">
     <template #cell="{ row, column, value }">
       <strong v-if="column.key === 'name'">{{ value }}</strong>
-      <Badge
-        v-else-if="column.key === 'status'"
-        :color="value === 'active' ? 'success' : 'error'"
-      >
-        {{ value === "active" ? "激活" : "禁用" }}
+      <Badge v-else-if="column.key === 'status'" :color="value === 'active' ? 'success' : 'error'">
+        {{ value === 'active' ? '激活' : '禁用' }}
       </Badge>
       <div v-else-if="column.key === 'actions'">
         <Button size="sm" @click="edit(row)">编辑</Button>
@@ -249,20 +288,20 @@ const edit = (row) => console.log("编辑", row)
 
 ```vue
 <script setup>
-import { Table, Badge, Button } from "moongate-vue"
+import { Table, Badge, Button } from 'moongate-vue'
 
 const columns = [
-  { key: "name", title: "姓名" },
-  { key: "status", title: "状态" },
-  { key: "actions", title: "操作" },
+  { key: 'name', title: '姓名' },
+  { key: 'status', title: '状态' },
+  { key: 'actions', title: '操作' },
 ]
 
 const users = [
-  { name: "张三", status: "active" },
-  { name: "李四", status: "inactive" },
+  { name: '张三', status: 'active' },
+  { name: '李四', status: 'inactive' },
 ]
 
-const edit = (row) => console.log("编辑", row)
+const edit = (row) => console.log('编辑', row)
 </script>
 
 <template>
@@ -272,7 +311,7 @@ const edit = (row) => console.log("编辑", row)
     </template>
     <template #column-status="{ value }">
       <Badge :color="value === 'active' ? 'success' : 'error'">
-        {{ value === "active" ? "激活" : "禁用" }}
+        {{ value === 'active' ? '激活' : '禁用' }}
       </Badge>
     </template>
     <template #column-actions="{ row }">
@@ -297,17 +336,17 @@ const edit = (row) => console.log("编辑", row)
 
 ```vue
 <script setup>
-import { Table, Badge } from "moongate-vue"
+import { Table, Badge } from 'moongate-vue'
 
 const columns = [
-  { key: "avatar", title: "头像" },
-  { key: "name", title: "姓名" },
-  { key: "status", title: "状态" },
+  { key: 'avatar', title: '头像' },
+  { key: 'name', title: '姓名' },
+  { key: 'status', title: '状态' },
 ]
 
 const users = [
-  { avatar: "👤", name: "张三", status: "active" },
-  { avatar: "👤", name: "李四", status: "inactive" },
+  { avatar: '👤', name: '张三', status: 'active' },
+  { avatar: '👤', name: '李四', status: 'inactive' },
 ]
 </script>
 
@@ -319,7 +358,7 @@ const users = [
     <template #cell="{ column, value }">
       <span v-if="column.key === 'status'">
         <Badge :color="value === 'active' ? 'success' : 'error'">
-          {{ value === "active" ? "激活" : "禁用" }}
+          {{ value === 'active' ? '激活' : '禁用' }}
         </Badge>
       </span>
       <span v-else>{{ value }}</span>
@@ -338,17 +377,17 @@ const users = [
 
 ```vue
 <script setup>
-import { Table } from "moongate-vue"
+import { Table } from 'moongate-vue'
 
 const columns = [
-  { key: "name", title: "姓名", width: "120px" },
-  { key: "price", title: "价格", align: "right" },
-  { key: "status", title: "状态", align: "center" },
+  { key: 'name', title: '姓名', width: '120px' },
+  { key: 'price', title: '价格', align: 'right' },
+  { key: 'status', title: '状态', align: 'center' },
 ]
 
 const products = [
-  { name: "商品一", price: 99.0, status: "在售" },
-  { name: "商品二", price: 199.0, status: "缺货" },
+  { name: '商品一', price: 99.0, status: '在售' },
+  { name: '商品二', price: 199.0, status: '缺货' },
 ]
 </script>
 
@@ -367,11 +406,11 @@ const products = [
 
 ```vue
 <script setup>
-import { Table } from "moongate-vue"
+import { Table } from 'moongate-vue'
 
 const columns = [
-  { key: "name", title: "姓名" },
-  { key: "email", title: "邮箱" },
+  { key: 'name', title: '姓名' },
+  { key: 'email', title: '邮箱' },
 ]
 </script>
 
@@ -405,38 +444,36 @@ const columns = [
 
 ```vue
 <script setup>
-import { Table } from "moongate-vue"
+import { Table } from 'moongate-vue'
 
 const columns = [
-  { key: "name", title: "姓名" },
-  { key: "email", title: "邮箱" },
-  { key: "role", title: "角色" },
-  { key: "department", title: "部门" },
-  { key: "location", title: "地点" },
+  { key: 'name', title: '姓名' },
+  { key: 'email', title: '邮箱' },
+  { key: 'role', title: '角色' },
+  { key: 'department', title: '部门' },
+  { key: 'location', title: '地点' },
 ]
 
 const users = [
   {
-    name: "张三",
-    email: "zhang@example.com",
-    role: "管理员",
-    department: "技术部",
-    location: "北京",
+    name: '张三',
+    email: 'zhang@example.com',
+    role: '管理员',
+    department: '技术部',
+    location: '北京',
   },
   {
-    name: "李四",
-    email: "li@example.com",
-    role: "编辑",
-    department: "内容部",
-    location: "上海",
+    name: '李四',
+    email: 'li@example.com',
+    role: '编辑',
+    department: '内容部',
+    location: '上海',
   },
 ]
 </script>
 
 <template>
-  <div
-    style="max-width: 500px; border: 1px solid var(--ui-border); padding: 16px;"
-  >
+  <div style="max-width: 500px; border: 1px solid var(--ui-border); padding: 16px;">
     <p style="margin-bottom: 8px;">小屏幕容器（500px），表格自动横向滚动</p>
     <Table :columns="columns" :data="users" />
   </div>
@@ -453,16 +490,16 @@ const users = [
 
 ```vue
 <script setup>
-import { Table } from "moongate-vue"
+import { Table } from 'moongate-vue'
 
 const columns = [
-  { key: "name", title: "姓名" },
-  { key: "email", title: "邮箱" },
+  { key: 'name', title: '姓名' },
+  { key: 'email', title: '邮箱' },
 ]
 
 const users = [
-  { name: "张三", email: "zhang@example.com" },
-  { name: "李四", email: "li@example.com" },
+  { name: '张三', email: 'zhang@example.com' },
+  { name: '李四', email: 'li@example.com' },
 ]
 
 const handleRowClick = (row, index) => {
@@ -485,22 +522,22 @@ Table 组件不内置加载状态，推荐配合 `Skeleton` 骨架屏组件使�
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Table, Skeleton } from "moongate-vue"
+import { ref } from 'vue'
+import { Table, Skeleton } from 'moongate-vue'
 
 const loading = ref(true)
 const users = ref([])
 const columns = [
-  { key: "name", title: "姓名" },
-  { key: "email", title: "邮箱" },
-  { key: "role", title: "角色" },
+  { key: 'name', title: '姓名' },
+  { key: 'email', title: '邮箱' },
+  { key: 'role', title: '角色' },
 ]
 
 // 模拟异步加载
 setTimeout(() => {
   users.value = [
-    { name: "张三", email: "zhang@example.com", role: "管理员" },
-    { name: "李四", email: "li@example.com", role: "编辑" },
+    { name: '张三', email: 'zhang@example.com', role: '管理员' },
+    { name: '李四', email: 'li@example.com', role: '编辑' },
   ]
   loading.value = false
 }, 1000)
@@ -520,22 +557,23 @@ setTimeout(() => {
 
 ### Props
 
-| 属性          | 类型              | 默认值       | 说明                                            |
-| ------------- | ----------------- | ------------ | ----------------------------------------------- |
-| `columns`     | `TableColumn[]`   | `[]`         | 列配置                                          |
-| `data`        | `any[]`           | `[]`         | 表格数据                                        |
-| `emptyText`   | `string`          | `'暂无数据'` | 空状态文案（插槽优先）                          |
-| `showHeader`  | `boolean`         | `true`       | 是否显示表头                                    |
-| `striped`     | `boolean`         | `false`      | 是否显示斑马纹                                  |
-| `hoverable`   | `boolean`         | `true`       | 是否显示悬停高亮                                |
-| `scrollable`  | `boolean`         | `false`      | 是否强制横向滚动                                |
-| `responsive`  | `boolean`         | `true`       | 是否响应式（小屏自动滚动）                      |
-| `fixedHeader` | `boolean`         | `false`      | 是否固定表头                                    |
-| `maxHeight`   | `string`          | `'400px'`    | 固定表头时的最大高度（配合 `fixedHeader` 使用） |
-| `sortKey`     | `string`          | `undefined`  | 当前排序字段（受控模式）                        |
-| `sortOrder`   | `'asc' \| 'desc'` | `undefined`  | 当前排序方向（受控模式）                        |
-| `labelKey`    | `string`          | `'label'`    | 全局默认标题字段名                              |
-| `valueKey`    | `string`          | `'value'`    | 全局默认数据字段名                              |
+| 属性          | 类型                | 默认值       | 说明                                                       |
+| ------------- | ------------------- | ------------ | ---------------------------------------------------------- |
+| `columns`     | `TableColumn[]`     | `[]`         | 列配置                                                     |
+| `data`        | `any[]`             | `[]`         | 表格数据                                                   |
+| `emptyText`   | `string`            | `'暂无数据'` | 空状态文案（插槽优先）                                     |
+| `showHeader`  | `boolean`           | `true`       | 是否显示表头                                               |
+| `striped`     | `boolean`           | `false`      | 是否显示斑马纹                                             |
+| `hoverable`   | `boolean`           | `true`       | 是否显示悬停高亮                                           |
+| `scrollable`  | `boolean`           | `false`      | 是否强制横向滚动                                           |
+| `responsive`  | `boolean`           | `true`       | 是否响应式（小屏自动滚动）                                 |
+| `fixedHeader` | `boolean`           | `false`      | 是否固定表头                                               |
+| `maxHeight`   | `string`            | `'400px'`    | 固定表头时的最大高度（配合 `fixedHeader` 使用）            |
+| `sortKey`     | `string`            | `undefined`  | 当前排序字段（受控模式）                                   |
+| `sortOrder`   | `'asc' \| 'desc'`   | `undefined`  | 当前排序方向（受控模式）                                   |
+| `rowKey`      | `keyof T \| string` | `undefined`  | 行唯一标识字段名（稳定 key，排序/更新时避免 DOM 复用错乱） |
+| `labelKey`    | `string`            | `'label'`    | 全局默认标题字段名                                         |
+| `valueKey`    | `string`            | `'value'`    | 全局默认数据字段名                                         |
 
 ### TableColumn 配置
 
@@ -568,20 +606,20 @@ setTimeout(() => {
 
 ## 类型支持
 
-Table 组件使用 Vue 3.3+ 的泛型组件特性，**自动从 `data` 推断行数据类型**：
+Table 组件使用 Vue 3.5+ 的泛型组件特性，**自动从 `data` 推断行数据类型**：
 
 ```vue
 <script setup lang="ts">
 // ✅ 不需要手动定义接口，自动推断
 const users = ref([
-  { id: 1, name: "张三", email: "zhang@example.com" },
-  { id: 2, name: "李四", email: "li@example.com" },
+  { id: 1, name: '张三', email: 'zhang@example.com' },
+  { id: 2, name: '李四', email: 'li@example.com' },
 ])
 
 // ✅ columns 配置时，key 自动提示只能是 id | name | email
 const columns = [
-  { key: "name", title: "姓名" },
-  { key: "email", title: "邮箱" },
+  { key: 'name', title: '姓名' },
+  { key: 'email', title: '邮箱' },
 ]
 
 // ✅ 事件回调中 row 自动推断类型
@@ -602,7 +640,7 @@ const handleRowClick = (row, index) => {
 如需显式使用类型，可从包中导入：
 
 ```typescript
-import type { TableColumn, CellSlotProps } from "moongate-vue"
+import type { TableColumn, CellSlotProps } from 'moongate-vue'
 ```
 
 ## 注意事项

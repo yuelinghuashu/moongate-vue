@@ -1,9 +1,11 @@
+/* ========== 共享容器（由 createOverlay 动态创建） ========== */
 .mg-toast-container {
   position: fixed;
   top: var(--ui-spacing-xl, 24px);
   right: var(--ui-spacing-xl, 24px);
   display: flex;
   flex-direction: column;
+  align-items: flex-end;
   gap: var(--ui-spacing-sm, 8px);
   z-index: var(--ui-z-index-toast, 2000);
 }
@@ -23,10 +25,17 @@
   background-color: var(--ui-bg-elevated, #ffffff);
   border: var(--ui-physics-border-crease, 1px) solid var(--ui-border, #cbd5e1);
   border-radius: var(--ui-radius-sm, 2px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
   font-size: var(--ui-typography-size-body, 15px);
   color: var(--ui-text, #0f172a);
   animation: mg-toast-slide-in 0.3s ease;
+}
+
+/* 退出动画（由 leaving 状态触发） */
+.mg-toast-leave {
+  animation: mg-toast-slide-out 0.3s ease forwards;
 }
 
 /* 类型变体 - 左侧彩色边框 */
@@ -111,10 +120,6 @@
     transform: translateX(100%);
     opacity: 0;
   }
-}
-
-.mg-toast-slide-out {
-  animation: mg-toast-slide-out 0.3s ease forwards;
 }
 
 /* 移动端适配 */

@@ -1,48 +1,41 @@
 <template>
-  <Teleport to="body">
-    <div
-      v-bind="attrsWithoutClass"
-      :class="[
-        'mg-toast-container',
-        mergedClass,
-        { 'mg-toast-container-bottom': position === 'bottom' },
-      ]"
-    >
-      <Transition name="mg-toast">
-        <div
-          v-if="modelValue"
-          class="mg-toast"
-          :class="[`mg-toast-${type}`]"
-        >
-          <span class="mg-toast-icon">
-            <slot name="icon">
-              <span v-if="icon">{{ icon }}</span>
-              <span v-else-if="type === 'success'">✓</span>
-              <span v-else-if="type === 'error'">✗</span>
-              <span v-else-if="type === 'warning'">⚠</span>
-              <span v-else-if="type === 'info'">ℹ</span>
-            </slot>
-          </span>
-          <span class="mg-toast-message">
-            <slot>{{ message }}</slot>
-          </span>
-          <button v-if="closable" class="mg-toast-close" @click="handleClose">
-            &times;
-          </button>
-        </div>
-      </Transition>
-    </div>
-  </Teleport>
+  <div
+    v-if="modelValue"
+    v-bind="attrsWithoutClass"
+    class="mg-toast"
+    :class="[`mg-toast-${type}`, { 'mg-toast-leave': leaving }, mergedClass]"
+  >
+    <span class="mg-toast-icon">
+      <slot name="icon">
+        <span v-if="icon">{{ icon }}</span>
+        <span v-else-if="type === 'success'">✓</span>
+        <span v-else-if="type === 'error'">✗</span>
+        <span v-else-if="type === 'warning'">⚠</span>
+        <span v-else-if="type === 'info'">ℹ</span>
+      </slot>
+    </span>
+    <span class="mg-toast-message">
+      <slot>{{ message }}</slot>
+    </span>
+    <button v-if="closable" class="mg-toast-close" @click="handleClose">&times;</button>
+  </div>
 </template>
 
 <script setup lang="ts">
 defineOptions({ name: 'Toast', inheritAttrs: false })
 
-import { watch, onMounted, onBeforeUnmount } from 'vue'
+import { watch, onMounted, onUnmounted, ref } from 'vue'
 import { useAttrsWithClass } from '../composables/useAttrsWithClass'
 
 type ToastType = 'success' | 'error' | 'warning' | 'info'
 type ToastPosition = 'top' | 'bottom'
+
+defineSlots<{
+  /** 消息内容（优先于 message prop） */
+  default: () => any
+  /** 自定义图标 */
+  icon: () => any
+}>()
 
 interface Props {
   /** 消息内容 */
@@ -79,6 +72,9 @@ const emit = defineEmits<{
 // 处理外部属性透传（无内部动态类，仅合并外部 class）
 const { attrsWithoutClass, mergedClass } = useAttrsWithClass(() => ({}))
 
+/** 是否正在退出（触发 CSS 退出动画） */
+const leaving = ref(false)
+
 let timer: ReturnType<typeof setTimeout> | null = null
 
 /**
@@ -105,11 +101,11 @@ const clearTimer = () => {
 
 /**
  * 关闭 Toast
- * 由 Transition 组件自动处理 DOM 移除，只需修改 modelValue
+ * 先播放退出动画，外层的 createOverlay 会在动画结束后清理 DOM
  */
 const handleClose = () => {
   clearTimer()
-  modelValue.value = false
+  leaving.value = true
   emit('close')
 }
 
@@ -125,6 +121,7 @@ watch(
       clearTimer()
     }
   },
+  { immediate: true },
 )
 
 // 组件挂载时，如果初始为显示状态，启动定时器
@@ -135,7 +132,7 @@ onMounted(() => {
 })
 
 // 组件卸载时清理定时器
-onBeforeUnmount(() => {
+onUnmounted(() => {
   clearTimer()
 })
 </script>

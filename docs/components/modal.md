@@ -8,8 +8,8 @@
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Button, Modal } from "moongate-vue"
+import { ref } from 'vue'
+import { Button, Modal } from 'moongate-vue'
 
 const open = ref(false)
 </script>
@@ -32,8 +32,8 @@ const open = ref(false)
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Button, Modal } from "moongate-vue"
+import { ref } from 'vue'
+import { Button, Modal } from 'moongate-vue'
 
 const openSm = ref(false)
 const openMd = ref(false)
@@ -72,13 +72,13 @@ const openXl = ref(false)
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Button, Modal } from "moongate-vue"
+import { ref } from 'vue'
+import { Button, Modal } from 'moongate-vue'
 
 const open = ref(false)
 
 const handleConfirm = () => {
-  alert("已确认")
+  alert('已确认')
   open.value = false
 }
 </script>
@@ -90,12 +90,7 @@ const handleConfirm = () => {
       <p>确定要删除吗？</p>
       <template #footer>
         <Button variant="outline" @click="open = false" label="取消" />
-        <Button
-          variant="filled"
-          color="error"
-          @click="handleConfirm"
-          label="确认"
-        />
+        <Button variant="filled" color="error" @click="handleConfirm" label="确认" />
       </template>
     </Modal>
   </div>
@@ -110,8 +105,8 @@ const handleConfirm = () => {
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Button, Modal } from "moongate-vue"
+import { ref } from 'vue'
+import { Button, Modal } from 'moongate-vue'
 
 const open = ref(false)
 </script>
@@ -121,9 +116,7 @@ const open = ref(false)
     <Button @click="open = true" label="打开弹窗" />
     <Modal v-model="open">
       <template #title>
-        <span style="display: flex; align-items: center; gap: 8px;"
-          >🎉 自定义标题</span
-        >
+        <span style="display: flex; align-items: center; gap: 8px;">🎉 自定义标题</span>
       </template>
       <p>弹窗内容</p>
     </Modal>
@@ -139,8 +132,8 @@ const open = ref(false)
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Button, Modal } from "moongate-vue"
+import { ref } from 'vue'
+import { Button, Modal } from 'moongate-vue'
 
 const open = ref(false)
 </script>
@@ -163,8 +156,8 @@ const open = ref(false)
 
 ```vue
 <script setup>
-import { ref } from "vue"
-import { Button, Modal } from "moongate-vue"
+import { ref } from 'vue'
+import { Button, Modal } from 'moongate-vue'
 
 const open = ref(false)
 </script>
@@ -185,13 +178,16 @@ const open = ref(false)
 
 ### Props
 
-| 属性             | 类型                           | 默认值  | 说明                |
-| ---------------- | ------------------------------ | ------- | ------------------- |
-| `modelValue`     | `boolean`                      | `false` | 是否显示（v-model） |
-| `title`          | `string`                       | `''`    | 标题                |
-| `size`           | `'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'`  | 尺寸（宽度）        |
-| `closable`       | `boolean`                      | `true`  | 是否显示关闭按钮    |
-| `closeOnOverlay` | `boolean`                      | `true`  | 点击遮罩层是否关闭  |
+| 属性              | 类型                           | 默认值   | 说明                              |
+| ----------------- | ------------------------------ | -------- | --------------------------------- |
+| `modelValue`      | `boolean`                      | `false`  | 是否显示（v-model）               |
+| `title`           | `string`                       | `''`     | 标题                              |
+| `size`            | `'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'`   | 尺寸（宽度）                      |
+| `closable`        | `boolean`                      | `true`   | 是否显示关闭按钮                  |
+| `closeOnOverlay`  | `boolean`                      | `true`   | 点击遮罩层是否关闭                |
+| `closeAriaLabel`  | `string`                       | `'关闭'` | 关闭按钮的无障碍标签              |
+| `enableEsc`       | `boolean`                      | `true`   | 是否启用 ESC 键关闭               |
+| `enableFocusTrap` | `boolean`                      | `true`   | 是否启用焦点陷阱（键盘 Tab 循环） |
 
 ### Slots
 
@@ -223,5 +219,7 @@ const open = ref(false)
 - 弹窗使用 `Teleport` 挂载到 `body`，避免层级问题
 - 弹窗打开时会锁定 body 滚动，关闭时恢复
 - 支持点击遮罩层关闭（可通过 `closeOnOverlay` 禁用）
+- 支持按 ESC 键关闭（可通过 `enableEsc` 禁用）
+- 打开时自动启用焦点陷阱（可通过 `enableFocusTrap` 禁用）
 - 关闭按钮可通过 `closable` 属性控制显示/隐藏
 - 包含完整的 ARIA 无障碍属性

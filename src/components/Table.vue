@@ -36,11 +36,9 @@
                   <svg
                     class="mg-table-sort-svg"
                     :class="{
-                      'mg-table-sort-asc':
-                        sortKey === getColumnKey(column) && sortOrder === 'asc',
+                      'mg-table-sort-asc': sortKey === getColumnKey(column) && sortOrder === 'asc',
                       'mg-table-sort-desc':
-                        sortKey === getColumnKey(column) &&
-                        sortOrder === 'desc',
+                        sortKey === getColumnKey(column) && sortOrder === 'desc',
                     }"
                     xmlns="http://www.w3.org/2000/svg"
                     width="14"
@@ -65,7 +63,7 @@
         <tbody v-if="displayData.length > 0">
           <tr
             v-for="(row, rowIndex) in displayData"
-            :key="rowIndex"
+            :key="getRowKey(row, rowIndex)"
             :class="{
               'mg-table-row-hover': hoverable,
               'mg-table-row-striped': striped && rowIndex % 2 === 1,
@@ -82,12 +80,7 @@
                 :row="row"
                 :value="getRowValue(row, column)"
               >
-                <slot
-                  name="cell"
-                  :row="row"
-                  :column="column"
-                  :value="getRowValue(row, column)"
-                >
+                <slot name="cell" :row="row" :column="column" :value="getRowValue(row, column)">
                   {{ getRowValue(row, column) }}
                 </slot>
               </slot>
@@ -113,10 +106,10 @@
 </template>
 
 <script setup lang="ts" generic="T extends Record<string, any> = any">
-import { ref, computed } from "vue"
-import type { TableColumn, SortParams } from "../types/table"
+import { ref, computed } from 'vue'
+import type { TableColumn, SortParams } from '../types/table'
 
-defineOptions({ name: "Table", inheritAttrs: false })
+defineOptions({ name: 'Table', inheritAttrs: false })
 
 // ==================== Props 定义 ====================
 const props = withDefaults(
@@ -144,26 +137,29 @@ const props = withDefaults(
     /** 当前排序字段（受控模式） */
     sortKey?: string
     /** 当前排序方向（受控模式） */
-    sortOrder?: "asc" | "desc"
+    sortOrder?: 'asc' | 'desc'
     /** 全局默认标题字段名 */
     labelKey?: string
     /** 全局默认数据字段名 */
     valueKey?: string
+    /** 行唯一标识字段名（稳定 key，排序时可避免 DOM 复用错乱） */
+    rowKey?: keyof T | string
   }>(),
   {
     data: () => [],
-    emptyText: "暂无数据",
+    emptyText: '暂无数据',
     showHeader: true,
     striped: false,
     hoverable: true,
     scrollable: false,
     responsive: true,
     fixedHeader: false,
-    maxHeight: "400px",
+    maxHeight: '400px',
     sortKey: undefined,
     sortOrder: undefined,
-    labelKey: "label",
-    valueKey: "value",
+    labelKey: 'label',
+    valueKey: 'value',
+    rowKey: undefined,
   },
 )
 
@@ -171,13 +167,13 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   /** 排序字段变化（v-model:sort-key） */
-  "update:sortKey": [key: string]
+  'update:sortKey': [key: string]
   /** 排序方向变化（v-model:sort-order） */
-  "update:sortOrder": [order: "asc" | "desc"]
+  'update:sortOrder': [order: 'asc' | 'desc']
   /** 排序变化（合并事件） */
   sort: [params: SortParams]
   /** 点击行 */
-  "row-click": [row: T, index: number, event: MouseEvent]
+  'row-click': [row: T, index: number, event: MouseEvent]
 }>()
 
 // ==================== 插槽定义 ====================
@@ -195,12 +191,11 @@ defineSlots<{
  * 优先级：column.key > column.valueKey > column.labelKey > props.valueKey
  */
 const getColumnKey = (column: TableColumn<T>): string => {
-  if (column.key !== undefined && column.key !== "") return String(column.key)
-  if (column.valueKey !== undefined && column.valueKey !== "")
-    return column.valueKey
-  if (column.labelKey !== undefined && typeof column === "object") {
+  if (column.key !== undefined && column.key !== '') return String(column.key)
+  if (column.valueKey !== undefined && column.valueKey !== '') return column.valueKey
+  if (column.labelKey !== undefined && typeof column === 'object') {
     const val = (column as any)[column.labelKey]
-    if (val !== undefined && val !== "") return String(val)
+    if (val !== undefined && val !== '') return String(val)
   }
   return props.valueKey
 }
@@ -210,16 +205,30 @@ const getColumnKey = (column: TableColumn<T>): string => {
  * 优先级：column.title > column.labelKey 对应的值 > props.labelKey 对应的值 > getColumnKey()
  */
 const getColumnTitle = (column: TableColumn<T>): string => {
-  if (column.title !== undefined && column.title !== "") return column.title
-  if (column.labelKey !== undefined && typeof column === "object") {
+  if (column.title !== undefined && column.title !== '') return column.title
+  if (column.labelKey !== undefined && typeof column === 'object') {
     const val = (column as any)[column.labelKey]
-    if (val !== undefined && val !== "") return String(val)
+    if (val !== undefined && val !== '') return String(val)
   }
-  if (props.labelKey && typeof column === "object") {
+  if (props.labelKey && typeof column === 'object') {
     const val = (column as any)[props.labelKey]
-    if (val !== undefined && val !== "") return String(val)
+    if (val !== undefined && val !== '') return String(val)
   }
   return getColumnKey(column)
+}
+
+/**
+ * 获取行的稳定 key
+ * 优先级：props.rowKey > 行索引
+ */
+const getRowKey = (row: T, index: number): string | number => {
+  if (props.rowKey !== undefined) {
+    const val = row[props.rowKey as keyof T]
+    if (val !== undefined && val !== null) {
+      return String(val)
+    }
+  }
+  return index
 }
 
 /**
@@ -239,7 +248,7 @@ const getRowValue = (row: T, column: TableColumn<T>): any => {
 // ==================== 排序逻辑 ====================
 
 const internalSortKey = ref<string | undefined>(undefined)
-const internalSortOrder = ref<"asc" | "desc" | undefined>(undefined)
+const internalSortOrder = ref<'asc' | 'desc' | undefined>(undefined)
 
 const useInternalSort = computed(() => {
   return props.sortKey === undefined && props.sortOrder === undefined
@@ -257,25 +266,25 @@ const currentSortOrder = computed(() => {
 
 const handleSort = (column: TableColumn<T>) => {
   const key = getColumnKey(column)
-  let newOrder: "asc" | "desc" = "asc"
+  let newOrder: 'asc' | 'desc' = 'asc'
 
   if (currentSortKey.value === key) {
-    newOrder = currentSortOrder.value === "asc" ? "desc" : "asc"
+    newOrder = currentSortOrder.value === 'asc' ? 'desc' : 'asc'
   }
 
   if (useInternalSort.value) {
     internalSortKey.value = key
     internalSortOrder.value = newOrder
   } else {
-    emit("update:sortKey", key)
-    emit("update:sortOrder", newOrder)
+    emit('update:sortKey', key)
+    emit('update:sortOrder', newOrder)
   }
 
-  emit("sort", { key, order: newOrder })
+  emit('sort', { key, order: newOrder })
 }
 
 const displayData = computed(() => {
-  let result = [...props.data]
+  const result = [...props.data]
 
   if (currentSortKey.value && currentSortOrder.value) {
     const key = currentSortKey.value as keyof T
@@ -285,16 +294,14 @@ const displayData = computed(() => {
       const aRaw = a[key]
       const bRaw = b[key]
 
-      const aStr = aRaw == null ? "" : String(aRaw)
-      const bStr = bRaw == null ? "" : String(bRaw)
+      const aStr = aRaw == null ? '' : String(aRaw)
+      const bStr = bRaw == null ? '' : String(bRaw)
 
-      if (typeof aRaw === "number" && typeof bRaw === "number") {
-        return order === "asc" ? aRaw - bRaw : bRaw - aRaw
+      if (typeof aRaw === 'number' && typeof bRaw === 'number') {
+        return order === 'asc' ? aRaw - bRaw : bRaw - aRaw
       }
 
-      return order === "asc"
-        ? aStr.localeCompare(bStr)
-        : bStr.localeCompare(aStr)
+      return order === 'asc' ? aStr.localeCompare(bStr) : bStr.localeCompare(aStr)
     })
   }
 
@@ -304,6 +311,6 @@ const displayData = computed(() => {
 // ==================== 行事件处理 ====================
 
 const handleRowClick = (row: T, index: number, event: MouseEvent) => {
-  emit("row-click", row, index, event)
+  emit('row-click', row, index, event)
 }
 </script>

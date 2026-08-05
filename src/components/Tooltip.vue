@@ -15,20 +15,14 @@
         v-if="visible"
         ref="tooltipRef"
         class="mg-tooltip"
-        :class="[
-          { 'mg-tooltip-visible': visible },
-          `mg-tooltip-${currentPlacement}`,
-        ]"
+        :class="[{ 'mg-tooltip-visible': visible }, `mg-tooltip-${currentPlacement}`]"
         :style="tooltipStyle"
         role="tooltip"
       >
         <slot name="content">
           {{ content }}
         </slot>
-        <div
-          class="mg-tooltip-arrow"
-          :class="`mg-tooltip-arrow-${currentPlacement}`"
-        />
+        <div class="mg-tooltip-arrow" :class="`mg-tooltip-arrow-${currentPlacement}`" />
       </div>
     </Teleport>
   </div>
@@ -111,6 +105,7 @@ const show = () => {
   timer = setTimeout(() => {
     visible.value = true
     updatePosition()
+    enableResizeObserver()
   }, props.delay)
 }
 
@@ -121,6 +116,7 @@ const show = () => {
 const hide = () => {
   if (timer) clearTimeout(timer)
   visible.value = false
+  disableResizeObserver()
 }
 
 // ==================== 位置计算核心 ====================
@@ -131,11 +127,7 @@ const hide = () => {
  * @param triggerRect - 触发元素的边界矩形
  * @param tooltipRect - 提示框的边界矩形
  */
-const recalculatePosition = (
-  placement: Placement,
-  triggerRect: DOMRect,
-  tooltipRect: DOMRect,
-) => {
+const recalculatePosition = (placement: Placement, triggerRect: DOMRect, tooltipRect: DOMRect) => {
   let top = 0
   let left = 0
 
@@ -226,8 +218,27 @@ const handleResize = () => {
   if (visible.value) updatePosition()
 }
 
-/** DOM 变化观察器（监听内容变动导致尺寸改变） */
-let observer: MutationObserver | null = null
+/**
+ * ResizeObserver：仅监听 tooltip 自身内容变化（相比全局
+ * MutationObserver 监听 document.body，大幅降低性能开销）。
+ * 只在 tooltip 可见时启用，隐藏时自动断开。
+ */
+let resizeObserver: ResizeObserver | null = null
+
+const enableResizeObserver = () => {
+  if (!isBrowser || resizeObserver || !tooltipRef.value) return
+  resizeObserver = new ResizeObserver(() => {
+    if (visible.value) updatePosition()
+  })
+  resizeObserver.observe(tooltipRef.value)
+}
+
+const disableResizeObserver = () => {
+  if (resizeObserver) {
+    resizeObserver.disconnect()
+    resizeObserver = null
+  }
+}
 
 onMounted(() => {
   // 只在浏览器环境执行
@@ -235,12 +246,6 @@ onMounted(() => {
 
   window.addEventListener('scroll', handleScroll, true)
   window.addEventListener('resize', handleResize)
-
-  // 监听 DOM 变化，内容变动时自动更新位置
-  observer = new MutationObserver(() => {
-    if (visible.value) updatePosition()
-  })
-  observer.observe(document.body, { childList: true, subtree: true })
 })
 
 onUnmounted(() => {
@@ -250,10 +255,7 @@ onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll, true)
   window.removeEventListener('resize', handleResize)
 
-  if (observer) {
-    observer.disconnect()
-    observer = null
-  }
+  disableResizeObserver()
 
   if (timer) clearTimeout(timer)
 })

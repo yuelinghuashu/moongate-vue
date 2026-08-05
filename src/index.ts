@@ -55,15 +55,9 @@ export {
   Hero,
   Popover,
   Drawer,
-
   useToast,
   useMessage,
 }
 
 // Table 组件类型（泛型组件需要单独导出类型）
-export type {
-  TableColumn,
-  SortParams,
-  CellSlotProps,
-  ColumnSlotProps,
-} from './types/table.ts'
+export type { TableColumn, SortParams, CellSlotProps, ColumnSlotProps } from './types/table'
