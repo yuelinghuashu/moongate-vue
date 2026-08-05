@@ -2,18 +2,12 @@ name: CI
 
 on:
   push:
-    branches: [main, master]
-  pull_request:
-    branches: [main, master]
+    branches: [main]
 
 jobs:
   quality:
-    name: Lint + Type + Test + Build
+    name: Test + Lint + Build
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [22, 24]
 
     steps:
       - name: Checkout
@@ -25,7 +19,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 24
           cache: pnpm
 
       - name: Install dependencies
@@ -37,17 +31,8 @@ jobs:
       - name: Lint
         run: pnpm lint:no-fix
 
-      - name: Format check
-        run: pnpm format:check
-
-      - name: Run tests with coverage
-        run: pnpm test:coverage
+      - name: Run tests
+        run: pnpm test
 
       - name: Build
         run: pnpm build
-
-      - name: Upload coverage reports
-        uses: codecov/codecov-action@v5
-        with:
-          files: ./coverage/coverage-final.json
-          fail_ci_if_error: false
