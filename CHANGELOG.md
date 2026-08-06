@@ -2,16 +2,34 @@
 
 **English** | [中文](./CHANGELOG.zh-CN.md)
 
-## [1.4.2] - 2026-08-06
+## [1.5.0] - 2026-08-06
+
+### 🐛 Bug Fixes
+
+- **Divider typo**: `hasDefaul` → `hasDefault` (variable/computed/template)
+- **Button empty label rendering**: `label=""` no longer renders an empty `.mg-button-label` container (icon-only button scenarios); covered by new test assertion
+
+### 🚀 New Features
+
+- **`useForm` form validation composable**: Leverages HTML5 Constraint Validation (`required`/`email`/`min`/`pattern` etc. already native) instead of reimplementing it; only fills 4 gaps native API can't cover — centralized state (`values`/`errors`/`valid`), async validation (remote uniqueness), cross-field validation (confirm password), validation orchestration (`validate`/`validateField`/`reset`). Zero-dependency, 19 unit tests
+- **Select multiple selection**: New `multiple` prop (pairs with `filterable`); tag chips with remove buttons, continuous multi-select (dropdown stays open after selection), keyboard-friendly (Enter selects without closing / Esc closes), `change` always emits array in multiple mode. 8 unit tests
+- **Table row selection**: New `selectable` prop + `v-model:selected-rows`; header select-all with `indeterminate` half-check, `row-selectable` for disabling rows, `row-key` keeps selection stable across sorting. 9 unit tests
+- **`Form` / `FormItem` view-layer components**: Layout container + per-field label/required-asterisk/error/validating display, fully driven by `useForm` (no duplicated validation logic); both together ~1KB gzipped. 14 unit tests
 
 ### 🚀 Quality
 
 - **Accessibility overhaul (WAI-ARIA Patterns)**: Tooltip adds `aria-describedby` + keyboard focus trigger; Select adds per-option unique `id` + `aria-activedescendant`; Table sort headers expose `aria-sort` with keyboard support; Modal/Drawer add `aria-describedby` linking body content; Tabs add full keyboard navigation (`←`/`→`/Home/End) — all IDs SSR-safe via `useId()`
 - **SSR hardening**: `useScrollLock` exported helpers guard against non-browser environments; `Message`/`Toast` skip timer creation during SSR rendering
 - **Code deduplication**: Extracted `useNotification` (Message/Toast) and `useFormField` (Input/Textarea) composables; Select state-reset logic refactored into shared helpers
-- **Test suite expanded to 338 tests**: Coverage raised from 78.85% to 95%+ (statements `76→90`, branches `65→80`, functions `76→90`, lines `78→92`)
+- **Test suite expanded to 395 tests**: Coverage raised from 78.85% to 95%+ (statements `76→90`, branches `65→80`, functions `76→90`, lines `78→92`)
+- **Playwright e2e smoke suite**: 14 real-browser tests covering all 25 components (rendering + key interactions), using system Google Chrome via `channel: 'chrome'`; new `pnpm test:e2e` / `test:e2e:install` scripts
 - **Table sort icon fix**: Sort indicator classes now use reactive `currentSortKey`/`currentSortOrder` instead of raw props
 - **Docs accuracy fixes**: Tooltip/Table/Select docs updated to reflect new keyboard & accessibility behavior
+
+### 📝 Documentation
+
+- New `docs/guide/form-validation.md` guide: HTML5-native-first validation philosophy + `useForm` API reference
+- Select docs updated with multiple-selection examples; Table docs updated with row-selection examples
 
 ## [1.4.1] - 2026-08-06
 

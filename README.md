@@ -20,7 +20,7 @@ Moongate Vue is a moon-inspired, minimal Vue 3 component library. Design-token d
 - ✨ **Minimal API** — 2-8 props per component, easy to learn and use
 - 🚀 **Zero Dependencies** — No extra configuration, works out of the box
 - ⚡ **SSR Ready** — Perfect for Nuxt 4 / VitePress and other server-side rendering scenarios
-- ✅ **Tested** — Vitest + jsdom full coverage: 25 components + 2 public composables (`useMessage` / `useToast`) + SSR/a11y regression, 338 tests total (95% statements / 86% branches)
+- ✅ **Tested** — Vitest + jsdom full coverage: 27 components + 3 public composables (`useForm` / `useMessage` / `useToast`) + SSR/a11y regression + Playwright e2e, 395 tests total (95% statements / 86% branches)
 - 🔧 **Engineering Standards** — ESLint + Prettier unified style, husky pre-commit checks
 
 ## Installation
@@ -69,14 +69,16 @@ Visit the [**Moongate Vue Official Documentation**](https://vue.moongate.top) fo
 
 ### Form Components
 
-| Component | Description         |
-| --------- | ------------------- |
-| Input     | Input field         |
-| Textarea  | Multi-line textarea |
-| Checkbox  | Checkbox            |
-| Radio     | Radio button        |
-| Switch    | Toggle switch       |
-| Select    | Dropdown select     |
+| Component | Description                                           |
+| --------- | ----------------------------------------------------- |
+| Form      | Form layout + validation display (pairs with useForm) |
+| FormItem  | Single field: label / required asterisk / error       |
+| Input     | Input field                                           |
+| Textarea  | Multi-line textarea                                   |
+| Checkbox  | Checkbox                                              |
+| Radio     | Radio button                                          |
+| Switch    | Toggle switch                                         |
+| Select    | Dropdown select                                       |
 
 ### Data Display
 
@@ -115,7 +117,7 @@ Visit the [**Moongate Vue Official Documentation**](https://vue.moongate.top) fo
 | Link    | `.mg-link` / `.nav-link`                          | Link styles |
 | Code    | `.mg-code` / `.mg-code-inline` / `.mg-code-block` | Code styles |
 
-> **Note**: **25 components + 2 style utilities** in total, covering most daily development scenarios.
+> **Note**: **27 components + 2 style utilities** in total, covering most daily development scenarios.
 
 ## Design Tokens
 

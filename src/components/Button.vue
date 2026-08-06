@@ -93,7 +93,11 @@ defineSlots<{
 
 const slots = useSlots()
 const hasIconSlot = computed(() => !!slots.icon)
-const hasLabel = computed(() => props.label !== undefined || !!slots.default)
+/**
+ * 是否渲染 label 容器。
+ * 空字符串视为无 label（纯图标按钮场景，避免渲染空的 .mg-button-label 容器）。
+ */
+const hasLabel = computed(() => props.label !== '' || !!slots.default)
 
 const emit = defineEmits<{
   click: [event: MouseEvent]

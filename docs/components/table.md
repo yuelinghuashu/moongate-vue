@@ -522,6 +522,100 @@ const handleRowClick = (row, index) => {
 
 :::
 
+## 行选择
+
+设置 `selectable` 属性显示选择列。选中行通过 `v-model:selected-rows` 双向绑定（数组），或通过 `@selection-change` 监听变化。
+
+:::demo
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import { Table } from 'moongate-vue'
+
+const selectedRows = ref([])
+const columns = [
+  { key: 'name', title: '姓名' },
+  { key: 'email', title: '邮箱' },
+  { key: 'role', title: '角色' },
+]
+
+// 推荐为数据提供唯一 id，并与 row-key 配合使用
+// 未设置 row-key 时组件按对象引用识别行，父组件重建数组（过滤/排序/接口刷新）会导致已选状态失效
+const users = [
+  { id: 1, name: '张三', email: 'zhang@example.com', role: '管理员' },
+  { id: 2, name: '李四', email: 'li@example.com', role: '编辑' },
+  { id: 3, name: '王五', email: 'wang@example.com', role: '访客' },
+]
+</script>
+
+<template>
+  <div>
+    <Table
+      v-model:selected-rows="selectedRows"
+      :columns="columns"
+      :data="users"
+      row-key="id"
+      selectable
+    />
+    <p style="margin-top: 8px;">
+      已选 {{ selectedRows.length }} 行:
+      {{ selectedRows.map((row) => row.name).join(', ') || '无' }}
+    </p>
+  </div>
+</template>
+```
+
+:::
+
+### 禁用指定行
+
+通过 `row-selectable` 回调控制哪些行不可选（返回 `false` 禁用该行 checkbox）：
+
+:::demo
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import { Table } from 'moongate-vue'
+
+const selectedRows = ref([])
+const columns = [
+  { key: 'name', title: '姓名' },
+  { key: 'role', title: '角色' },
+]
+
+const users = [
+  { id: 1, name: '张三', role: '管理员' },
+  { id: 2, name: '李四', role: '编辑' },
+  { id: 3, name: '王五', role: '已离职' },
+]
+
+// 已离职（index 2）不可选
+const rowSelectable = (row, index) => index !== 2
+</script>
+
+<template>
+  <Table
+    v-model:selected-rows="selectedRows"
+    :columns="columns"
+    :data="users"
+    row-key="id"
+    selectable
+    :row-selectable="rowSelectable"
+  />
+</template>
+```
+
+:::
+
+### 行选择行为说明
+
+- **全选**：表头 checkbox 一键全选/取消，自动跳过 `row-selectable` 禁用的行
+- **半选状态**：部分行选中时表头 checkbox 显示 `indeterminate` 状态
+- **选中高亮**：选中行添加 `mg-table-row-selected` 背景色
+- **`rowKey` 配合（强烈建议）**：设置 `row-key` 后，排序/数据更新时选中状态按唯一标识比较，保持稳定；**未设置时组件按对象引用识别行，若父组件重建 `data` 数组（重新赋值、过滤、排序、接口刷新），已选中的记录会因引用变化而"失联"**
+
 ## 加载状态
 
 Table 组件不内置加载状态，推荐配合 `Skeleton` 骨架屏组件使用：
@@ -565,23 +659,26 @@ setTimeout(() => {
 
 ### Props
 
-| 属性          | 类型                | 默认值       | 说明                                                       |
-| ------------- | ------------------- | ------------ | ---------------------------------------------------------- |
-| `columns`     | `TableColumn[]`     | `[]`         | 列配置                                                     |
-| `data`        | `any[]`             | `[]`         | 表格数据                                                   |
-| `emptyText`   | `string`            | `'暂无数据'` | 空状态文案（插槽优先）                                     |
-| `showHeader`  | `boolean`           | `true`       | 是否显示表头                                               |
-| `striped`     | `boolean`           | `false`      | 是否显示斑马纹                                             |
-| `hoverable`   | `boolean`           | `true`       | 是否显示悬停高亮                                           |
-| `scrollable`  | `boolean`           | `false`      | 是否强制横向滚动                                           |
-| `responsive`  | `boolean`           | `true`       | 是否响应式（小屏自动滚动）                                 |
-| `fixedHeader` | `boolean`           | `false`      | 是否固定表头                                               |
-| `maxHeight`   | `string`            | `'400px'`    | 固定表头时的最大高度（配合 `fixedHeader` 使用）            |
-| `sortKey`     | `string`            | `undefined`  | 当前排序字段（受控模式）                                   |
-| `sortOrder`   | `'asc' \| 'desc'`   | `undefined`  | 当前排序方向（受控模式）                                   |
-| `rowKey`      | `keyof T \| string` | `undefined`  | 行唯一标识字段名（稳定 key，排序/更新时避免 DOM 复用错乱） |
-| `labelKey`    | `string`            | `'label'`    | 全局默认标题字段名                                         |
-| `valueKey`    | `string`            | `'value'`    | 全局默认数据字段名                                         |
+| 属性            | 类型                      | 默认值       | 说明                                                       |
+| --------------- | ------------------------- | ------------ | ---------------------------------------------------------- |
+| `columns`       | `TableColumn[]`           | `[]`         | 列配置                                                     |
+| `data`          | `any[]`                   | `[]`         | 表格数据                                                   |
+| `emptyText`     | `string`                  | `'暂无数据'` | 空状态文案（插槽优先）                                     |
+| `showHeader`    | `boolean`                 | `true`       | 是否显示表头                                               |
+| `striped`       | `boolean`                 | `false`      | 是否显示斑马纹                                             |
+| `hoverable`     | `boolean`                 | `true`       | 是否显示悬停高亮                                           |
+| `scrollable`    | `boolean`                 | `false`      | 是否强制横向滚动                                           |
+| `responsive`    | `boolean`                 | `true`       | 是否响应式（小屏自动滚动）                                 |
+| `fixedHeader`   | `boolean`                 | `false`      | 是否固定表头                                               |
+| `maxHeight`     | `string`                  | `'400px'`    | 固定表头时的最大高度（配合 `fixedHeader` 使用）            |
+| `sortKey`       | `string`                  | `undefined`  | 当前排序字段（受控模式）                                   |
+| `sortOrder`     | `'asc' \| 'desc'`         | `undefined`  | 当前排序方向（受控模式）                                   |
+| `rowKey`        | `keyof T \| string`       | `undefined`  | 行唯一标识字段名（稳定 key，排序/更新时避免 DOM 复用错乱） |
+| `selectable`    | `boolean`                 | `false`      | 是否显示选择列（行选择）                                   |
+| `rowSelectable` | `(row, index) => boolean` | `undefined`  | 行是否可选（返回 `false` 禁用该行 checkbox）               |
+| `selectAllText` | `string`                  | `'全选'`     | 全选 checkbox 的 `aria-label`                              |
+| `labelKey`      | `string`                  | `'label'`    | 全局默认标题字段名                                         |
+| `valueKey`      | `string`                  | `'value'`    | 全局默认数据字段名                                         |
 
 ### TableColumn 配置
 
@@ -605,12 +702,14 @@ setTimeout(() => {
 
 ### Events
 
-| 事件               | 参数                       | 说明                               |
-| ------------------ | -------------------------- | ---------------------------------- |
-| `update:sortKey`   | `(key: string)`            | 排序字段变化（v-model:sort-key）   |
-| `update:sortOrder` | `(order: 'asc' \| 'desc')` | 排序方向变化（v-model:sort-order） |
-| `sort`             | `({ key, order })`         | 排序变化（合并事件）               |
-| `row-click`        | `(row, index, event)`      | 点击行                             |
+| 事件                  | 参数                       | 说明                                |
+| --------------------- | -------------------------- | ----------------------------------- |
+| `update:sortKey`      | `(key: string)`            | 排序字段变化（v-model:sort-key）    |
+| `update:sortOrder`    | `(order: 'asc' \| 'desc')` | 排序方向变化（v-model:sort-order）  |
+| `sort`                | `({ key, order })`         | 排序变化（合并事件）                |
+| `row-click`           | `(row, index, event)`      | 点击行                              |
+| `update:selectedRows` | `(rows: T[])`              | 选中行变化（v-model:selected-rows） |
+| `selection-change`    | `(rows: T[])`              | 选中行变化（与 update 同时触发）    |
 
 ## 类型支持
 
@@ -663,3 +762,6 @@ import type { TableColumn, CellSlotProps } from 'moongate-vue'
 - 移动端建议谨慎使用固定表头功能
 - 建议在 `tsconfig.json` 中开启 `strict: true` 以获得最佳类型推断体验
 - 加载状态推荐配合 `Skeleton` 组件使用，Table 本身不内置加载逻辑
+- 行选择需设置 `selectable`，选中行通过 `v-model:selected-rows` 绑定数组
+- `row-key` 强烈建议配合行选择使用：设置后数据排序/更新时选中状态按唯一标识保持稳定；**未设置时组件按对象引用识别行，父组件重建 `data` 数组（过滤/排序/接口刷新）会导致已选记录失效**
+- 全选操作自动跳过 `row-selectable` 禁用的行

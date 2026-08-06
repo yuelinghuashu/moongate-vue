@@ -127,10 +127,18 @@ describe('Button', () => {
     expect(wrapper.find('.custom-loading').exists()).toBe(true)
   })
 
-  it('label 为 undefined 时显示空 label（内部逻辑）', () => {
+  it('label 为 undefined（未传或显式 undefined）时不渲染空 label 容器', () => {
     const wrapper = mount(Button, { props: { label: undefined } })
-    // hasLabel 计算属性：label !== undefined 为 true，因此会渲染 label 容器
-    expect(wrapper.find('.mg-button-label').exists()).toBe(true)
+    // withDefaults 将 undefined 解析为默认值 ''，因此与空字符串行为一致：不渲染空容器
+    expect(wrapper.find('.mg-button-label').exists()).toBe(false)
+  })
+
+  it('label 为空字符串时不渲染空 label 容器（纯图标按钮）', () => {
+    const wrapper = mount(Button, { props: { label: '', icon: '★' } })
+    // hasLabel 计算属性：label === '' 且无默认插槽时，不渲染 label 容器
+    expect(wrapper.find('.mg-button-label').exists()).toBe(false)
+    // 但图标仍然显示
+    expect(wrapper.find('.mg-button-icon').exists()).toBe(true)
   })
 
   it('icon 插槽优先于 icon prop', () => {

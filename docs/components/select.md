@@ -335,6 +335,46 @@ const options = [
 
 :::
 
+## 多选
+
+设置 `multiple` 属性启用多选（需与 `filterable` 配合）。已选项以标签形式展示，可点击移除。选择后下拉保持打开，方便连续多选。
+
+:::demo
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import { Select } from 'moongate-vue'
+
+const fruits = ref([])
+const options = [
+  { label: '苹果', value: 'apple' },
+  { label: '香蕉', value: 'banana' },
+  { label: '橙子', value: 'orange' },
+  { label: '葡萄', value: 'grape' },
+  { label: '西瓜', value: 'watermelon' },
+]
+</script>
+
+<template>
+  <div style="width: 280px;">
+    <Select v-model="fruits" :options="options" filterable multiple placeholder="搜索并多选水果" />
+    <p style="margin-top: 8px;">已选: {{ fruits.join(', ') || '未选择' }}</p>
+  </div>
+</template>
+```
+
+:::
+
+> **注意**：多选模式要求 `modelValue` 为数组（`v-model` 绑定 `ref([])`），且仅支持 `filterable` 可搜索模式。
+
+### 多选模式说明
+
+- **标签展示**：已选项以 chip 标签形式显示在输入框内，点击 `×` 可单独移除
+- **键盘操作**：`Enter` 选中后**保持下拉打开**（方便连续多选），`Esc` 关闭
+- **连续多选**：点击选项后输入框搜索文本自动清空，无需手动删除
+- **`change` 事件**：多选时始终返回数组（即使只有一个值）
+
 ## 尺寸
 
 :::demo
@@ -461,27 +501,28 @@ const options = [
 
 ### Props
 
-| 属性          | 类型                   | 默认值       | 说明                                         |
-| ------------- | ---------------------- | ------------ | -------------------------------------------- |
-| `modelValue`  | `string \| number`     | `''`         | 选中的值（v-model）                          |
-| `options`     | `any[]`                | `[]`         | 选项列表，支持对象数组、字符串数组、数字数组 |
-| `labelKey`    | `string`               | `'label'`    | 对象数组中作为显示文本的字段名               |
-| `valueKey`    | `string`               | `'value'`    | 对象数组中作为选项值的字段名                 |
-| `placeholder` | `string`               | `''`         | 占位文本（显示为不可选中的默认选项）         |
-| `size`        | `'sm' \| 'md' \| 'lg'` | `'md'`       | 尺寸                                         |
-| `disabled`    | `boolean`              | `false`      | 是否禁用                                     |
-| `error`       | `boolean`              | `false`      | 是否显示错误状态（仅边框样式）               |
-| `filterable`  | `boolean`              | `false`      | 是否可搜索（启用后替换为自定义下拉框）       |
-| `emptyText`   | `string`               | `'暂无数据'` | 搜索无结果时的空状态文案                     |
-| `maxHeight`   | `number`               | `240`        | 下拉面板最大高度（单位：px）                 |
+| 属性          | 类型                                       | 默认值       | 说明                                               |
+| ------------- | ------------------------------------------ | ------------ | -------------------------------------------------- |
+| `modelValue`  | `string \| number \| (string \| number)[]` | `''` / `[]`  | 选中的值（v-model），多选时为数组                  |
+| `options`     | `any[]`                                    | `[]`         | 选项列表，支持对象数组、字符串数组、数字数组       |
+| `labelKey`    | `string`                                   | `'label'`    | 对象数组中作为显示文本的字段名                     |
+| `valueKey`    | `string`                                   | `'value'`    | 对象数组中作为选项值的字段名                       |
+| `placeholder` | `string`                                   | `''`         | 占位文本（显示为不可选中的默认选项）               |
+| `size`        | `'sm' \| 'md' \| 'lg'`                     | `'md'`       | 尺寸                                               |
+| `disabled`    | `boolean`                                  | `false`      | 是否禁用                                           |
+| `error`       | `boolean`                                  | `false`      | 是否显示错误状态（仅边框样式）                     |
+| `filterable`  | `boolean`                                  | `false`      | 是否可搜索（启用后替换为自定义下拉框）             |
+| `multiple`    | `boolean`                                  | `false`      | 是否多选（需与 `filterable` 配合，v-model 为数组） |
+| `emptyText`   | `string`                                   | `'暂无数据'` | 搜索无结果时的空状态文案                           |
+| `maxHeight`   | `number`                                   | `240`        | 下拉面板最大高度（单位：px）                       |
 
 ### Events
 
-| 事件                | 参数                        | 说明                                           |
-| ------------------- | --------------------------- | ---------------------------------------------- |
-| `update:modelValue` | `(value: string \| number)` | 值变化时触发（v-model）                        |
-| `change`            | `(value: string \| number)` | 值变化时触发                                   |
-| `search`            | `(value: string)`           | 搜索输入时触发（仅在 `filterable` 模式下可用） |
+| 事件                | 参数                                 | 说明                                           |
+| ------------------- | ------------------------------------ | ---------------------------------------------- |
+| `update:modelValue` | `(value: string \| number \| array)` | 值变化时触发（v-model），多选时为数组          |
+| `change`            | `(value: string \| number \| array)` | 值变化时触发（多选时始终返回数组）             |
+| `search`            | `(value: string)`                    | 搜索输入时触发（仅在 `filterable` 模式下可用） |
 
 ### Slots
 
@@ -514,3 +555,6 @@ const options = [
 - 对象数组默认使用 `label`/`value` 字段，可通过 `label-key`/`value-key` 自定义
 - 基本类型（字符串、数字）数组自动处理：显示值和选中值均为该值本身
 - 通过 `max-height` 可控制下拉面板最大高度，超出后自动滚动
+- 多选模式需同时设置 `multiple` + `filterable`，`v-model` 绑定数组
+- 多选模式下 `Enter` 选中后保持下拉打开，方便连续多选；`Esc` 关闭
+- 多选模式下 `change` 事件始终返回数组（即使只有一个元素）

@@ -23,9 +23,12 @@ import Hero from './components/Hero.vue'
 import Popover from './components/Popover.vue'
 import Drawer from './components/Drawer.vue'
 import Table from './components/Table.vue'
+import Form from './components/Form.vue'
+import FormItem from './components/FormItem.vue'
 
 import { useToast } from './composables/useToast'
 import { useMessage } from './composables/useMessage'
+import { useForm } from './composables/useForm'
 
 import './styles/index.css'
 
@@ -48,6 +51,8 @@ export {
   Skeleton,
   Tooltip,
   Table,
+  Form,
+  FormItem,
   Container,
   Header,
   Main,
@@ -57,7 +62,10 @@ export {
   Drawer,
   useToast,
   useMessage,
+  useForm,
 }
+
+export type { Rule, FieldRules, UseFormOptions } from './composables/useForm'
 
 // Table 组件类型（泛型组件需要单独导出类型）
 export type { TableColumn, SortParams, CellSlotProps, ColumnSlotProps } from './types/table'

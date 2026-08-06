@@ -28,6 +28,7 @@ Moongate Vue 是一个受月亮启发的**极简 Vue 3 组件库**。设计令�
 - [安装](/guide/install) — 安装与配置
 - [快速开始](/guide/getting-started) — 第一个组件
 - [设计令牌](/guide/design-tokens) — 主题定制
+- [表单校验](/guide/form-validation) — useForm 组合式函数
 - [组件列表](/components/) — 全部组件 API
 - [Nuxt 集成](/guide/nuxt-integration) — SSR 环境使用
 

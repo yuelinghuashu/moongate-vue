@@ -28,7 +28,7 @@ describe('Select', () => {
     const wrapper = mount(Select, {
       props: {
         options,
-        'onUpdate:modelValue': (v: SelectValue) => wrapper.setProps({ modelValue: v }),
+        'onUpdate:modelValue': (v: any) => wrapper.setProps({ modelValue: v }),
       },
     })
     await wrapper.find('select').setValue('banana')
@@ -41,7 +41,7 @@ describe('Select', () => {
     const wrapper = mount(Select, {
       props: {
         options: numOptions,
-        'onUpdate:modelValue': (v: SelectValue) => wrapper.setProps({ modelValue: v }),
+        'onUpdate:modelValue': (v: any) => wrapper.setProps({ modelValue: v }),
       },
     })
     await wrapper.find('select').setValue('2')
@@ -91,7 +91,7 @@ describe('Select', () => {
       props: {
         options,
         filterable: true,
-        'onUpdate:modelValue': (v: SelectValue) => wrapper.setProps({ modelValue: v }),
+        'onUpdate:modelValue': (v: any) => wrapper.setProps({ modelValue: v }),
       },
       attachTo: document.body,
     })
@@ -212,7 +212,7 @@ describe('Select', () => {
       props: {
         options,
         filterable: true,
-        'onUpdate:modelValue': (v: SelectValue) => wrapper.setProps({ modelValue: v }),
+        'onUpdate:modelValue': (v: any) => wrapper.setProps({ modelValue: v }),
       },
       attachTo: document.body,
     })
@@ -281,7 +281,7 @@ describe('Select', () => {
       props: {
         options,
         filterable: true,
-        'onUpdate:modelValue': (v: SelectValue) => wrapper.setProps({ modelValue: v }),
+        'onUpdate:modelValue': (v: any) => wrapper.setProps({ modelValue: v }),
       },
       attachTo: document.body,
     })
@@ -340,7 +340,7 @@ describe('Select', () => {
     const wrapper = mount(Select, {
       props: {
         options,
-        'onUpdate:modelValue': (v: SelectValue) => wrapper.setProps({ modelValue: v }),
+        'onUpdate:modelValue': (v: any) => wrapper.setProps({ modelValue: v }),
       },
     })
     await wrapper.find('select').setValue('orange')
@@ -351,7 +351,7 @@ describe('Select', () => {
     const wrapper = mount(Select, {
       props: {
         options: [1, 2, 3],
-        'onUpdate:modelValue': (v: SelectValue) => wrapper.setProps({ modelValue: v }),
+        'onUpdate:modelValue': (v: any) => wrapper.setProps({ modelValue: v }),
       },
     })
     // jsdom 中 select.value 无法设为不存在的值，直接验证存在的值行为
@@ -368,7 +368,7 @@ describe('Select', () => {
       props: {
         options: customOptions,
         filterable: true,
-        'onUpdate:modelValue': (v: SelectValue) => wrapper.setProps({ modelValue: v }),
+        'onUpdate:modelValue': (v: any) => wrapper.setProps({ modelValue: v }),
       },
       attachTo: document.body,
     })
@@ -467,5 +467,176 @@ describe('Select', () => {
     const select = wrapper.find('select')
     expect(select.attributes('name')).toBe('fruit-native')
     expect(select.attributes('id')).toBe('native-select')
+  })
+
+  // ==================== 多选模式（multiple + filterable） ====================
+
+  it('多选模式：渲染已选标签', () => {
+    const wrapper = mount(Select, {
+      props: {
+        options,
+        filterable: true,
+        multiple: true,
+        modelValue: ['apple', 'banana'],
+      },
+      attachTo: document.body,
+    })
+    const tags = wrapper.findAll('.mg-select-tag')
+    expect(tags).toHaveLength(2)
+    expect(wrapper.text()).toContain('苹果')
+    expect(wrapper.text()).toContain('香蕉')
+  })
+
+  it('多选模式：点击选项切换选中/取消，下拉保持打开', async () => {
+    const wrapper = mount(Select, {
+      props: {
+        options,
+        filterable: true,
+        multiple: true,
+        'onUpdate:modelValue': (v: any) => wrapper.setProps({ modelValue: v }),
+      },
+      attachTo: document.body,
+    })
+    await wrapper.find('.mg-select-input').trigger('focus')
+    const optionElements = wrapper.findAll('.mg-select-option')
+
+    // 选中第一个（多选始终 emit 数组）
+    await optionElements[0].trigger('click')
+    expect(wrapper.emitted('update:modelValue')).toEqual([[['apple']]])
+    // 下拉保持打开
+    expect(wrapper.find('.mg-select-dropdown').exists()).toBe(true)
+
+    // 选中第二个
+    await optionElements[1].trigger('click')
+    expect(wrapper.emitted('update:modelValue')).toHaveLength(2)
+    const emitted = wrapper.emitted('update:modelValue')
+    expect(emitted?.[1]?.[0]).toEqual(['apple', 'banana'])
+
+    // 取消第一个
+    await optionElements[0].trigger('click')
+    const emitted2 = wrapper.emitted('update:modelValue')
+    expect(emitted2?.[2]?.[0]).toEqual(['banana'])
+  })
+
+  it('多选模式：选项 aria-selected 正确反映选中状态', async () => {
+    const wrapper = mount(Select, {
+      props: {
+        options,
+        filterable: true,
+        multiple: true,
+        modelValue: ['apple'],
+      },
+      attachTo: document.body,
+    })
+    await wrapper.find('.mg-select-input').trigger('focus')
+    const optionElements = wrapper.findAll('.mg-select-option')
+    expect(optionElements[0].attributes('aria-selected')).toBe('true')
+    expect(optionElements[1].attributes('aria-selected')).toBe('false')
+  })
+
+  it('多选模式：Tag 删除按钮移除对应值', async () => {
+    const wrapper = mount(Select, {
+      props: {
+        options,
+        filterable: true,
+        multiple: true,
+        modelValue: ['apple', 'banana'],
+        'onUpdate:modelValue': (v: any) => wrapper.setProps({ modelValue: v }),
+      },
+      attachTo: document.body,
+    })
+    const removeButtons = wrapper.findAll('.mg-select-tag-remove')
+    expect(removeButtons).toHaveLength(2)
+
+    await removeButtons[0].trigger('click')
+    expect(wrapper.emitted('update:modelValue')).toEqual([[['banana']]])
+    expect(wrapper.emitted('change')).toEqual([[['banana']]])
+  })
+
+  it('多选模式：键盘 Enter 选中后保持下拉打开', async () => {
+    const wrapper = mount(Select, {
+      props: {
+        options,
+        filterable: true,
+        multiple: true,
+        'onUpdate:modelValue': (v: any) => wrapper.setProps({ modelValue: v }),
+      },
+      attachTo: document.body,
+    })
+    await wrapper.find('.mg-select-input').trigger('focus')
+    await wrapper.find('.mg-select-input').trigger('keydown.down')
+    await wrapper.find('.mg-select-input').trigger('keydown.enter')
+
+    // 选中 apple（多选始终 emit 数组），下拉保持打开
+    expect(wrapper.emitted('update:modelValue')).toEqual([[['apple']]])
+    expect(wrapper.find('.mg-select-dropdown').exists()).toBe(true)
+
+    // 首次 Enter 后 focusedIndex 重置为 -1
+    // 需要两次 Down 到达第二个选项（banana）再 Enter
+    await wrapper.find('.mg-select-input').trigger('keydown.down')
+    await wrapper.find('.mg-select-input').trigger('keydown.down')
+    await wrapper.find('.mg-select-input').trigger('keydown.enter')
+    const emitted = wrapper.emitted('update:modelValue')
+    expect(emitted?.[1]?.[0]).toEqual(['apple', 'banana'])
+  })
+
+  it('多选模式：多选时输入框只显示搜索文本，不显示选中标签', async () => {
+    const wrapper = mount(Select, {
+      props: {
+        options,
+        filterable: true,
+        multiple: true,
+        modelValue: ['apple'],
+      },
+      attachTo: document.body,
+    })
+    const inputEl = wrapper.find('.mg-select-input').element as HTMLInputElement
+    // 未编辑时输入框为空（标签在 .mg-select-tag 中展示）
+    expect(inputEl.value).toBe('')
+
+    await wrapper.find('.mg-select-input').trigger('focus')
+    await wrapper.find('.mg-select-input').setValue('香')
+    expect((wrapper.find('.mg-select-input').element as HTMLInputElement).value).toBe('香')
+  })
+
+  it('多选模式：禁用选项不可点击选中', async () => {
+    const customOptions = [
+      { label: '正常', value: 'ok' },
+      { label: '禁用', value: 'no', disabled: true },
+    ]
+    const wrapper = mount(Select, {
+      props: {
+        options: customOptions,
+        filterable: true,
+        multiple: true,
+        'onUpdate:modelValue': (v: any) => wrapper.setProps({ modelValue: v }),
+      },
+      attachTo: document.body,
+    })
+    await wrapper.find('.mg-select-input').trigger('focus')
+    const allOptions = wrapper.findAll('.mg-select-option')
+
+    await allOptions[1].trigger('click')
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+
+    // 正常项可选中（多选始终 emit 数组）
+    await allOptions[0].trigger('click')
+    expect(wrapper.emitted('update:modelValue')).toEqual([[['ok']]])
+  })
+
+  it('多选模式：手动 blur 关闭下拉', async () => {
+    const wrapper = mount(Select, {
+      props: {
+        options,
+        filterable: true,
+        multiple: true,
+      },
+      attachTo: document.body,
+    })
+    await wrapper.find('.mg-select-input').trigger('focus')
+    expect(wrapper.find('.mg-select-dropdown').exists()).toBe(true)
+
+    await wrapper.find('.mg-select-input').trigger('blur')
+    expect(wrapper.find('.mg-select-dropdown').exists()).toBe(false)
   })
 })

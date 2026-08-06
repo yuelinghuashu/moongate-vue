@@ -2,16 +2,34 @@
 
 [English](./CHANGELOG.md) | **中文**
 
-## [1.4.2] - 2026-08-06
+## [1.5.0] - 2026-08-06
+
+### 🐛 Bug 修复
+
+- **Divider 拼写错误**：`hasDefaul` → `hasDefault`（变量/计算属性/模板三处）
+- **Button 空 label 渲染**：`label=''` 时不再渲染空的 `.mg-button-label` 容器（纯图标按钮场景），新增测试断言
+
+### 🚀 新特性
+
+- **`useForm` 表单校验组合式函数**：复用 HTML5 Constraint Validation（`required`/`email`/`min`/`pattern` 等原生已有能力），只补 4 个原生做不到的场景——状态集中管理（`values`/`errors`/`valid`）、异步校验（远程唯一性）、关联字段校验（确认密码）、校验编排（`validate`/`validateField`/`reset`），零依赖，19 个单元测试
+- **Select 多选**：新增 `multiple` prop（需配 `filterable`），标签 chip 展示 + 删除按钮、连续多选（选中后下拉保持打开）、键盘友好（Enter 选中不关闭/Esc 关闭）、多选时 `change` 始终 emit 数组，8 个单元测试
+- **Table 行选择**：新增 `selectable` prop + `v-model:selected-rows`，表头全选/半选（indeterminate）、`row-selectable` 禁用行、`row-key` 稳定选中，9 个单元测试
+- **`Form` / `FormItem` 表单视图组件**：布局容器 + 单字段 label/必填星号/错误/校验中展示，完全由 `useForm` 驱动（不重复校验逻辑）；两者合计约 1KB gzip。14 个单元测试
 
 ### 🚀 质量提升
 
 - **可访问性全面升级（WAI-ARIA Patterns）**：Tooltip 新增 `aria-describedby` + 键盘 focus 触发；Select 新增选项唯一 `id` + `aria-activedescendant`；Table 排序表头暴露 `aria-sort` 并支持键盘排序；Modal/Drawer 新增 `aria-describedby` 关联正文；Tabs 新增完整键盘导航（`←`/`→`/Home/End）——所有 ID 均通过 SSR 安全的 `useId()` 生成
 - **SSR 健壮性加固**：`useScrollLock` 导出函数增加非浏览器环境守卫；`Message`/`Toast` 在 SSR 渲染期间跳过创建定时器
 - **代码去重**：抽取 `useNotification`（Message/Toast）与 `useFormField`（Input/Textarea）composable；Select 状态重置逻辑重构为共享方法
-- **测试扩展至 338 个**：覆盖率从 78.85% 提升至 95%+（statements `76→90`、branches `65→80`、functions `76→90`、lines `78→92`）
+- **测试扩展至 395 个（29 个测试文件）**：覆盖率从 78.85% 提升至 95%+（statements `76→90`、branches `65→80`、functions `76→90`、lines `78→92`）
+- **Playwright 端到端冒烟测试**：14 个真实浏览器用例覆盖全部 25 个组件（渲染 + 关键交互），使用系统 Google Chrome（`channel: 'chrome'`）；新增 `pnpm test:e2e` / `test:e2e:install` 脚本
 - **Table 排序图标修复**：排序图标 class 改用响应式 `currentSortKey`/`currentSortOrder` 而非原始 props
 - **文档准确性修正**：Tooltip/Table/Select 文档更新至与键盘/无障碍行为一致
+
+### 📝 文档更新
+
+- 新增 `docs/guide/form-validation.md` 表单校验指南：原生优先校验理念 + `useForm` API 参考
+- Select 文档更新多选示例；Table 文档更新行选择示例
 
 ## [1.4.1] - 2026-08-06
 

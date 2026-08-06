@@ -6,7 +6,7 @@
     :class="{ 'mg-divider-dashed': dashed }"
     role="separator"
   >
-    <span v-if="hasDefaul" class="mg-divider-text">
+    <span v-if="hasDefault" class="mg-divider-text">
       <slot />
     </span>
   </div>
@@ -19,7 +19,7 @@ defineOptions({ name: 'Divider', inheritAttrs: false })
 import { useSlots, computed } from 'vue'
 
 const slots = useSlots()
-const hasDefaul = computed(() => !!slots.default)
+const hasDefault = computed(() => !!slots.default)
 
 interface Props {
   /** 是否为垂直分割线 */

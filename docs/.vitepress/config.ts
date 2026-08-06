@@ -23,6 +23,7 @@ const sidebar = {
         { text: '安装', link: '/guide/install' },
         { text: '快速开始', link: '/guide/getting-started' },
         { text: '设计令牌', link: '/guide/design-tokens' },
+        { text: '表单校验', link: '/guide/form-validation' },
         { text: 'Nuxt 集成', link: '/guide/nuxt-integration' },
       ],
     },
@@ -40,6 +41,7 @@ const sidebar = {
     {
       text: '表单组件',
       items: [
+        { text: 'Form 表单', link: '/components/form' },
         { text: 'Input 输入框', link: '/components/input' },
         { text: 'Textarea 多行文本', link: '/components/textarea' },
         { text: 'Checkbox 复选框', link: '/components/checkbox' },

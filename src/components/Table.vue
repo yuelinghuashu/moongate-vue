@@ -19,6 +19,17 @@
         <!-- 表头 -->
         <thead v-if="showHeader">
           <tr>
+            <!-- 选择列 -->
+            <th v-if="selectable" class="mg-table-selection-col">
+              <input
+                type="checkbox"
+                class="mg-table-checkbox"
+                :checked="isAllSelected"
+                :indeterminate="isIndeterminate"
+                :aria-label="selectAllText"
+                @change="handleSelectAll"
+              />
+            </th>
             <th
               v-for="column in columns"
               :key="getColumnKey(column)"
@@ -73,9 +84,21 @@
             :class="{
               'mg-table-row-hover': hoverable,
               'mg-table-row-striped': striped && rowIndex % 2 === 1,
+              'mg-table-row-selected': isRowSelected(row),
             }"
             @click="handleRowClick(row, rowIndex, $event)"
           >
+            <!-- 选择列 -->
+            <td v-if="selectable" class="mg-table-selection-col">
+              <input
+                type="checkbox"
+                class="mg-table-checkbox"
+                :checked="isRowSelected(row)"
+                :disabled="!isRowSelectable(row, rowIndex)"
+                :aria-label="`选择 ${getRowLabel(row)}`"
+                @change="handleRowSelect(row)"
+              />
+            </td>
             <td
               v-for="column in columns"
               :key="getColumnKey(column)"
@@ -150,6 +173,12 @@ const props = withDefaults(
     valueKey?: string
     /** 行唯一标识字段名（稳定 key，排序时可避免 DOM 复用错乱） */
     rowKey?: keyof T | string
+    /** 是否显示选择列（行选择） */
+    selectable?: boolean
+    /** 行是否可选（返回 false 禁用该行 checkbox） */
+    rowSelectable?: (row: T, index: number) => boolean
+    /** 全选 checkbox 的 aria-label */
+    selectAllText?: string
   }>(),
   {
     data: () => [],
@@ -166,8 +195,19 @@ const props = withDefaults(
     labelKey: 'label',
     valueKey: 'value',
     rowKey: undefined,
+    selectable: false,
+    rowSelectable: undefined,
+    selectAllText: '全选',
   },
 )
+
+// ==================== v-model 定义 ====================
+
+/**
+ * v-model:selected-rows 双向绑定（选中行数组）
+ * 未绑定时内部管理（默认全空）
+ */
+const selectedRows = defineModel<T[]>('selectedRows', { default: () => [] })
 
 // ==================== Emits 定义 ====================
 
@@ -180,6 +220,8 @@ const emit = defineEmits<{
   sort: [params: SortParams]
   /** 点击行 */
   'row-click': [row: T, index: number, event: MouseEvent]
+  /** 选中行变化 */
+  'selection-change': [rows: T[]]
 }>()
 
 // ==================== 插槽定义 ====================
@@ -325,6 +367,113 @@ const displayData = computed(() => {
 
   return result
 })
+
+// ==================== 行选择逻辑 ====================
+
+/**
+ * 比较两行是否相等（优先使用 rowKey，否则按引用比较）
+ */
+const isSameRow = (a: T, b: T): boolean => {
+  if (props.rowKey !== undefined) {
+    return String(a[props.rowKey as keyof T]) === String(b[props.rowKey as keyof T])
+  }
+  return a === b
+}
+
+/**
+ * 检查行是否在选中列表中
+ */
+const isRowSelected = (row: T): boolean => {
+  return selectedRows.value.some((selected) => isSameRow(selected, row))
+}
+
+/**
+ * 检查行是否可选（禁用 checkbox）
+ */
+const isRowSelectable = (row: T, index: number): boolean => {
+  if (!props.rowSelectable) return true
+  return props.rowSelectable(row, index)
+}
+
+/**
+ * 当前可被选择的行（用于全选逻辑，跳过禁用行）
+ */
+const selectableRows = computed(() => {
+  if (!props.rowSelectable) return displayData.value
+  return displayData.value.filter((row, index) => props.rowSelectable?.(row, index))
+})
+
+/**
+ * 表头 checkbox：是否全选
+ */
+const isAllSelected = computed(() => {
+  if (selectableRows.value.length === 0) return false
+  return selectableRows.value.every((row) => isRowSelected(row))
+})
+
+/**
+ * 表头 checkbox：是否半选
+ */
+const isIndeterminate = computed(() => {
+  const selectedCount = selectableRows.value.filter((row) => isRowSelected(row)).length
+  return selectedCount > 0 && selectedCount < selectableRows.value.length
+})
+
+/**
+ * 获取行的可访问名称（用于 checkbox aria-label）
+ */
+const getRowLabel = (row: T): string => {
+  if (props.rowKey !== undefined) {
+    return String(row[props.rowKey as keyof T])
+  }
+  // 使用第一列的值作为可访问名称
+  const firstColumn = props.columns[0]
+  if (firstColumn) {
+    return String(getRowValue(row, firstColumn))
+  }
+  return '行'
+}
+
+/**
+ * 选中/取消选中单行
+ */
+const handleRowSelect = (row: T) => {
+  if (!isRowSelected(row)) {
+    const next = [...selectedRows.value, row]
+    selectedRows.value = next
+    emit('selection-change', next)
+  } else {
+    const next = selectedRows.value.filter((selected) => !isSameRow(selected, row))
+    selectedRows.value = next
+    emit('selection-change', next)
+  }
+}
+
+/**
+ * 全选 / 取消全选（仅操作可选中的行）
+ */
+const handleSelectAll = () => {
+  if (isAllSelected.value) {
+    // 取消全选：移除所有可选行
+    const next = selectedRows.value.filter(
+      (selected) => !selectableRows.value.some((row) => isSameRow(selected, row)),
+    )
+    selectedRows.value = next
+    emit('selection-change', next)
+  } else {
+    // 全选：仅追加尚未选中的可选行
+    // 使用 isRowSelected（内部走 isSameRow：有 rowKey 按 rowKey 比较，无 rowKey 按引用比较）
+    // 避免无 rowKey 时 getRowKey 返回数字索引导致 Set 去重类型不匹配（数字 vs 字符串）而重复追加
+    const next = [...selectedRows.value]
+    for (const row of selectableRows.value) {
+      if (!isRowSelected(row)) {
+        next.push(row)
+      }
+    }
+    selectedRows.value = next
+    emit('selection-change', next)
+  }
+}
 
 // ==================== 行事件处理 ====================
 

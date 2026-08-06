@@ -5,7 +5,27 @@
     :class="[`mg-select-${size}`, { 'mg-select-error': error, 'mg-select-disabled': disabled }]"
   >
     <!-- ==================== 可搜索模式 ==================== -->
-    <div v-if="filterable" class="mg-select-filterable" @mousedown="mousedownInside = true">
+    <div
+      v-if="filterable"
+      class="mg-select-filterable"
+      :class="{ 'mg-select-multiple': multiple }"
+      @mousedown="mousedownInside = true"
+    >
+      <!-- 多选模式：已选标签 -->
+      <div v-if="multiple" class="mg-select-tags">
+        <span v-for="tag in selectedTags" :key="String(tag.value)" class="mg-select-tag">
+          <span class="mg-select-tag-label">{{ tag.label }}</span>
+          <button
+            type="button"
+            class="mg-select-tag-remove"
+            :aria-label="`移除 ${tag.label}`"
+            @click.stop="removeTag(tag.value)"
+          >
+            &times;
+          </button>
+        </span>
+      </div>
+
       <!-- 输入框 -->
       <input
         ref="inputRef"
@@ -195,6 +215,8 @@ interface Props {
   emptyText?: string
   /** 下拉面板最大高度（单位：px） */
   maxHeight?: number
+  /** 是否多选（仅 filterable 可搜索模式支持） */
+  multiple?: boolean
 }
 
 // ==================== Props 默认值 ====================
@@ -210,16 +232,21 @@ const props = withDefaults(defineProps<Props>(), {
   filterable: false,
   emptyText: '暂无数据',
   maxHeight: 240,
+  multiple: false,
 })
 
-/** v-model 双向绑定（当前选中的值） */
-const modelValue = defineModel<SelectValue>({ default: '' })
+/**
+ * v-model 双向绑定（当前选中的值）
+ * - 单选：SelectValue
+ * - 多选（multiple + filterable）：SelectValue[]
+ */
+const modelValue = defineModel<SelectValue | SelectValue[]>({ default: '' })
 
 // ==================== Emits 定义 ====================
 
 const emit = defineEmits<{
-  /** 值变化事件 */
-  change: [value: SelectValue]
+  /** 值变化事件（多选时为数组） */
+  change: [value: SelectValue | SelectValue[]]
   /** 搜索输入事件 */
   search: [value: string]
 }>()
@@ -279,14 +306,37 @@ const isOptionDisabled = (item: SelectOption): boolean => {
 }
 
 /**
+ * 多选模式下的选中值数组（对非数组的 modelValue 做防护）
+ */
+const multipleValues = computed<SelectValue[]>(() => {
+  if (!props.multiple) return []
+  return Array.isArray(modelValue.value) ? modelValue.value : []
+})
+
+/**
  * 检查选项是否被选中
- * @param item - 选项对象或基本类型值
- * @returns 是否选中
+ * - 多选模式：值存在于数组中
+ * - 单选模式：值与模型值相等
  */
 const isSelected = (item: SelectOption): boolean => {
   const itemValue = getValue(item)
+  if (props.multiple) {
+    return multipleValues.value.some((v) => String(v) === String(itemValue))
+  }
   return String(itemValue) === String(modelValue.value)
 }
+
+/**
+ * 多选模式：已选中的选项标签列表
+ */
+const selectedTags = computed(() => {
+  return multipleValues.value
+    .map((value) => {
+      const item = props.options.find((opt) => String(getValue(opt)) === String(value))
+      return item ? { label: getLabel(item), value: getValue(item) } : null
+    })
+    .filter((tag): tag is { label: string; value: SelectValue } => tag !== null)
+})
 
 /**
  * 查找当前选中的选项对象
@@ -324,6 +374,10 @@ const mousedownInside = ref(false)
  * - 否则显示空字符串
  */
 const displayValue = computed(() => {
+  // 多选模式：输入框只显示搜索文本（已选项由标签展示）
+  if (props.multiple) {
+    return searchText.value
+  }
   // 用户正在编辑时，始终显示 searchText（允许空字符串）
   if (isEditing.value) {
     return searchText.value
@@ -429,17 +483,50 @@ const toggleDropdown = () => {
 }
 
 /**
+ * 移除多选中的一个值
+ * @param value - 要移除的值
+ */
+const removeTag = (value: SelectValue) => {
+  if (!props.multiple) return
+  const next = multipleValues.value.filter((v) => String(v) !== String(value))
+  modelValue.value = next
+  // 多选模式始终 emit 数组
+  emit('change', next)
+}
+
+/**
  * 选择选项
+ * - 单选：设置值并关闭下拉
+ * - 多选：切换选中/取消，保持下拉打开（方便连续多选）
  * @param item - 选中的选项
  */
 const selectOption = (item: SelectOption) => {
   if (isOptionDisabled(item)) return
 
   const value = getValue(item)
+
+  if (props.multiple) {
+    // 多选：切换选中状态
+    const current = multipleValues.value
+    const isAlreadySelected = current.some((v) => String(v) === String(value))
+    const next = isAlreadySelected
+      ? current.filter((v) => String(v) !== String(value)) // 取消选中
+      : [...current, value] // 添加选中
+
+    modelValue.value = next
+    // 多选模式始终 emit 数组
+    emit('change', next)
+
+    // 多选保持下拉打开，清空搜索文本方便连续选择
+    searchText.value = ''
+    focusedIndex.value = -1
+    nextTick(() => inputRef.value?.focus())
+    return
+  }
+
+  // 单选：选择后关闭
   modelValue.value = value
   emit('change', value)
-
-  // 选择后关闭下拉并清空搜索状态
   closeDropdown()
   mousedownInside.value = false
 }
@@ -458,6 +545,8 @@ const moveFocus = (offset: 1 | -1) => {
 
 /**
  * 键盘回车确认
+ * - 单选：选中后关闭下拉
+ * - 多选：选中后保持下拉打开（方便连续多选）
  */
 const handleKeyEnter = () => {
   if (focusedIndex.value >= 0 && filteredOptions.value[focusedIndex.value]) {

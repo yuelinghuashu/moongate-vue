@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { h } from 'vue'
+import { h, nextTick } from 'vue'
 import Table from '../../components/Table.vue'
 
 interface User {
@@ -29,6 +29,175 @@ describe('Table', () => {
     expect(headers[0].text()).toContain('ID')
     expect(wrapper.findAll('tbody tr')).toHaveLength(3)
     expect(wrapper.text()).toContain('Alice')
+  })
+
+  it('选择列：selectable 显示 checkbox 列', () => {
+    const wrapper = mount(Table, { props: { columns, data, selectable: true } })
+    expect(wrapper.findAll('.mg-table-selection-col')).toHaveLength(4) // 1 表头 + 3 行
+    expect(wrapper.find('th.mg-table-selection-col input[type="checkbox"]').exists()).toBe(true)
+  })
+
+  it('选择列：默认无选择列', () => {
+    const wrapper = mount(Table, { props: { columns, data } })
+    expect(wrapper.find('.mg-table-selection-col').exists()).toBe(false)
+  })
+
+  it('选择列：点击行 checkbox 选中行', async () => {
+    const wrapper = mount(Table, {
+      props: {
+        columns,
+        data,
+        selectable: true,
+        'onSelection-change': () => {},
+      },
+    })
+    const rowCheckboxes = wrapper.findAll('tbody .mg-table-checkbox')
+    await rowCheckboxes[0].trigger('change')
+    expect(wrapper.emitted('selection-change')).toEqual([[[{ id: 1, name: 'Alice', age: 30 }]]])
+    // 选中行添加高亮 class
+    expect(wrapper.findAll('tbody tr')[0].classes()).toContain('mg-table-row-selected')
+  })
+
+  it('选择列：再次点击取消选中', async () => {
+    const wrapper = mount(Table, {
+      props: { columns, data, selectable: true },
+      attachTo: document.body,
+    })
+    const rowCheckboxes = wrapper.findAll('tbody .mg-table-checkbox')
+    await rowCheckboxes[0].trigger('change') // 选中
+    await rowCheckboxes[0].trigger('change') // 取消
+    expect(wrapper.emitted('selection-change')).toHaveLength(2)
+    const last = wrapper.emitted('selection-change')?.[1]?.[0]
+    expect(last).toEqual([])
+  })
+
+  it('选择列：表头全选/取消全选', async () => {
+    const wrapper = mount(Table, {
+      props: { columns, data, selectable: true },
+      attachTo: document.body,
+    })
+    const headerCheckbox = wrapper.find('th.mg-table-selection-col .mg-table-checkbox')
+    await headerCheckbox.trigger('change')
+    const first = wrapper.emitted('selection-change')?.[0]?.[0]
+    expect(first).toHaveLength(3)
+
+    // 再次点击取消全选
+    await headerCheckbox.trigger('change')
+    const last = wrapper.emitted('selection-change')?.[1]?.[0]
+    expect(last).toEqual([])
+  })
+
+  it('选择列：全选后表头 checkbox 为选中态', async () => {
+    const wrapper = mount(Table, {
+      props: { columns, data, selectable: true },
+    })
+    const headerCheckbox = wrapper.find('th.mg-table-selection-col .mg-table-checkbox')
+    await headerCheckbox.trigger('change')
+    await nextTick()
+    const input = wrapper.find('th.mg-table-selection-col .mg-table-checkbox')
+      .element as HTMLInputElement
+    expect(input.checked).toBe(true)
+  })
+
+  it('选择列：rowSelectable 禁用指定行', () => {
+    const wrapper = mount(Table, {
+      props: {
+        columns,
+        data,
+        selectable: true,
+        rowSelectable: (row: Record<string, any>) => row.id !== 2,
+      },
+    })
+    const rowCheckboxes = wrapper.findAll('tbody .mg-table-checkbox')
+    expect(rowCheckboxes[0].attributes('disabled')).toBeUndefined()
+    expect(rowCheckboxes[1].attributes('disabled')).toBeDefined()
+  })
+
+  it('选择列：全选时跳过禁用行', async () => {
+    const wrapper = mount(Table, {
+      props: {
+        columns,
+        data,
+        selectable: true,
+        rowSelectable: (row: Record<string, any>) => row.id !== 2,
+      },
+    })
+    const headerCheckbox = wrapper.find('th.mg-table-selection-col .mg-table-checkbox')
+    await headerCheckbox.trigger('change')
+    const selected = wrapper.emitted('selection-change')?.[0]?.[0] as Record<string, any>[]
+    expect(selected).toHaveLength(2)
+    expect(selected[0].id).toBe(1)
+    expect(selected[1].id).toBe(3)
+  })
+
+  it('选择列：v-model:selected-rows 通过 prop 初始化选中', () => {
+    const wrapper = mount(Table, {
+      props: {
+        columns,
+        data,
+        selectable: true,
+        selectedRows: [data[0]],
+      },
+    })
+    const rowCheckboxes = wrapper.findAll('tbody .mg-table-checkbox')
+    expect((rowCheckboxes[0].element as HTMLInputElement).checked).toBe(true)
+    expect((rowCheckboxes[1].element as HTMLInputElement).checked).toBe(false)
+  })
+
+  // ==================== 回归：全选去重（无 rowKey 时重复累计 bug） ====================
+
+  it('回归：无 rowKey 时全选不会重复累计（全选→取消→再全选）', async () => {
+    const wrapper = mount(Table, {
+      props: { columns, data, selectable: true },
+      attachTo: document.body,
+    })
+    const headerCheckbox = wrapper.find('th.mg-table-selection-col .mg-table-checkbox')
+
+    // 第一次全选：3 行
+    await headerCheckbox.trigger('change')
+    expect(wrapper.emitted('selection-change')?.[0]?.[0]).toHaveLength(3)
+
+    // 取消全选：0 行
+    await headerCheckbox.trigger('change')
+    expect(wrapper.emitted('selection-change')?.[1]?.[0]).toHaveLength(0)
+
+    // 第二次全选：仍为 3 行（不被上一轮残留影响）
+    await headerCheckbox.trigger('change')
+    const third = wrapper.emitted('selection-change')?.[2]?.[0] as Record<string, any>[]
+    expect(third).toHaveLength(3)
+
+    // 第三次全选：此时已全选，应走「取消」分支，不应再追加
+    await headerCheckbox.trigger('change')
+    const fourth = wrapper.emitted('selection-change')?.[3]?.[0] as Record<string, any>[]
+    expect(fourth).toHaveLength(0)
+  })
+
+  it('回归：有 rowKey 时全选合并去重按 rowKey 生效', async () => {
+    // 构造引用不同但 id 相同的数据，模拟父组件重建数组
+    const rebuiltData = data.map((row) => ({ ...row }))
+    const wrapper = mount(Table, {
+      props: { columns, data, selectable: true, rowKey: 'id' },
+      attachTo: document.body,
+    })
+    const headerCheckbox = wrapper.find('th.mg-table-selection-col .mg-table-checkbox')
+
+    // 先手动选中第一行
+    const rowCheckboxes = wrapper.findAll('tbody .mg-table-checkbox')
+    await rowCheckboxes[0].trigger('change')
+    const selectedBefore = wrapper.emitted('selection-change')?.[0]?.[0] as Record<string, any>[]
+    expect(selectedBefore).toHaveLength(1)
+
+    // 外部用新引用数组更新 data 与 selectedRows（业务常见场景：接口刷新后数组重建）
+    await wrapper.setProps({ data: rebuiltData })
+    await wrapper.setProps({ selectedRows: [...selectedBefore] })
+
+    // 再次点全选：第一行引用已不同但 id 相同，去重应按 rowKey 生效 → 合并后仍 3 行（不重复）
+    await headerCheckbox.trigger('change')
+    const second = wrapper.emitted('selection-change')?.[1]?.[0] as Record<string, any>[]
+    expect(second).toHaveLength(3)
+    // 且第一行应保留原引用（不因引用不同而重复追加）
+    const idCount = new Set(second.map((row) => String(row.id))).size
+    expect(idCount).toBe(3)
   })
 
   it('空状态显示 emptyText', () => {

@@ -19,7 +19,7 @@ Moongate Vue 是一个受月亮启发的极简 Vue 3 组件库。设计令牌驱
 - ✨ **极简 API** — 每个组件 2-8 个 props，易学易用
 - 🚀 **零依赖** — 无需额外配置，开箱即用
 - ⚡ **SSR 就绪** — 完美适配 Nuxt 4 / VitePress 等服务端渲染场景
-- ✅ **测试保障** — Vitest + jsdom 全覆盖，25 个组件 + 2 个公开 composables（`useMessage` / `useToast`）+ SSR/a11y 回归，共 338 个测试（语句覆盖率 95% / 分支覆盖率 86%）
+- ✅ **测试保障** — Vitest + jsdom 全覆盖，27 个组件 + 3 个公开 composables（`useForm` / `useMessage` / `useToast`）+ SSR/a11y 回归 + Playwright e2e，共 395 个测试（语句覆盖率 95% / 分支覆盖率 86%）
 - 🔧 **工程规范** — ESLint + Prettier 统一风格，husky 提交前自动检查
 
 ## 安装
@@ -68,14 +68,16 @@ const message = useMessage()
 
 ### 表单组件
 
-| 组件     | 说明     |
-| -------- | -------- |
-| Input    | 输入框   |
-| Textarea | 多行文本 |
-| Checkbox | 复选框   |
-| Radio    | 单选框   |
-| Switch   | 开关     |
-| Select   | 下拉选择 |
+| 组件     | 说明                               |
+| -------- | ---------------------------------- |
+| Form     | 表单容器与校验展示（配合 useForm） |
+| FormItem | 单字段：label / 必填星号 / 错误    |
+| Input    | 输入框                             |
+| Textarea | 多行文本                           |
+| Checkbox | 复选框                             |
+| Radio    | 单选框                             |
+| Switch   | 开关                               |
+| Select   | 下拉选择                           |
 
 ### 数据展示组件
 
@@ -114,7 +116,7 @@ const message = useMessage()
 | Link | `.mg-link` / `.nav-link`                          | 链接样式 |
 | Code | `.mg-code` / `.mg-code-inline` / `.mg-code-block` | 代码样式 |
 
-> **说明**：总计 **25 个组件 + 2 个样式工具**，覆盖日常开发绝大多数场景。
+> **说明**：总计 **27 个组件 + 2 个样式工具**，覆盖日常开发绝大多数场景。
 
 ## 设计令牌
 

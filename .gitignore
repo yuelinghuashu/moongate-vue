@@ -11,8 +11,11 @@ node_modules
 docs/.vitepress/cache
 dist
 dist-ssr
+dist-e2e
 coverage
 coverage/
+test-results/
+playwright-report/
 *.local
 temp-types/
 !.gitkeep

@@ -1,6 +1,6 @@
 # 组件
 
-Moongate Vue 提供了 25 个组件 + 2 个样式工具（Code / Link），覆盖日常开发需求。
+Moongate Vue 提供了 27 个组件 + 2 个样式工具（Code / Link），覆盖日常开发需求。
 
 ## 基础组件
 
@@ -13,14 +13,15 @@ Moongate Vue 提供了 25 个组件 + 2 个样式工具（Code / Link），覆�
 
 ## 表单组件
 
-| 组件                            | 说明         |
-| ------------------------------- | ------------ |
-| [Input 输入框](./input)         | 文本输入     |
-| [Textarea 多行文本](./textarea) | 多行文本输入 |
-| [Checkbox 复选框](./checkbox)   | 多选框       |
-| [Radio 单选框](./radio)         | 单选框       |
-| [Switch 开关](./switch)         | 开关切换     |
-| [Select 下拉选择](./select)     | 下拉选择器   |
+| 组件                            | 说明               |
+| ------------------------------- | ------------------ |
+| [Form 表单](./form)             | 表单容器与校验布局 |
+| [Input 输入框](./input)         | 文本输入           |
+| [Textarea 多行文本](./textarea) | 多行文本输入       |
+| [Checkbox 复选框](./checkbox)   | 多选框             |
+| [Radio 单选框](./radio)         | 单选框             |
+| [Switch 开关](./switch)         | 开关切换           |
+| [Select 下拉选择](./select)     | 下拉选择器         |
 
 ## 数据展示组件
 

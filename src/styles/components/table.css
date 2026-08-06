@@ -157,6 +157,27 @@
   text-align: right;
 }
 
+/* ========== 行选择 ========== */
+.mg-table-selection-col {
+  width: 48px;
+  text-align: center !important;
+}
+
+.mg-table-selection-col .mg-table-checkbox {
+  cursor: pointer;
+  accent-color: var(--ui-primary);
+}
+
+.mg-table-checkbox:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+/* 选中行高亮 */
+.mg-table-row-selected {
+  background-color: var(--ui-bg-active);
+}
+
 /* ========== 空状态 ========== */
 .mg-table-empty {
   text-align: center !important;

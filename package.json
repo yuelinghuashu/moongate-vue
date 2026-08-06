@@ -1,6 +1,6 @@
 {
   "name": "moongate-vue",
-  "version": "1.4.2",
+  "version": "1.5.0",
   "keywords": [
     "vue",
     "vue3",
@@ -74,6 +74,16 @@
       "types": "./dist/exports/Footer.d.ts",
       "import": "./dist/footer.mjs",
       "default": "./dist/footer.mjs"
+    },
+    "./form": {
+      "types": "./dist/exports/Form.d.ts",
+      "import": "./dist/form.mjs",
+      "default": "./dist/form.mjs"
+    },
+    "./form-item": {
+      "types": "./dist/exports/FormItem.d.ts",
+      "import": "./dist/form-item.mjs",
+      "default": "./dist/form-item.mjs"
     },
     "./header": {
       "types": "./dist/exports/Header.d.ts",
@@ -175,6 +185,8 @@
     "docs:build": "pnpm run register:components && vitepress build docs",
     "register:components": "vitepress-rc",
     "test": "vitest run",
+    "test:e2e": "playwright test",
+    "test:e2e:install": "playwright install chromium",
     "lint": "eslint . --fix",
     "lint:no-fix": "eslint .",
     "format": "prettier --write .",
@@ -196,6 +208,7 @@
     ]
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
     "@types/node": "^25.9.1",
     "@vitejs/plugin-vue": "^6.0.6",
     "@vitest/coverage-v8": "^4.1.10",

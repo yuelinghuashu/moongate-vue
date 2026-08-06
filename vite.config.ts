@@ -32,6 +32,8 @@ const componentNames = [
   'Popover',
   'Drawer',
   'Table',
+  'Form',
+  'FormItem',
 ]
 
 /** 按需引入入口：从 src/exports/<name>.ts 导入，每个组件独立产出 */
@@ -47,6 +49,9 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),
+      // 开发时可让 import 'moongate-vue' 直接指向本地源码（与 docs/.vitepress/config.ts 保持一致）
+      // 避免在 node_modules 中不存在该包时，Vite 通过 package self-reference 解析到 dist 旧产物
+      'moongate-vue': resolve(__dirname, 'src/index.ts'),
     },
   },
   build: {
