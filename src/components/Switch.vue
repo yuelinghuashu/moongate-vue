@@ -13,7 +13,7 @@
     />
     <span class="mg-switch-track" />
     <span class="mg-switch-label">
-      <slot>{{ label }}</slot>
+      <slot name="label">{{ label }}</slot>
     </span>
   </label>
 </template>
@@ -22,6 +22,11 @@
 import type { Size } from '../types/components'
 
 defineOptions({ name: 'Switch', inheritAttrs: false })
+
+defineSlots<{
+  /** 标签内容（优先于 label prop） */
+  label: () => any
+}>()
 
 interface Props {
   /** 开关标签文字 */

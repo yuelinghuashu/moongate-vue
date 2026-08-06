@@ -88,18 +88,6 @@ const sidebar = {
       ],
     }
   ],
-  '/tokens/': [
-    {
-      text: '设计令牌',
-      items: [
-        { text: '颜色', link: '/tokens/colors' },
-        { text: '间距', link: '/tokens/spacing' },
-        { text: '排版', link: '/tokens/typography' },
-        { text: '动效', link: '/tokens/animation' },
-        { text: '断点', link: '/tokens/breakpoints' },
-      ],
-    },
-  ],
 }
 
 export default defineConfig({

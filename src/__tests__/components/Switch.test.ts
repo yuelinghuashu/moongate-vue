@@ -44,10 +44,13 @@ describe('Switch', () => {
     expect(wrapper.emitted('change')).toHaveLength(1)
   })
 
-  it('label 插槽', () => {
+  it('label 具名插槽优先于 label prop', () => {
     const wrapper = mount(Switch, {
-      slots: { default: '<span class="custom-switch-label">自定义</span>' },
+      props: { label: 'prop 标签' },
+      slots: { label: '<span class="custom-switch-label">插槽标签</span>' },
     })
     expect(wrapper.find('.custom-switch-label').exists()).toBe(true)
+    expect(wrapper.find('.custom-switch-label').text()).toBe('插槽标签')
+    expect(wrapper.text()).not.toContain('prop 标签')
   })
 })

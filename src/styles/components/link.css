@@ -6,6 +6,7 @@
 }
 .mg-link:hover {
   color: var(--ui-primary);
+  text-decoration: underline;
 }
 
 /* 导航栏链接（需要更大点击区域） */

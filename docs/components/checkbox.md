@@ -109,7 +109,7 @@ import { Checkbox } from 'moongate-vue'
 <template>
   <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
     <Checkbox disabled label="已禁用" />
-    <Checkbox disabled checked label="已禁用（选中）" />
+    <Checkbox disabled :model-value="true" label="已禁用（选中）" />
   </div>
 </template>
 

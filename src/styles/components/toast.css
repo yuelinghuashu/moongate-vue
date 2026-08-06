@@ -7,7 +7,7 @@
   flex-direction: column;
   align-items: flex-end;
   gap: var(--ui-spacing-sm, 8px);
-  z-index: var(--ui-z-index-toast, 2000);
+  z-index: var(--ui-z-index-tooltip, 1500);
 }
 
 /* 底部位置 */

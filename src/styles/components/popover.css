@@ -5,7 +5,7 @@
 
 .mg-popover {
   position: fixed;
-  z-index: var(--ui-z-index-popover, 1500);
+  z-index: var(--ui-z-index-tooltip, 1500);
   background-color: var(--ui-bg-elevated);
   border: 1px solid var(--ui-border);
   border-radius: var(--ui-radius-sm);

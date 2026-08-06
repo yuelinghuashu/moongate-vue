@@ -426,7 +426,7 @@ const options = [
 
 <template>
   <div style="width: 240px;">
-    <Select disabled :options="options" value="1" />
+    <Select disabled :options="options" model-value="1" />
   </div>
 </template>
 ```

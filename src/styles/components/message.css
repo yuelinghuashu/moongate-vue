@@ -4,7 +4,7 @@
   top: var(--ui-spacing-xl, 24px);
   left: 50%;
   transform: translateX(-50%);
-  z-index: var(--ui-z-index-toast, 2000);
+  z-index: var(--ui-z-index-tooltip, 1500);
   display: flex;
   flex-direction: column;
   align-items: center;
