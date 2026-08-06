@@ -46,9 +46,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, useId } from 'vue'
-import { useAttrsWithClass } from '../composables/useAttrsWithClass'
-import { useOverlayBehavior } from '../composables/useScrollLock'
+import { useOverlayComponent } from '../composables/useOverlayComponent'
+import type { Placement, SizeFull } from '../types/components'
 
 defineOptions({ name: 'Drawer', inheritAttrs: false })
 
@@ -58,14 +57,11 @@ defineSlots<{
   footer: () => any
 }>()
 
-type Placement = 'left' | 'right' | 'top' | 'bottom'
-type Size = 'sm' | 'md' | 'lg' | 'xl' | 'full'
-
 interface Props {
   /** 抽屉弹出方向 */
   placement?: Placement
   /** 抽屉尺寸（宽度/高度） */
-  size?: Size
+  size?: SizeFull
   /** 标题文本 */
   title?: string
   /** 是否显示关闭按钮 */
@@ -101,39 +97,17 @@ const emit = defineEmits<{
   close: []
 }>()
 
-const { attrsWithoutClass, mergedClass } = useAttrsWithClass(() => ({}))
-
-/** 浮层容器 DOM 引用（焦点陷阱作用域） */
-const overlayRef = ref<HTMLElement | null>(null)
-
-/** 标题元素的唯一 ID（用于 aria-labelledby，SSR 安全） */
-const titleId = useId()
-
-// 统一管理滚动锁定 + ESC 关闭 + 焦点陷阱（支持多实例计数器）
-useOverlayBehavior(modelValue as unknown as import('vue').Ref<boolean>, overlayRef, handleClose, {
-  enableEsc: props.enableEsc,
-  enableFocusTrap: props.enableFocusTrap,
-})
-
-/**
- * 监听 modelValue 变化
- * - 打开时：触发 open 事件
- * - 关闭时：触发 close 事件
- */
-watch(
-  () => modelValue.value,
-  (val) => {
-    if (val) {
-      emit('open')
-    } else {
-      emit('close')
-    }
+// 共享浮层逻辑：事件触发 + 标题 ID + 属性透传 + 滚动锁定/ESC/焦点陷阱
+const { overlayRef, titleId, attrsWithoutClass, mergedClass, handleClose } = useOverlayComponent(
+  modelValue,
+  {
+    onOpen: () => emit('open'),
+    onClose: () => emit('close'),
   },
-  { immediate: true },
+  () => ({}),
+  {
+    enableEsc: props.enableEsc,
+    enableFocusTrap: props.enableFocusTrap,
+  },
 )
-
-/** 关闭抽屉 */
-function handleClose() {
-  modelValue.value = false
-}
 </script>

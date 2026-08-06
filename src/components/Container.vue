@@ -5,12 +5,12 @@
 </template>
 
 <script setup lang="ts">
+import type { SizeContainer } from '../types/components'
+
 defineOptions({ name: 'Container', inheritAttrs: false })
 
-type Size = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | 'full'
-
 interface Props {
-  size?: Size
+  size?: SizeContainer
 }
 
 withDefaults(defineProps<Props>(), {

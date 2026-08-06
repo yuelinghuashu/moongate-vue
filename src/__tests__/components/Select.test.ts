@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import Select from '../../components/Select.vue'
+import Select, { type SelectValue } from '../../components/Select.vue'
 
 const options = [
   { label: '苹果', value: 'apple' },
@@ -26,7 +26,10 @@ describe('Select', () => {
 
   it('原生模式：change 事件更新 modelValue', async () => {
     const wrapper = mount(Select, {
-      props: { options, 'onUpdate:modelValue': (v: string) => wrapper.setProps({ modelValue: v }) },
+      props: {
+        options,
+        'onUpdate:modelValue': (v: SelectValue) => wrapper.setProps({ modelValue: v }),
+      },
     })
     await wrapper.find('select').setValue('banana')
     expect(wrapper.emitted('update:modelValue')).toEqual([['banana']])
@@ -38,7 +41,7 @@ describe('Select', () => {
     const wrapper = mount(Select, {
       props: {
         options: numOptions,
-        'onUpdate:modelValue': (v: number) => wrapper.setProps({ modelValue: v }),
+        'onUpdate:modelValue': (v: SelectValue) => wrapper.setProps({ modelValue: v }),
       },
     })
     await wrapper.find('select').setValue('2')
@@ -67,12 +70,28 @@ describe('Select', () => {
     expect(wrapper.findAll('.mg-select-option')).toHaveLength(3)
   })
 
+  it('可搜索模式：选项具备 role="option" 与 aria-selected', async () => {
+    const wrapper = mount(Select, {
+      props: { options, filterable: true, modelValue: 'banana' },
+      attachTo: document.body,
+    })
+    await wrapper.find('.mg-select-input').trigger('focus')
+    const dropdown = wrapper.find('.mg-select-dropdown')
+    // 下拉面板是 listbox，选项是 option
+    expect(dropdown.attributes('role')).toBe('listbox')
+    const optionElements = wrapper.findAll('.mg-select-option')
+    expect(optionElements[0].attributes('role')).toBe('option')
+    // 已选中项 aria-selected=true
+    expect(optionElements[1].attributes('aria-selected')).toBe('true')
+    expect(optionElements[0].attributes('aria-selected')).toBe('false')
+  })
+
   it('可搜索模式：选中选项更新 modelValue', async () => {
     const wrapper = mount(Select, {
       props: {
         options,
         filterable: true,
-        'onUpdate:modelValue': (v: string) => wrapper.setProps({ modelValue: v }),
+        'onUpdate:modelValue': (v: SelectValue) => wrapper.setProps({ modelValue: v }),
       },
       attachTo: document.body,
     })

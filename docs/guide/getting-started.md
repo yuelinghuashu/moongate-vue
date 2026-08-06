@@ -21,6 +21,8 @@ const message = useMessage()
 </template>
 ```
 
+> 💡 **非侵入式样式**：上面的 `style.css` 只包含组件样式，不会重置你的全局样式。如需统一盒模型基线，可额外引入 `moongate-vue/reset.css`（详见[安装指南](/guide/install#样式引入)）。
+
 ## 更多示例
 
 ### 卡片组件

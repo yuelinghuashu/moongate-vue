@@ -22,6 +22,20 @@ describe('Tabs', () => {
     expect(firstTab.classes()).toContain('mg-tab-active')
   })
 
+  it('tab 按钮与面板的 aria 关联正确', () => {
+    const wrapper = mount(Tabs, { props: { tabs } })
+    const firstTab = wrapper.findAll('.mg-tab')[0]
+    const firstPanel = wrapper.findAll('.mg-tab-panel')[0]
+    // tab 按钮拥有 id 和 aria-controls
+    expect(firstTab.attributes('id')).toBe('mg-tab-0')
+    expect(firstTab.attributes('aria-controls')).toBe('mg-tab-panel-0')
+    // 面板 aria-labelledby 指向对应 tab 按钮
+    expect(firstPanel.attributes('aria-labelledby')).toBe('mg-tab-0')
+    // aria-selected 状态正确
+    expect(firstTab.attributes('aria-selected')).toBe('true')
+    expect(wrapper.findAll('.mg-tab')[1].attributes('aria-selected')).toBe('false')
+  })
+
   it('size/variant class', () => {
     const wrapper = mount(Tabs, { props: { tabs, size: 'lg', variant: 'card' } })
     expect(wrapper.classes()).toContain('mg-tabs-lg')

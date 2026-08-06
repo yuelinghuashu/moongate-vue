@@ -22,18 +22,17 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: 'Message', inheritAttrs: false })
-
 import { watch, onMounted, onUnmounted, ref } from 'vue'
 import { useAttrsWithClass } from '../composables/useAttrsWithClass'
+import type { NotificationType } from '../types/components'
 
-type MessageType = 'success' | 'error' | 'warning' | 'info'
+defineOptions({ name: 'Message', inheritAttrs: false })
 
 interface Props {
   /** 消息内容 */
   message?: string
   /** 消息类型 */
-  type?: MessageType
+  type?: NotificationType
   /** 持续时间（毫秒），0 表示不自动关闭 */
   duration?: number
   /** 是否显示关闭按钮 */

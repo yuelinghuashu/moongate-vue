@@ -42,14 +42,13 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: 'Skeleton', inheritAttrs: false })
-
 import { computed } from 'vue'
+import type { Size } from '../types/components'
+
+defineOptions({ name: 'Skeleton', inheritAttrs: false })
 
 type SkeletonType = 'default' | 'card' | 'list'
 type AvatarType = 'circle' | 'square'
-type AvatarSize = 'sm' | 'md' | 'lg'
-type RowSize = 'sm' | 'md' | 'lg'
 
 interface Props {
   type?: SkeletonType
@@ -57,11 +56,11 @@ interface Props {
   avatar?: boolean
   avatarShape?: AvatarType
   /** 头像尺寸 */
-  avatarSize?: AvatarSize
+  avatarSize?: Size
   /** 第一行是否为标题 */
   title?: boolean
   /** 行宽度（仅 default 模式） */
-  rowSize?: RowSize
+  rowSize?: Size
 }
 
 const props = withDefaults(defineProps<Props>(), {

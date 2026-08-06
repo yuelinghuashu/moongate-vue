@@ -45,9 +45,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, useId } from 'vue'
-import { useAttrsWithClass } from '../composables/useAttrsWithClass'
-import { useOverlayBehavior } from '../composables/useScrollLock'
+import { useOverlayComponent } from '../composables/useOverlayComponent'
+import type { SizeXl } from '../types/components'
 
 defineOptions({ name: 'Modal', inheritAttrs: false })
 
@@ -57,13 +56,11 @@ defineSlots<{
   footer: () => any
 }>()
 
-type Size = 'sm' | 'md' | 'lg' | 'xl'
-
 interface Props {
   /** 模态框标题 */
   title?: string
   /** 模态框尺寸 */
-  size?: Size
+  size?: SizeXl
   /** 是否显示关闭按钮 */
   closable?: boolean
   /** 点击遮罩层是否关闭 */
@@ -96,42 +93,19 @@ const emit = defineEmits<{
   close: []
 }>()
 
-/** 浮层容器 DOM 引用（焦点陷阱作用域） */
-const overlayRef = ref<HTMLElement | null>(null)
-
-/** 标题元素的唯一 ID（用于 aria-labelledby，SSR 安全） */
-const titleId = useId()
-
-// 处理外部属性透传（无内部动态类，仅合并外部 class）
-const { attrsWithoutClass, mergedClass } = useAttrsWithClass(() => ({}))
-
-// 统一管理滚动锁定 + ESC 关闭 + 焦点陷阱
-useOverlayBehavior(modelValue as unknown as import('vue').Ref<boolean>, overlayRef, handleClose, {
-  enableEsc: props.enableEsc,
-  enableFocusTrap: props.enableFocusTrap,
-})
-
-/**
- * 监听 modelValue 变化
- * - 打开时：触发 open 事件
- * - 关闭时：触发 close 事件
- */
-watch(
-  () => modelValue.value,
-  (val) => {
-    if (val) {
-      emit('open')
-    } else {
-      emit('close')
-    }
+// 共享浮层逻辑：事件触发 + 标题 ID + 属性透传 + 滚动锁定/ESC/焦点陷阱
+const { overlayRef, titleId, attrsWithoutClass, mergedClass, handleClose } = useOverlayComponent(
+  modelValue,
+  {
+    onOpen: () => emit('open'),
+    onClose: () => emit('close'),
   },
-  { immediate: true },
+  () => ({}),
+  {
+    enableEsc: props.enableEsc,
+    enableFocusTrap: props.enableFocusTrap,
+  },
 )
-
-/** 关闭模态框 */
-function handleClose() {
-  modelValue.value = false
-}
 
 /** 点击遮罩层关闭 */
 function handleOverlayClick() {

@@ -38,12 +38,11 @@
 <script setup lang="ts">
 import { useSlots, computed } from 'vue'
 import type { Component } from 'vue'
+import type { Size, AddonColor } from '../types/components'
 
 defineOptions({ name: 'Button', inheritAttrs: false })
 
 type Variant = 'filled' | 'outline'
-type Color = 'primary' | 'success' | 'warning' | 'error'
-type Size = 'sm' | 'md' | 'lg'
 type ButtonType = 'button' | 'submit' | 'reset'
 
 interface Props {
@@ -52,7 +51,7 @@ interface Props {
   /** 按钮样式 */
   variant?: Variant
   /** 按钮颜色 */
-  color?: Color
+  color?: AddonColor
   /** 按钮大小 */
   size?: Size
   /** 原生按钮类型，默认 button 防止表单意外提交 */

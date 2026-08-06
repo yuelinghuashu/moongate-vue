@@ -30,11 +30,12 @@ describe('Badge', () => {
 
 // ==================== Card ====================
 describe('Card', () => {
-  it('渲染默认 div', () => {
+  it('渲染默认 div 并带 mg-card 基础类', () => {
     const wrapper = mount(Card, {
       slots: { default: '卡片内容' },
     })
     expect(wrapper.element.tagName).toBe('DIV')
+    expect(wrapper.classes()).toContain('mg-card')
     expect(wrapper.text()).toContain('卡片内容')
   })
 

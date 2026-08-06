@@ -71,11 +71,10 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: 'Pagination', inheritAttrs: false })
-
 import { ref, nextTick } from 'vue'
+import type { Size } from '../types/components'
 
-type Size = 'sm' | 'md' | 'lg'
+defineOptions({ name: 'Pagination', inheritAttrs: false })
 
 interface Props {
   /** 总页数 */

@@ -17,6 +17,10 @@
   ],
   "type": "module",
   "packageManager": "pnpm@11.15.1",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
   "sideEffects": [
     "*.css"
   ],
@@ -30,6 +34,7 @@
       "default": "./dist/index.mjs"
     },
     "./style.css": "./dist/style.css",
+    "./reset.css": "./dist/reset.css",
     "./badge": {
       "types": "./dist/exports/Badge.d.ts",
       "import": "./dist/badge.mjs",
@@ -162,23 +167,21 @@
   "scripts": {
     "dev": "vite",
     "clean": "rm -rf dist",
-    "build": "pnpm run clean && vite build && pnpm run build:types && pnpm run clean:dts",
+    "build": "pnpm run clean && vite build && pnpm run build:types && pnpm run clean:dts && pnpm run copy:reset",
+    "copy:reset": "mkdir -p dist && cp src/styles/reset.css dist/reset.css",
     "build:types": "vue-tsc -p tsconfig.build.json --emitDeclarationOnly --declaration --declarationDir ./dist --skipLibCheck",
     "prepublishOnly": "pnpm build && pnpm test",
-    "preview": "vite preview",
     "docs:dev": "pnpm run register:components && vitepress dev docs",
     "docs:build": "pnpm run register:components && vitepress build docs",
     "register:components": "vitepress-rc",
     "test": "vitest run",
-    "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage",
     "lint": "eslint . --fix",
     "lint:no-fix": "eslint .",
     "format": "prettier --write .",
-    "format:check": "prettier --check .",
     "prepare": "husky",
     "docs:preview": "vitepress preview docs",
-    "clean:dts": "node scripts/clean-dts.mjs"
+    "clean:dts": "node scripts/clean-dts.mjs",
+    "publish": "npm publish --access public"
   },
   "peerDependencies": {
     "vue": "^3.5.0"
@@ -200,6 +203,7 @@
     "@vue/eslint-config-typescript": "^14.9.0",
     "@vue/server-renderer": "^3.5.35",
     "@vue/test-utils": "^2.4.11",
+    "axe-core": "^4.12.1",
     "eslint": "^10.8.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.6",

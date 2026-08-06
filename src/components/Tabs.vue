@@ -13,6 +13,7 @@
         :class="{ 'mg-tab-active': activeTab === index }"
         :disabled="tab.disabled"
         role="tab"
+        :id="`mg-tab-${index}`"
         :aria-selected="activeTab === index"
         :aria-controls="`mg-tab-panel-${index}`"
         @click="handleTabClick(index)"
@@ -42,11 +43,11 @@
 </template>
 
 <script setup lang="ts">
+import { ref, watch } from 'vue'
+import type { Size } from '../types/components'
+
 defineOptions({ name: 'Tabs', inheritAttrs: false })
 
-import { ref, watch } from 'vue'
-
-type Size = 'sm' | 'md' | 'lg'
 type Variant = 'line' | 'card'
 
 export interface TabItem {

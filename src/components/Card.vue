@@ -43,6 +43,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const { attrsWithoutClass, mergedClass } = useAttrsWithClass(() => ({
+  'mg-card': true,
   'mg-card-hoverable': props.hoverable,
   'mg-card--body-hidden': props.hideBody,
 }))

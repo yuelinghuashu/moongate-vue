@@ -80,7 +80,9 @@ describe('SSR 兼容性（renderToString 不崩溃）', () => {
         data: [{ name: '张三' }],
       }),
     ).toContain('mg-table')
-    expect(await renderSSR(Pagination, { total: 100, currentPage: 1 })).toContain('mg-pagination')
+    expect(await renderSSR(Pagination, { totalPages: 100, modelValue: 1 })).toContain(
+      'mg-pagination',
+    )
     expect(await renderSSR(Skeleton, { rows: 3 })).toContain('mg-skeleton')
     expect(
       await renderSSR(

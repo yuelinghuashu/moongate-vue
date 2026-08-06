@@ -6,8 +6,8 @@ WORKDIR /app
 # 安装 git（vitepress 需要）
 RUN apk add --no-cache git
 
-# 安装 pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
+# 安装 pnpm（版本与 package.json packageManager 保持一致）
+RUN corepack enable && corepack prepare pnpm@11.15.1 --activate
 
 # 复制依赖文件
 COPY package.json pnpm-lock.yaml ./

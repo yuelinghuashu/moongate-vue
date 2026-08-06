@@ -20,7 +20,7 @@ Moongate Vue 是一个受月亮启发的极简 Vue 3 组件库。设计令牌驱
 - 🚀 **零依赖** — 无需额外配置，开箱即用
 - 🎨 **代码美化** — 内置行内代码和代码块样式，适配深色/浅色模式
 - ⚡ **SSR 就绪** — 完美适配 Nuxt 4 / VitePress 等服务端渲染场景
-- ✅ **测试保障** — Vitest + jsdom 全覆盖，25 个组件 + 5 个 composables + SSR 回归，共 212 个测试
+- ✅ **测试保障** — Vitest + jsdom 全覆盖，25 个组件 + 5 个 composables + SSR 回归，共 228 个测试
 - 🔧 **工程规范** — ESLint + Prettier 统一风格，husky 提交前自动检查
 - 📚 **消息堆叠** — Message / Toast 支持同时显示多条，无需额外配置
 
@@ -40,6 +40,29 @@ pnpm add moongate-vue
 
 > 如果你在使用 Vue 3.0 - 3.4，请使用 `moongate-vue@1.2.x` 版本。
 
+### 浏览器支持
+
+[![Browser Support](https://img.shields.io/badge/Browser-Chrome%20111%2B%20%7C%20Firefox%20113%2B%20%7C%20Edge%20111%2B%20%7C%20Safari%2016.2%2B-4FC08D)](<>)
+
+Moongate Vue 以 **ES2020** 为目标，要求支持 CSS 自定义属性（CSS Variables）。浏览器支持与 **VitePress** 保持一致（因为文档站本身运行本组件库）：
+
+| 浏览器  | 最低版本 |
+| ------- | -------- |
+| Chrome  | 111+     |
+| Edge    | 111+     |
+| Firefox | 113+     |
+| Safari  | 16.2+    |
+
+> ⚠️ **注意**：`Textarea` 组件的 `field-sizing: content` 自动高度功能需要较新浏览器：
+>
+> - Chrome/Edge 123+
+> - Firefox 128+
+> - Safari 16.4+
+>
+> 在旧版浏览器中组件仍可正常使用——只需手动设置 `rows` 即可实现类似效果。
+>
+> 不支持 IE 11（无 CSS 自定义属性支持）。
+
 ## 快速开始
 
 ```vue
@@ -56,6 +79,18 @@ const message = useMessage()
   </Button>
 </template>
 ```
+
+## 🎨 可选全局重置
+
+Moongate Vue 的默认 `style.css` **不包含全局重置**——不会侵入你项目的既有样式。如需统一基线，可显式引入可选重置：
+
+```js
+import 'moongate-vue/style.css'
+// 可选：为所有元素统一 box-sizing: border-box
+import 'moongate-vue/reset.css'
+```
+
+> 该可选重置仅对全部元素应用 `box-sizing: border-box`（保留浏览器默认的 margin/padding），不会覆盖你现有的排版与间距。
 
 ## 📖 在线文档
 

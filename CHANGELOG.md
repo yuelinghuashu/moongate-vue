@@ -1,157 +1,189 @@
-# 更新日志
+# Changelog
 
-## [1.4.0] - 2026-08-05
+**English** | [中文](./CHANGELOG.zh-CN.md)
 
-### 🐛 Bug 修复
+## [1.4.1] - 2026-08-06
 
-- **Input `change` 事件丢失**：组件声明了 `change` emit 但模板漏绑 `@change`，导致事件被"吞掉"（既不触发、也不透传）——由新增的单元测试发现并修复
-- **createOverlay 共享容器孤儿引用**：模块级 `Map` 缓存未检查 `isConnected`，测试/应用清空 body 后可能拿到已脱离 DOM 的孤儿节点
-- **Modal / Drawer 滚动锁冲突**：多实例同时打开时（多个 Modal、Modal + Drawer 等），关闭任意一个都会恢复 body 滚动；先引入模块级计数器，再统一抽取 `useScrollLock` composable 共享锁逻辑，仅最后一个关闭时恢复
-- **Button 缺少默认 `type="button"`**：原实现未设置 `type`，在表单内使用 `<Button>` 会默认为 `submit` 导致意外提交，现默认 `type="button"` 并支持 `submit`/`reset` 显式指定
-- **Modal 缺少 ESC 键关闭**：Drawer 已支持 ESC 关闭但 Modal 未实现，体验不一致；现统一通过 `useOverlayBehavior` 支持
-- **Select 大量 `any` 类型**：`options`、`getLabel`、`getValue` 等使用 `any` 导致类型不安全；改用 `SelectOption` 联合类型并新增 `isOptionDisabled` 辅助函数
+### 🐛 Bug Fixes
 
-### 🚀 新特性
+- **Card missing `mg-card` base class**: `mergedClass` only included dynamic classes (`mg-card-hoverable`/`mg-card--body-hidden`), missing the hardcoded `mg-card` base class — card background/radius/overflow styles never applied; fixed and covered by new test assertion
+- **Tabs ARIA id mismatch**: Tab buttons lacked `id="mg-tab-{index}"` while panels' `aria-labelledby` referenced it — broken association for screen readers; fixed and covered by new aria tests
+- **Select accessibility deficiencies**: Options lacked `role="option"`/`aria-selected`, dropdown lacked `role="listbox"`, and `aria-label`/`name`/`id` were bound to the outer wrapper instead of the actual `<input>`/`<select>` (axe flags `aria-input-field-name`/`label`) — all fixed; form/aria attrs now pass through to the native element, listbox reuses the accessible name
+- **SSR test used outdated Pagination props**: `{ total, currentPage }` → `{ totalPages, modelValue }`, eliminating missing-required-prop warnings
 
-- **Message / Toast 支持堆叠**：基于新增的 `createOverlay` 共享容器机制，可同时显示多条消息/通知（此前为替换前一条）
-- **新增 `createOverlay` / `closeAllOverlays` / `destroyAllOverlays` composable**：动态挂载覆盖层的可复用工具，提供统一 `close()` 接口与 SSR 安全、同步清理 API
-- **Table 新增 `row-key` prop**：排序时使用稳定 key 替代索引，避免 DOM 复用错乱
-- **按需导出（Tree-shaking 友好）**：新增 25 个组件的独立导出入口（`moongate-vue/button`、`moongate-vue/table` 等），构建产出每个组件独立 `.mjs` 文件，`package.json` exports 支持全部子路径
-- **焦点陷阱（Focus Trap）**：Modal 和 Drawer 打开时键盘 Tab 循环在组件内，无法逃出遮罩层
-- **ARIA 可访问性提升**：Modal/Drawer 增加 `aria-labelledby` 动态标题关联，关闭按钮支持自定义 `closeAriaLabel`
-- **CI/CD 工作流**：新增 GitHub Actions（含 `pnpm test` 与 `build:types` 步骤），在 Node 20/22 上执行 lint、类型检查、格式检查、覆盖率测试与构建
+### ✨ Improvements
 
-### ✨ 优化改进
+- **Enable TypeScript strict mode**: `tsconfig.json` changed from `strict: false` to `strict: true`, improving overall type quality of the component library
+- **Fix tsconfig.app.json**: Removed reference to the uninstalled `@vue/tsconfig` package, replaced with a self-contained config, fixing editor type-check errors
+- **Extract `useOverlayComponent` composable**: Unified Modal/Drawer open/close event emission, title ID, attribute passthrough, scroll lock/ESC/focus trap logic, reducing ~40 lines of duplicate code per component
+- **Select removes 200ms hardcoded delay**: Uses browser event ordering (`mousedown` → `blur` → `click`) instead — clicking an option keeps the dropdown open, clicking outside closes it immediately, faster and race-free
+- **Modal/Drawer remove double type assertion**: `modelValue as unknown as Ref<boolean>` no longer needed; shared composable directly accepts type-safe `Ref<boolean>`
+- **Extract shared types to `src/types/components.ts`**: Eliminated duplicate type definitions across 18 components (`Size`/`Placement`/`NotificationType`/`AddonColor`/`InputType` etc.), unified API type consistency across the library
+- **Expand axe-core accessibility coverage to 13 components**: `a11y.test.ts` now covers Button/Checkbox/Input/Textarea/Select (native + searchable)/Tabs/Table/Pagination/Modal/Drawer/Tooltip/Popover with WCAG checks — violations fail the test; `region` rule disabled in unit tests as a testing-environment artifact
+- **Global CSS reset made opt-in**: Removed the aggressive `* { margin: 0; padding: 0 }` + `ul/ol` reset from the default `style.css` (was forced on all consumers). New optional `moongate-vue/reset.css` entry provides a modern, non-invasive reset (only `box-sizing: border-box`), keeping browser-default margins/paddings intact — zero impact on consumer styles by default
+- **README adds browser support declaration**: Aligns with VitePress baseline (Chrome 111+/Firefox 113+/Edge 111+/Safari 16.2+), with notes on `field-sizing: content` auto-grow browser requirements for Textarea
 
-- **抽取 `useScrollLock` composable**：统一 Modal/Drawer 的 body 滚动锁定、ESC 关闭、焦点陷阱逻辑，消除重复代码
-- **createOverlay 清理导入**：移除未使用的 `h`、`reactive` 导入
-- **Button/Toast/Modal/Drawer 增加 `defineSlots` 类型**：插槽类型安全化
-- **SSR 兼容性增强**：Modal/Drawer 改用 `useId()`（Vue 3.5+ 内置 SSR 安全 ID），替换 `Math.random()` 消除 hydration mismatch 警告
-- **Popover 性能优化**：将全局 `MutationObserver`（监听整个 body）替换为 `ResizeObserver`，仅在 popover 可见时监听自身尺寸变化
-- **Tooltip 性能优化**：将全局 `MutationObserver`（监听整个 body）替换为 `ResizeObserver`，仅在 tooltip 可见时监听自身尺寸变化
-- **新增 SSR 回归测试**：使用 `@vue/server-renderer` 对所有 25 个组件执行 `renderToString`，防止未来改动破坏 SSR 兼容性
-- **Message / Toast 解耦 Teleport**：移出组件内层 `<Teleport>`，由 `createOverlay` 统一管理容器与离开动画时序
-- **代码规范落地**：引入 ESLint + Prettier，统一全库单引号、无分号风格，修复 5 个历史问题（Footer/Main 缺 `lang="ts"`、Table `prefer-const` 等）
-- **pre-commit 钩子**：husky + lint-staged，提交前自动对暂存文件执行 lint 与 format
-- **样式清理**：移除 `index.css` 中 `table.css` 重复导入
-- **测试体系落地**：Vitest + jsdom，覆盖全部 25 个组件、5 个 composables 与 SSR 回归测试，共 212 个测试用例，整体覆盖率约 78.85%
-- **测试覆盖率阈值提升**：statements/lines 60→76/78，branches 50→65，functions 60→76（渐进式目标）
-- **`.gitignore` 完善**：忽略 `coverage/` 目录与 `assets/` 支付图片
-- **Select 泛型改进**：类型从 `any` 收窄为 `SelectOption` / `SelectValue`，`labelKey`/`valueKey` 类型安全
+### 🔧 Build
 
-### ⚠️ 破坏性变更
+- **Dockerfile pins pnpm version**: `pnpm@latest` → `pnpm@11.15.1`, consistent with `packageManager`, eliminating non-reproducible builds
+- **package.json adds `engines` field**: Declares `node >= 20.0.0` and `pnpm >= 9.0.0`, clarifying runtime environment requirements
+- **colors.css source comment updated**: Points to the upstream moongate-theme project path for traceability of auto-generated files
 
-- **Message / Toast 行为变化**：从"替换前一条"改为"叠加显示多条"。依赖旧行为（消息互斥）的调用方如有需要，可在调用前手动关闭已有实例
-- **最低 Vue 版本**：从 `^3.3.0` 提升至 **`^3.5.0`**（`defineModel` 需 Vue 3.4+、`useId` 需 Vue 3.5+，实现 SSR 安全 ID）；Vue 3.0 - 3.4 用户请使用 `moongate-vue@1.2.x`
-- **Button type 行为变化**：默认 `type` 从（浏览器默认的 submit）改为 `button`；如依赖 `<Button>` 在表单中提交的行为，需显式传入 `type="submit"`
-- **按需导出路径**：新增子路径导出 `moongate-vue/button` 等，但主入口 `moongate-vue` 保持兼容
+<details>
+<summary>[1.4.0] - 2026-08-05</summary>
 
-### 📝 文档更新
+### 🐛 Bug Fixes
 
-- README 版本要求更新为 Vue `^3.5.0`
-- 新增技术博客《Vue 3 Teleport 组件单元测试指南》（`docs/blog/`）
+- **Input `change` event lost**: Component declared `change` emit but template missed `@change` binding, causing the event to be "swallowed" (neither emitted nor passed through) — discovered and fixed by new unit tests
+- **createOverlay shared container orphan reference**: Module-level `Map` cache didn't check `isConnected`; after tests/apps cleared body, could return orphaned DOM nodes already detached
+- **Modal / Drawer scroll lock conflict**: When multiple instances were open (multiple Modals, Modal + Drawer, etc.), closing any one restored body scrolling; introduced module-level counter, then extracted unified `useScrollLock` composable to share lock logic — scroll restores only when the last instance closes
+- **Button missing default `type="button"`**: Original implementation didn't set `type`; using `<Button>` in a form defaulted to `submit` causing unintended submission. Now defaults to `type="button"` with support for explicit `submit`/`reset`
+- **Modal missing ESC key close**: Drawer already supported ESC close but Modal didn't, inconsistent UX; now unified through `useOverlayBehavior`
+- **Select heavy `any` types**: `options`, `getLabel`, `getValue` etc. used `any` causing type unsafety; switched to `SelectOption` union type and added `isOptionDisabled` helper
 
-### 🔧 构建相关
+### 🚀 New Features
 
-- `@types/node` 移入 `devDependencies`（守住零依赖承诺）
-- `package.json` 的 `main` 字段修正为 `./dist/index.mjs`（与 ESM 产物一致）
-- 新增 `.dockerignore`，加速 Docker 构建
-- 新增 `pnpm-workspace.yaml`，解决 pnpm 11 构建脚本审批问题
-- 新增 `lint` / `format` / `prepare` 脚本
-- 构建配置支持多入口按需导出（vite.config.ts 增量入口）
-- **打包流程加固**：新增 `clean` 脚本（构建前清理 dist 避免旧产物残留），`build` 统一使用 pnpm（消除 npm/pnpm 混用），新增 `prepublishOnly` 发布前自动执行「构建 + 测试」安全检查
+- **Message / Toast stacking**: Based on new `createOverlay` shared container mechanism, can display multiple messages/toasts concurrently (previously replaced the previous one)
+- **New `createOverlay` / `closeAllOverlays` / `destroyAllOverlays` composables**: Reusable tools for dynamic overlay mounting, providing unified `close()` API with SSR safety and synchronous cleanup
+- **Table adds `row-key` prop**: Uses stable key instead of index during sorting, avoiding DOM reuse issues
+- **On-demand exports (Tree-shaking friendly)**: 25 independent component export entries (`moongate-vue/button`, `moongate-vue/table`, etc.), build produces per-component `.mjs` files, `package.json` exports supports all subpaths
+- **Focus Trap**: Modal and Drawer keep keyboard Tab cycling within the component, can't escape the overlay
+- **ARIA accessibility improvements**: Modal/Drawer add `aria-labelledby` dynamic title association, close button supports custom `closeAriaLabel`
+- **CI/CD workflow**: Added GitHub Actions (with `pnpm test` and `build:types` steps), running lint, type check, format check, coverage tests and build on Node 20/22
+
+### ✨ Improvements
+
+- **Extract `useScrollLock` composable**: Unified Modal/Drawer body scroll locking, ESC close, focus trap logic, eliminating duplicate code
+- **createOverlay import cleanup**: Removed unused `h`, `reactive` imports
+- **Button/Toast/Modal/Drawer add `defineSlots` types**: Slot type safety
+- **SSR compatibility enhancement**: Modal/Drawer switched to `useId()` (Vue 3.5+ built-in SSR-safe ID), replacing `Math.random()` to eliminate hydration mismatch warnings
+- **Popover performance optimization**: Replaced global `MutationObserver` (watching entire body) with `ResizeObserver`, only observing its own size changes when visible
+- **Tooltip performance optimization**: Replaced global `MutationObserver` (watching entire body) with `ResizeObserver`, only observing its own size changes when visible
+- **New SSR regression tests**: Use `@vue/server-renderer` to `renderToString` all 25 components, preventing future changes from breaking SSR compatibility
+- **Message / Toast decouple Teleport**: Removed inner `<Teleport>` from components, `createOverlay` unified container and leave-animation timing management
+- **Code standards**: Introduced ESLint + Prettier, unified single-quote/no-semicolon style across the library, fixed 5 historical issues (Footer/Main missing `lang="ts"`, Table `prefer-const`, etc.)
+- **Pre-commit hook**: husky + lint-staged, auto lint & format staged files before commit
+- **Style cleanup**: Removed duplicate `table.css` import in `index.css`
+- **Test infrastructure**: Vitest + jsdom, covering all 25 components, 5 composables and SSR regression tests, 212 test cases total, ~78.85% overall coverage
+- **Coverage threshold raised**: statements/lines 60→76/78, branches 50→65, functions 60→76 (progressive target)
+- **`.gitignore` improvement**: Ignore `coverage/` directory and `assets/` payment images
+- **Select generic improvement**: Types narrowed from `any` to `SelectOption` / `SelectValue`, `labelKey`/`valueKey` type-safe
+
+### ⚠️ Breaking Changes
+
+- **Message / Toast behavior change**: From "replaces previous" to "stacks multiple". Callers relying on the old behavior (message exclusivity) can manually close existing instances before calling
+- **Minimum Vue version**: Raised from `^3.3.0` to **`^3.5.0`** (`defineModel` requires Vue 3.4+, `useId` requires Vue 3.5+ for SSR-safe IDs); Vue 3.0 - 3.4 users should use `moongate-vue@1.2.x`
+- **Button type behavior change**: Default `type` changed from (browser default) submit to `button`; if relying on `<Button>` submitting forms, explicitly pass `type="submit"`
+- **On-demand export paths**: Added subpath exports `moongate-vue/button` etc., but main entry `moongate-vue` remains compatible
+
+### 📝 Documentation
+
+- README version requirement updated to Vue `^3.5.0`
+- New blog post "Vue 3 Teleport Component Unit Testing Guide" (`docs/blog/`)
+
+### 🔧 Build
+
+- `@types/node` moved to `devDependencies` (preserving zero-dependency promise)
+- `package.json` `main` field corrected to `./dist/index.mjs` (consistent with ESM output)
+- Added `.dockerignore` to speed up Docker builds
+- Added `pnpm-workspace.yaml` to resolve pnpm 11 build script approval issues
+- Added `lint` / `format` / `prepare` scripts
+- Build config supports multi-entry on-demand exports (vite.config.ts incremental entries)
+- **Packaging hardening**: Added `clean` script (cleans dist before build to avoid stale artifacts), unified `build` to use pnpm (eliminating npm/pnpm mixing), added `prepublishOnly` running "build + test" safety check before publish
+
+</details>
 
 <details>
 <summary>[1.3.1] - 2026-06-19</summary>
 
-### 🐛 Bug 修复
+### 🐛 Bug Fixes
 
-- **SSR 兼容性**：修复 Modal、Drawer、Popover、Tooltip 等组件在服务端渲染时访问 `document` 和 `window` 对象导致的 `document is not defined` 错误
-- **Toast / Message**：命令式调用在 SSR 环境下静默失败，不再抛出错误
+- **SSR compatibility**: Fixed `document is not defined` errors when Modal, Drawer, Popover, Tooltip etc. accessed `document` and `window` during server-side rendering
+- **Toast / Message**: Imperative calls fail silently in SSR environment instead of throwing errors
 
 </details>
 
 <details>
 <summary>[1.3.0] - 2026-06-19</summary>
 
-### 🚀 新特性
+### 🚀 New Features
 
-- **所有表单组件**（`Checkbox`、`Radio`、`Switch`、`Input`、`Textarea`、`Select`）使用 `defineModel` 重构 v-model 实现，代码更简洁、类型更安全
-- `Button`：新增 `showLabelWhileLoading` 和 `loadingLabel` 属性，加载时可选择保留文字
+- **All form components** (`Checkbox`, `Radio`, `Switch`, `Input`, `Textarea`, `Select`) refactored v-model implementation with `defineModel`, cleaner code and safer types
+- `Button`: Added `showLabelWhileLoading` and `loadingLabel` props, optionally retain text while loading
 
-### ✨ 优化改进
+### ✨ Improvements
 
-- **Toast / Message 动画优化**：使用 Vue 内置 `<Transition>` 组件管理进入/离开动画，无需手动控制 DOM 移除时机
-- **Drawer**：支持 ESC 键关闭，提升无障碍体验
-- **Toast / Message**：自动关闭定时器在组件卸载时正确清理，防止内存泄漏
-- 减少冗余响应式状态，提升代码可维护性
+- **Toast / Message animation optimization**: Use Vue built-in `<Transition>` component to manage enter/leave animations, no manual DOM removal timing needed
+- **Drawer**: Supports ESC key close, improved accessibility
+- **Toast / Message**: Auto-close timers properly cleaned up on component unmount, preventing memory leaks
+- Reduced redundant reactive state, improved code maintainability
 
-### ⚠️ 破坏性变更
+### ⚠️ Breaking Changes
 
-- **Pagination**：v-model 用法从 `v-model:current-page` 改为 `v-model`（旧用法不再兼容）
-- **最低 Vue 版本**：从 `^3.0.0` 提升至 `^3.3.0`（`defineModel` 需要 Vue 3.3+ 编译器支持）
+- **Pagination**: v-model usage changed from `v-model:current-page` to `v-model` (old usage no longer compatible)
+- **Minimum Vue version**: Raised from `^3.0.0` to `^3.3.0` (`defineModel` requires Vue 3.3+ compiler support)
 
-### 📝 文档更新
+### 📝 Documentation
 
-- Props 表格中移除 `update:modelValue` 事件说明（由 defineModel 自动处理）
-- Pagination 文档更新为 `v-model` 简写
+- Removed `update:modelValue` event docs from Props tables (auto-handled by defineModel)
+- Pagination documentation updated to `v-model` shorthand
 
 </details>
 
 <details>
 <summary>[1.2.1] - 2026-06-08</summary>
 
-### 🔧 构建相关
+### 🔧 Build
 
-- 添加 npm 包关键词（`keywords`），提升在 npm 搜索中的可发现性
+- Added npm package keywords (`keywords`), improving discoverability in npm search
 
 </details>
 
 <details>
 <summary>[1.2.0] - 2026-06-07</summary>
 
-### 🎉 新特性
+### 🎉 New Features
 
-- 新增 VitePress 文档站（`vue.moongate.top`）
+- Added VitePress documentation site (`vue.moongate.top`)
 
-### 🐛 Bug 修复
+### 🐛 Bug Fixes
 
-- 所有组件添加 `defineOptions({ name, inheritAttrs: false })`
-- 移除 install
+- All components add `defineOptions({ name, inheritAttrs: false })`
+- Removed install
 
-### 📝 文档更新
+### 📝 Documentation
 
-- 新增 25 个组件 API 文档
-- 新增设计令牌文档
+- Added 25 component API docs
+- Added design token docs
 
-### 🔧 构建相关
+### 🔧 Build
 
-- 移除全局安装函数 `install`，组件库仅支持按需导入，不再提供 `app.use()` 方式
-- 优化构建配置，使用 `vite build && tsc --emitDeclarationOnly`
-- 完善 `package.json` 导出配置（`exports`、`types`、`files`）
-- 配置阿里云 ACR 镜像仓库
-- 配置 GitHub Actions CI/CD 流水线
+- Removed global install function `install`, component library supports on-demand imports only, no longer provides `app.use()`
+- Optimized build config, using `vite build && tsc --emitDeclarationOnly`
+- Completed `package.json` export config (`exports`, `types`, `files`)
+- Configured Alibaba Cloud ACR image registry
+- Configured GitHub Actions CI/CD pipeline
 
 </details>
 
 <details>
 <summary>[1.1.0] - 2026-06-02</summary>
 
-### 🚀 新特性
+### 🚀 New Features
 
-- 新增 Table 组件
-- Pagination 组件支持快速跳转首尾页
-- Select 组件支持搜索过滤（`filterable` 属性）
+- Added Table component
+- Pagination component supports quick jump to first/last page
+- Select component supports search filtering (`filterable` prop)
 
 </details>
 
 <details>
 <summary>[1.0.0] - 2026-06-01</summary>
 
-### 🎉 首次发布
+### 🎉 Initial Release
 
-- 发布 24 个基础组件、2 个样式组件
-- 支持浅色/深色主题
-- 零依赖，体积 10KB
+- Released 24 base components, 2 style components
+- Light/dark theme support
+- Zero dependencies, 10KB bundle size
 
 </details>

@@ -21,7 +21,7 @@ Moongate Vue is a moon-inspired, minimal Vue 3 component library. Design-token d
 - 🚀 **Zero Dependencies** — No extra configuration, works out of the box
 - 🎨 **Code Styling** — Built-in inline code & code block styles, supports dark/light mode
 - ⚡ **SSR Ready** — Perfect for Nuxt 4 / VitePress and other server-side rendering scenarios
-- ✅ **Tested** — Vitest + jsdom full coverage: 25 components + 5 composables + SSR regression, 212 tests total
+- ✅ **Tested** — Vitest + jsdom full coverage: 25 components + 5 composables + SSR regression, 228 tests total
 - 🔧 **Engineering Standards** — ESLint + Prettier unified style, husky pre-commit checks
 - 📚 **Message Stacking** — Message / Toast support multiple concurrent messages, no extra config needed
 
@@ -41,6 +41,29 @@ pnpm add moongate-vue
 
 > If you're using Vue 3.0 - 3.4, please use `moongate-vue@1.2.x`.
 
+### Browser Support
+
+[![Browser Support](https://img.shields.io/badge/Browser-Chrome%20111%2B%20%7C%20Firefox%20113%2B%20%7C%20Edge%20111%2B%20%7C%20Safari%2016.2%2B-4FC08D)](<>)
+
+Moongate Vue targets **ES2020** and requires CSS Custom Properties support. Browser support aligns with **VitePress** baseline (because the documentation site itself runs this library):
+
+| Browser | Minimum Version |
+| ------- | --------------- |
+| Chrome  | 111+            |
+| Edge    | 111+            |
+| Firefox | 113+            |
+| Safari  | 16.2+           |
+
+> ⚠️ **Note**: The `Textarea` component's `field-sizing: content` auto-grow feature requires newer browser versions:
+>
+> - Chrome/Edge 123+
+> - Firefox 128+
+> - Safari 16.4+
+>
+> In older browsers, the component still works — you just need to set `rows` manually for auto-grow behavior.
+>
+> IE 11 is **not supported** (no CSS Custom Properties support).
+
 ## Quick Start
 
 ```vue
@@ -57,6 +80,18 @@ const message = useMessage()
   </Button>
 </template>
 ```
+
+## 🎨 Optional Global Reset
+
+Moongate Vue's default `style.css` is **non-invasive** — it does not reset your global styles. Import the optional reset only if you need a consistent baseline:
+
+```js
+import 'moongate-vue/style.css'
+// Optional: unify box-sizing to border-box across all elements
+import 'moongate-vue/reset.css'
+```
+
+> The optional reset only applies `box-sizing: border-box` to all elements (keeping browser-default margins/paddings intact). It won't override your existing typography or spacing.
 
 ## 📖 Documentation
 

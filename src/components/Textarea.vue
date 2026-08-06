@@ -20,8 +20,7 @@
 defineOptions({ name: 'Textarea', inheritAttrs: false })
 
 import { ref } from 'vue'
-
-type Size = 'sm' | 'md' | 'lg'
+import type { Size } from '../types/components'
 
 interface Props {
   /** 占位文本 */

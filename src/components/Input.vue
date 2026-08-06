@@ -16,10 +16,9 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: 'Input', inheritAttrs: false })
+import type { Size, InputType } from '../types/components'
 
-type Size = 'sm' | 'md' | 'lg'
-type InputType = 'text' | 'email' | 'password' | 'number' | 'tel' | 'url'
+defineOptions({ name: 'Input', inheritAttrs: false })
 
 interface Props {
   /** 输入框类型 */

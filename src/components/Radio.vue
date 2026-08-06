@@ -20,11 +20,10 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: 'Radio', inheritAttrs: false })
-
 import { computed } from 'vue'
+import type { Size } from '../types/components'
 
-type Size = 'sm' | 'md' | 'lg'
+defineOptions({ name: 'Radio', inheritAttrs: false })
 
 interface Props {
   /** 单选框标签文字 */

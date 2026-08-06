@@ -19,9 +19,9 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: 'Switch', inheritAttrs: false })
+import type { Size } from '../types/components'
 
-type Size = 'sm' | 'md' | 'lg'
+defineOptions({ name: 'Switch', inheritAttrs: false })
 
 interface Props {
   /** 开关标签文字 */

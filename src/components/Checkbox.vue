@@ -22,11 +22,10 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: 'Checkbox', inheritAttrs: false })
-
 import { computed } from 'vue'
+import type { Size } from '../types/components'
 
-type Size = 'sm' | 'md' | 'lg'
+defineOptions({ name: 'Checkbox', inheritAttrs: false })
 
 interface Props {
   /** 复选框标签文字 */

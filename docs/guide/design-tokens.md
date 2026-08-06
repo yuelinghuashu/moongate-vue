@@ -182,6 +182,18 @@ Moongate Vue 的所有样式都基于 CSS 变量（设计令牌）构建。你�
 }
 ```
 
+## 样式基线
+
+组件库的默认样式是**非侵入式**的：`moongate-vue/style.css` 只包含组件样式，不会重置使用方项目的全局样式（元素默认 margin/padding 保持不变）。
+
+如需统一盒模型基线（所有元素 `box-sizing: border-box`），可额外引入：
+
+```ts
+import 'moongate-vue/reset.css'
+```
+
+> `reset.css` 为可选文件，仅做无害的盒模型统一，不覆盖浏览器的排版默认值。
+
 ## 使用方式
 
 ```vue

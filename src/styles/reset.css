@@ -1,0 +1,25 @@
+/* ===== Moongate Vue 可选全局重置（默认不引入） ===== */
+
+/*
+ * 此文件为「可选」导入：
+ * - 默认 `import 'moongate-vue/style.css'` 不包含本重置，避免侵入使用方项目样式。
+ * - 如需全局重置，请显式引入：`import 'moongate-vue/reset.css'`。
+ *
+ * 设计取舍：
+ * - 仅统一盒模型为 `border-box`（业界共识，布局更可预测），
+ *   不覆盖浏览器对 h1/p/ul/button 等元素的合理默认 margin/padding。
+ * - 列表样式重置按需开启（默认注释），由使用方自行决定。
+ */
+
+/* 盒模型统一：所有元素及其伪元素均使用 border-box */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+ul,
+ol {
+  list-style: none;
+  padding-left: 0;
+}

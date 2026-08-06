@@ -1,14 +1,15 @@
 <template>
   <div
-    v-bind="$attrs"
+    v-bind="wrapperAttrs"
     class="mg-select-wrapper"
     :class="[`mg-select-${size}`, { 'mg-select-error': error, 'mg-select-disabled': disabled }]"
   >
     <!-- ==================== 可搜索模式 ==================== -->
-    <div v-if="filterable" class="mg-select-filterable">
+    <div v-if="filterable" class="mg-select-filterable" @mousedown="mousedownInside = true">
       <!-- 输入框 -->
       <input
         ref="inputRef"
+        v-bind="formAttrs"
         type="text"
         class="mg-select-input"
         :value="displayValue"
@@ -47,6 +48,8 @@
           v-if="isOpen"
           ref="dropdownRef"
           class="mg-select-dropdown"
+          role="listbox"
+          :aria-label="listboxAriaLabel"
           :style="{ maxHeight: `${maxHeight}px` }"
         >
           <!-- 空状态 -->
@@ -62,6 +65,8 @@
             v-else
             :key="getValue(item)"
             class="mg-select-option"
+            role="option"
+            :aria-selected="isSelected(item)"
             :class="{
               'mg-select-option-selected': isSelected(item),
               'mg-select-option-focused': focusedIndex === index,
@@ -81,6 +86,7 @@
     <!-- ==================== 普通模式 ==================== -->
     <select
       v-else
+      v-bind="formAttrs"
       class="mg-select-native"
       :class="[`mg-select-${size}`, { 'mg-select-error': error }]"
       :value="modelValue"
@@ -103,19 +109,52 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, nextTick } from 'vue'
+import { ref, computed, watch, nextTick, useAttrs } from 'vue'
+import type { Size } from '../types/components'
 
 defineOptions({ name: 'Select', inheritAttrs: false })
 
-// ==================== 类型定义 ====================
+/**
+ * 属性透传拆分：
+ * - 表单/无障碍相关属性（name/id/aria-* 等）透传到实际的 <input>/<select>，
+ *   否则可搜索模式的输入框将缺失可访问名称（axe 的 aria-input-field-name/label 违规）。
+ * - 其余属性（class/style/事件/data-* 等）保留在外层 wrapper。
+ */
+const attrs = useAttrs()
+
+/** 透传到原生表单元素的 form/aria 属性 */
+const formAttrs = computed(() => {
+  const result: Record<string, unknown> = {}
+  for (const [key, value] of Object.entries(attrs)) {
+    if (key.startsWith('aria-') || ['name', 'id', 'role', 'tabindex'].includes(key)) {
+      result[key] = value
+    }
+  }
+  return result
+})
+
+/** 保留在外层 wrapper 的其余属性 */
+const wrapperAttrs = computed(() => {
+  const result: Record<string, unknown> = {}
+  for (const [key, value] of Object.entries(attrs)) {
+    if (!(key in formAttrs.value)) {
+      result[key] = value
+    }
+  }
+  return result
+})
 
 /**
- * 组件尺寸类型
- * - sm: 小号
- * - md: 中号（默认）
- * - lg: 大号
+ * 下拉面板（role="listbox"）的可访问名称。
+ * 复用透传的 aria-label，确保 listbox 与搜索输入框拥有相同的可访问名称
+ * （axe 的 aria-input-field-name 要求组合式输入控件也具有可访问名称）。
  */
-type Size = 'sm' | 'md' | 'lg'
+const listboxAriaLabel = computed(() => {
+  const ariaLabel = formAttrs.value['aria-label']
+  return typeof ariaLabel === 'string' ? ariaLabel : undefined
+})
+
+// ==================== 类型定义 ====================
 
 /** 选项值的类型 */
 export type SelectValue = string | number
@@ -263,6 +302,8 @@ const inputRef = ref<HTMLInputElement | null>(null)
 const dropdownRef = ref<HTMLDivElement | null>(null)
 /** 用户是否正在编辑中（用于控制显示逻辑） */
 const isEditing = ref(false)
+/** 标记 mousedown 是否发生在组件内部（用于优化 blur 关闭逻辑） */
+const mousedownInside = ref(false)
 
 /**
  * 输入框显示的值
@@ -327,14 +368,19 @@ const handleInputFocus = () => {
 
 /**
  * 处理输入框失焦
- * 延迟退出编辑模式，让点击选项有机会执行
+ *
+ * 利用事件顺序（mousedown → blur → mouseup → click）判断：
+ * - 如果 mousedown 发生在组件内部（如点击选项），则不关闭下拉，让 click 正常执行选中逻辑
+ * - 点击外部区域时 blur 立即关闭，无需等待固定延迟
  */
 const handleInputBlur = () => {
-  // 延迟 200ms 关闭，确保点击选项的事件能够执行
-  setTimeout(() => {
-    isEditing.value = false
-    isOpen.value = false
-  }, 200)
+  // mousedown 在 blur 之前触发，若发生在组件内部说明是点击选项，保留下拉
+  if (mousedownInside.value) {
+    mousedownInside.value = false
+    return
+  }
+  isEditing.value = false
+  isOpen.value = false
 }
 
 /**
@@ -355,6 +401,7 @@ const toggleDropdown = () => {
     isOpen.value = true
     searchText.value = ''
     focusedIndex.value = -1
+    mousedownInside.value = false
     nextTick(() => {
       inputRef.value?.focus()
     })
@@ -377,6 +424,7 @@ const selectOption = (item: SelectOption) => {
   isOpen.value = false
   searchText.value = ''
   focusedIndex.value = -1
+  mousedownInside.value = false
 }
 
 /**

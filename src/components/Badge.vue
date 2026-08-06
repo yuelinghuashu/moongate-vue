@@ -5,15 +5,17 @@
 </template>
 
 <script setup lang="ts">
+import type { AddonColor, Size } from '../types/components'
+
 defineOptions({ name: 'Badge', inheritAttrs: false })
 
-type Color = 'primary' | 'success' | 'warning' | 'error'
-type Size = 'sm' | 'md'
+/** Badge 尺寸只有 sm/md（无 lg） */
+type BadgeSize = Exclude<Size, 'lg'>
 
 interface Props {
   label?: string
-  color?: Color
-  size?: Size
+  color?: AddonColor
+  size?: BadgeSize
 }
 
 withDefaults(defineProps<Props>(), {

@@ -22,12 +22,12 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: 'Toast', inheritAttrs: false })
-
 import { watch, onMounted, onUnmounted, ref } from 'vue'
 import { useAttrsWithClass } from '../composables/useAttrsWithClass'
+import type { NotificationType } from '../types/components'
 
-type ToastType = 'success' | 'error' | 'warning' | 'info'
+defineOptions({ name: 'Toast', inheritAttrs: false })
+
 type ToastPosition = 'top' | 'bottom'
 
 defineSlots<{
@@ -41,7 +41,7 @@ interface Props {
   /** 消息内容 */
   message?: string
   /** 消息类型 */
-  type?: ToastType
+  type?: NotificationType
   /** 持续时间（毫秒），0 表示不自动关闭 */
   duration?: number
   /** 是否显示关闭按钮 */
