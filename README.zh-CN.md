@@ -18,11 +18,9 @@ Moongate Vue 是一个受月亮启发的极简 Vue 3 组件库。设计令牌驱
 - 🔧 **CSS 优先** — 样式与逻辑解耦，可跨框架复用
 - ✨ **极简 API** — 每个组件 2-8 个 props，易学易用
 - 🚀 **零依赖** — 无需额外配置，开箱即用
-- 🎨 **代码美化** — 内置行内代码和代码块样式，适配深色/浅色模式
 - ⚡ **SSR 就绪** — 完美适配 Nuxt 4 / VitePress 等服务端渲染场景
-- ✅ **测试保障** — Vitest + jsdom 全覆盖，25 个组件 + 5 个 composables + SSR 回归，共 228 个测试
+- ✅ **测试保障** — Vitest + jsdom 全覆盖，25 个组件 + 2 个公开 composables（`useMessage` / `useToast`）+ SSR/a11y 回归，共 338 个测试（语句覆盖率 95% / 分支覆盖率 86%）
 - 🔧 **工程规范** — ESLint + Prettier 统一风格，husky 提交前自动检查
-- 📚 **消息堆叠** — Message / Toast 支持同时显示多条，无需额外配置
 
 ## 安装
 
@@ -32,42 +30,15 @@ npm install moongate-vue
 pnpm add moongate-vue
 ```
 
-> 💡 Moongate Vue 完全支持服务端渲染（SSR），可无缝集成 Nuxt 3 和 VitePress，无需额外配置。
-
-### 版本要求
-
-- **Vue**：`^3.5.0` 或更高版本（需要使用 `useId` 等 SSR 安全特性）
-
-> 如果你在使用 Vue 3.0 - 3.4，请使用 `moongate-vue@1.2.x` 版本。
-
-### 浏览器支持
-
-[![Browser Support](https://img.shields.io/badge/Browser-Chrome%20111%2B%20%7C%20Firefox%20113%2B%20%7C%20Edge%20111%2B%20%7C%20Safari%2016.2%2B-4FC08D)](<>)
-
-Moongate Vue 以 **ES2020** 为目标，要求支持 CSS 自定义属性（CSS Variables）。浏览器支持与 **VitePress** 保持一致（因为文档站本身运行本组件库）：
-
-| 浏览器  | 最低版本 |
-| ------- | -------- |
-| Chrome  | 111+     |
-| Edge    | 111+     |
-| Firefox | 113+     |
-| Safari  | 16.2+    |
-
-> ⚠️ **注意**：`Textarea` 组件的 `field-sizing: content` 自动高度功能需要较新浏览器：
+> 💡 **非侵入式样式**：默认 `style.css` 仅包含组件样式，不会重置你的全局样式。可选引入 `moongate-vue/reset.css` 为所有元素统一 `box-sizing: border-box`。
 >
-> - Chrome/Edge 123+
-> - Firefox 128+
-> - Safari 16.4+
->
-> 在旧版浏览器中组件仍可正常使用——只需手动设置 `rows` 即可实现类似效果。
->
-> 不支持 IE 11（无 CSS 自定义属性支持）。
+> **要求**：Vue `^3.5.0` 或更高版本。浏览器支持与 **VitePress** 基线保持一致（Chrome 111+ / Firefox 113+ / Edge 111+ / Safari 16.2+）。详见[完整安装指南](https://vue.moongate.top/guide/install)。
 
 ## 快速开始
 
 ```vue
 <script setup>
-import { Button, Card, useMessage } from 'moongate-vue'
+import { Button, useMessage } from 'moongate-vue'
 import 'moongate-vue/style.css'
 
 const message = useMessage()
@@ -80,26 +51,9 @@ const message = useMessage()
 </template>
 ```
 
-## 🎨 可选全局重置
-
-Moongate Vue 的默认 `style.css` **不包含全局重置**——不会侵入你项目的既有样式。如需统一基线，可显式引入可选重置：
-
-```js
-import 'moongate-vue/style.css'
-// 可选：为所有元素统一 box-sizing: border-box
-import 'moongate-vue/reset.css'
-```
-
-> 该可选重置仅对全部元素应用 `box-sizing: border-box`（保留浏览器默认的 margin/padding），不会覆盖你现有的排版与间距。
-
 ## 📖 在线文档
 
-访问 [**Moongate Vue 官方文档**](https://vue.moongate.top) 查看：
-
-- 所有组件 API 与交互示例
-- 设计令牌与主题定制指南
-
-> 文档站与组件库同步更新，建议优先查阅在线文档。
+访问 [**Moongate Vue 官方文档**](https://vue.moongate.top) 查看所有组件 API、交互示例与主题定制指南。
 
 ## 组件列表
 
@@ -153,9 +107,7 @@ import 'moongate-vue/reset.css'
 | Drawer   | 抽屉     |
 | Skeleton | 骨架屏   |
 
-## 样式工具
-
-以下为全局样式类，无需导入 Vue 组件，直接使用类名即可：
+### 样式工具
 
 | 样式 | 类名                                              | 说明     |
 | ---- | ------------------------------------------------- | -------- |
@@ -166,12 +118,7 @@ import 'moongate-vue/reset.css'
 
 ## 设计令牌
 
-Moongate Vue 基于完整的设计令牌系统：
-
-- `colors.css` — 浅色/深色模式颜色变量
-- `layout.css` — 间距、字体、动效等布局变量
-
-通过覆盖 CSS 变量即可完成主题定制：
+Moongate Vue 基于完整的设计令牌系统（`colors.css` 和 `layout.css`）。通过覆盖 CSS 变量即可完成主题定制：
 
 ```css
 :root {
@@ -180,34 +127,17 @@ Moongate Vue 基于完整的设计令牌系统：
 }
 ```
 
+完整变量参考见[设计令牌指南](https://vue.moongate.top/guide/design-tokens)。
+
 ## 属性透传
 
 所有组件都支持通过 `v-bind="$attrs"` 透传原生属性到根元素：
 
-- `id`、`name`、`data-*`、`aria-*`、`role` 等
 - Input/Textarea 透传到原生输入元素
 - Checkbox/Radio/Switch 透传到隐藏的 `<input>`（无障碍）
 - Button 透传到 `<button>` 元素
 
-示例：
-
-```vue
-<!-- 属性自动透传到 <input> -->
-<Input id="email" name="email" type="email" autocomplete="off" />
-
-<!-- 无障碍属性 -->
-<Checkbox name="terms" aria-label="同意用户协议" />
-
-<!-- 自定义数据属性 -->
-<Card data-testid="article-card" hoverable>
-  文章内容
-</Card>
-```
-
-## 注意事项
-
-- 透传属性不会覆盖组件 Props 中已声明的属性
-- 若需覆盖组件内置行为，请使用对应的 Props（如 `disabled`、`size` 等）
+> 透传属性不会覆盖组件 Props 中已声明的属性；如需覆盖组件内置行为，请使用对应的 Props（如 `disabled`、`size` 等）。
 
 ## 许可证
 
@@ -224,8 +154,6 @@ Moongate Vue 基于完整的设计令牌系统：
 
 <details>
 <summary>如果 Moongate Vue 帮你节省了开发时间，欢迎请我喝杯咖啡 ☕</summary>
-
-你的支持会让我更有动力持续维护、迭代新组件、完善文档。
 
 <img src="./assets/ali-pay.jpg" width="200" height="280" alt="支付宝收款码" />
 <img src="./assets/wechat-pay.jpg" width="200" height="280" alt="微信收款码" />

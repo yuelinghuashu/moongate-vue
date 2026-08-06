@@ -36,7 +36,8 @@ describe('Radio', () => {
       props: {
         value: 'b',
         modelValue: 'a',
-        'onUpdate:modelValue': (v: string) => wrapper.setProps({ modelValue: v }),
+        'onUpdate:modelValue': (v: string | number | undefined) =>
+          wrapper.setProps({ modelValue: v }),
       },
     })
     await wrapper.find('input').setValue(true)
@@ -54,5 +55,43 @@ describe('Radio', () => {
       slots: { default: '<span class="custom-radio-label">自定义</span>' },
     })
     expect(wrapper.find('.custom-radio-label').exists()).toBe(true)
+  })
+
+  // ==================== 补充：分支测试 ====================
+
+  it('value 为 undefined 时选中不更新 modelValue', async () => {
+    const wrapper = mount(Radio, {
+      props: {
+        value: undefined,
+        modelValue: 'a',
+        'onUpdate:modelValue': (v: string | number | undefined) =>
+          wrapper.setProps({ modelValue: v }),
+      },
+    })
+    await wrapper.find('input').setValue(true)
+    // value undefined 时不更新 modelValue
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+    // change 事件仍然透传
+    expect(wrapper.emitted('change')).toHaveLength(1)
+  })
+
+  it('透传原生属性到 input', () => {
+    const wrapper = mount(Radio, {
+      props: { value: 'x' },
+      attrs: { name: 'group1', 'aria-label': '选项' },
+    })
+    const input = wrapper.find('input')
+    expect(input.attributes('name')).toBe('group1')
+    expect(input.attributes('aria-label')).toBe('选项')
+  })
+
+  it('disabled 时 input 带 disabled attribute', () => {
+    const wrapper = mount(Radio, { props: { value: 'x', disabled: true } })
+    expect(wrapper.find('input').attributes('disabled')).toBeDefined()
+  })
+
+  it('数字值类型正确比较', () => {
+    const wrapper = mount(Radio, { props: { modelValue: 1, value: 1 } })
+    expect((wrapper.find('input').element as HTMLInputElement).checked).toBe(true)
   })
 })

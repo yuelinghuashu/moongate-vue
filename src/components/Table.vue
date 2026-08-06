@@ -23,22 +23,28 @@
               v-for="column in columns"
               :key="getColumnKey(column)"
               :style="{ width: column.width }"
+              :aria-sort="column.sortable ? getSortAria(column) : undefined"
               :class="[
                 `mg-table-th-${column.align || 'left'}`,
                 { 'mg-table-sortable': column.sortable },
               ]"
+              :tabindex="column.sortable ? 0 : undefined"
+              :role="column.sortable ? 'button' : undefined"
               @click="column.sortable ? handleSort(column) : undefined"
+              @keydown.enter="column.sortable ? handleSort(column) : undefined"
+              @keydown.space.prevent="column.sortable ? handleSort(column) : undefined"
             >
               <span class="mg-table-th-content">
                 {{ getColumnTitle(column) }}
-                <!-- 排序图标 -->
-                <span v-if="column.sortable" class="mg-table-sort-icon">
+                <!-- 排序图标（纯装饰性，屏幕阅读器通过 aria-sort 获取排序状态） -->
+                <span v-if="column.sortable" class="mg-table-sort-icon" aria-hidden="true">
                   <svg
                     class="mg-table-sort-svg"
                     :class="{
-                      'mg-table-sort-asc': sortKey === getColumnKey(column) && sortOrder === 'asc',
+                      'mg-table-sort-asc':
+                        currentSortKey === getColumnKey(column) && currentSortOrder === 'asc',
                       'mg-table-sort-desc':
-                        sortKey === getColumnKey(column) && sortOrder === 'desc',
+                        currentSortKey === getColumnKey(column) && currentSortOrder === 'desc',
                     }"
                     xmlns="http://www.w3.org/2000/svg"
                     width="14"
@@ -263,6 +269,18 @@ const currentSortOrder = computed(() => {
   if (useInternalSort.value) return internalSortOrder.value
   return props.sortOrder
 })
+
+/**
+ * 获取可排序列的 aria-sort 值
+ * @param column - 列配置
+ * @returns 'ascending' | 'descending' | undefined（未排序时不设置）
+ */
+const getSortAria = (column: TableColumn<T>): 'ascending' | 'descending' | undefined => {
+  if (currentSortKey.value !== getColumnKey(column)) return undefined
+  if (currentSortOrder.value === 'asc') return 'ascending'
+  if (currentSortOrder.value === 'desc') return 'descending'
+  return undefined
+}
 
 const handleSort = (column: TableColumn<T>) => {
   const key = getColumnKey(column)

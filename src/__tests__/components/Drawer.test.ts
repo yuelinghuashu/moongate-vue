@@ -117,4 +117,33 @@ describe('Drawer', () => {
     const wrapper = mountDrawer({ props: { modelValue: true } })
     expect(wrapper.emitted('open')).toBeDefined()
   })
+
+  it('closable=false 时不显示关闭按钮', () => {
+    mountDrawer({ props: { modelValue: true, closable: false } })
+    expect(bodyDrawerClose()).toBeNull()
+  })
+
+  it('enableEsc=false 时 ESC 不关闭抽屉', () => {
+    const wrapper = mountDrawer({
+      props: { modelValue: true, enableEsc: false, 'onUpdate:modelValue': () => {} },
+    })
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+  })
+
+  it('enableFocusTrap=false 时不自动聚焦', async () => {
+    const wrapper = mountDrawer({
+      props: { modelValue: true, enableFocusTrap: false },
+    })
+    await wrapper.vm.$nextTick()
+    expect(document.activeElement).not.toBe(bodyDrawer())
+  })
+
+  it('关闭时触发 close 事件', async () => {
+    const wrapper = mountDrawer({
+      props: { modelValue: true, 'onUpdate:modelValue': () => {} },
+    })
+    await wrapper.setProps({ modelValue: false })
+    expect(wrapper.emitted('close')).toBeDefined()
+  })
 })

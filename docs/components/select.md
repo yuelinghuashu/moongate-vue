@@ -192,21 +192,18 @@ import { Select } from 'moongate-vue'
 
 const value = ref('')
 const options = ref([])
-const loading = ref(false)
 
 const searchUsers = async (keyword) => {
   if (!keyword) {
     options.value = []
     return
   }
-  loading.value = true
   // 模拟远程搜索
   await new Promise((resolve) => setTimeout(resolve, 300))
   options.value = [
     { label: `用户: ${keyword}1`, value: 'user1' },
     { label: `用户: ${keyword}2`, value: 'user2' },
   ]
-  loading.value = false
 }
 </script>
 
@@ -215,7 +212,6 @@ const searchUsers = async (keyword) => {
     <Select
       v-model="value"
       :options="options"
-      :loading="loading"
       filterable
       placeholder="搜索用户"
       @search="searchUsers"
@@ -496,23 +492,15 @@ const options = [
 
 ## 类型支持
 
-Select 组件支持泛型类型推断，可手动标注 `options` 的类型以获得更好的类型提示：
+`options` 支持以下三种数据格式：
 
-```typescript
-import type { SelectOption } from 'moongate-vue'
+| 格式       | 示例                                 | 显示值       | 选中值       |
+| ---------- | ------------------------------------ | ------------ | ------------ |
+| 对象数组   | `[{ label: '技术', value: 'tech' }]` | `label` 字段 | `value` 字段 |
+| 字符串数组 | `['红', '绿', '蓝']`                 | 元素本身     | 元素本身     |
+| 数字数组   | `[1, 2, 3]`                          | 元素本身     | 元素本身     |
 
-interface User {
-  id: number
-  name: string
-  email: string
-}
-
-// 手动标注 options 类型
-const options: SelectOption<User>[] = [
-  { label: '张三', value: { id: 1, name: '张三', email: 'zhang@example.com' } },
-  { label: '李四', value: { id: 2, name: '李四', email: 'li@example.com' } },
-]
-```
+对象数组可通过 `label-key` / `value-key` 自定义字段名。在 Vue SFC 中 TypeScript 会根据 `:options` 传入的数据自动推断类型，无需手动标注。
 
 ## 注意事项
 

@@ -28,21 +28,46 @@ const message = useMessage()
 ### 卡片组件
 
 ```vue
-<Card hoverable class="max-w-sm">
-  <template #header>
-    <h3>卡片标题</h3>
-  </template>
-  <p>卡片内容区域</p>
-  <template #footer>
-    <Button size="sm">操作</Button>
-  </template>
-</Card>
+<script setup>
+import { Card, Button } from 'moongate-vue'
+
+// 卡片标题、内容、底部操作区
+</script>
+
+<template>
+  <Card hoverable style="max-width: 24rem;">
+    <template #header>
+      <h3>卡片标题</h3>
+    </template>
+    <p>卡片内容区域</p>
+    <template #footer>
+      <Button size="sm" label="操作" />
+    </template>
+  </Card>
+</template>
 ```
 
 ### 表格组件
 
 ```vue
-<Table :columns="columns" :data="users" striped hoverable />
+<script setup>
+import { Table } from 'moongate-vue'
+
+const columns = [
+  { key: 'name', title: '姓名' },
+  { key: 'email', title: '邮箱' },
+  { key: 'role', title: '角色' },
+]
+
+const users = [
+  { name: '张三', email: 'zhangsan@example.com', role: '管理员' },
+  { name: '李四', email: 'lisi@example.com', role: '编辑' },
+]
+</script>
+
+<template>
+  <Table :columns="columns" :data="users" striped hoverable />
+</template>
 ```
 
 ## 属性透传

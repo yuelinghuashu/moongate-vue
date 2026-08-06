@@ -142,8 +142,10 @@ import { Tooltip, Button } from 'moongate-vue'
 
 ## 注意事项
 
-- Tooltip 默认在 hover 时触发，不支持 click 或 focus 模式
+- Tooltip 支持 **hover 和键盘 focus** 两种触发方式：鼠标悬停或 `Tab` 聚焦时显示，移出/失焦时隐藏；不支持 click 模式
 - 提示内容为纯文本时用 `content` prop，复杂内容用 `#content` 插槽
 - 靠近视口边缘时自动翻转方向（防止超出屏幕）
 - Tooltip 使用 `Teleport` 挂载到 `body`，避免被父容器裁剪
 - 支持延迟显示，适合防止误触
+- **无障碍**：显示时触发元素自动关联 `aria-describedby`，屏幕阅读器可正确读取提示内容；键盘用户可通过 `Tab` 聚焦查看提示
+- 完全支持 SSR，`useId()` 保证服务端渲染与客户端 hydration 的关联 ID 一致

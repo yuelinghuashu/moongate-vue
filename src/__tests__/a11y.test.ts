@@ -124,6 +124,13 @@ describe('可访问性（axe-core）', () => {
     })
     await nextTick()
     // Modal 使用 Teleport，实际内容渲染在 body 中，需要检查 body
+    const dialog = document.body.querySelector('[role="dialog"]') as HTMLElement
+    // aria-describedby 关联到正文内容
+    const describedby = dialog?.getAttribute('aria-describedby')
+    expect(describedby).toBeDefined()
+    if (describedby) {
+      expect(document.getElementById(describedby)).not.toBeNull()
+    }
     await expectNoViolations(document.body)
   })
 
@@ -142,6 +149,13 @@ describe('可访问性（axe-core）', () => {
       slots: { default: '内容' },
     })
     await nextTick()
+    const dialog = document.body.querySelector('[role="dialog"]') as HTMLElement
+    // aria-describedby 关联到正文内容
+    const describedby = dialog?.getAttribute('aria-describedby')
+    expect(describedby).toBeDefined()
+    if (describedby) {
+      expect(document.getElementById(describedby)).not.toBeNull()
+    }
     await expectNoViolations(document.body)
   })
 

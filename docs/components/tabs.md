@@ -241,6 +241,8 @@ const handleTabChange = (index, tab) => {
 
 ### TabItem 类型
 
+`TabItem` 为组件内部定义的类型，**不对外导出**。如需在 TS 中标注类型，请自行声明：
+
 ```typescript
 interface TabItem {
   /** 标签文字 */

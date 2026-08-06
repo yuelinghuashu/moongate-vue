@@ -12,6 +12,7 @@
         :class="`mg-modal-${size}`"
         role="dialog"
         :aria-labelledby="titleId"
+        :aria-describedby="contentId"
         aria-modal="true"
       >
         <!-- 头部 -->
@@ -31,7 +32,7 @@
         </div>
 
         <!-- 内容 -->
-        <div class="mg-modal-body">
+        <div class="mg-modal-body" :id="contentId">
           <slot />
         </div>
 
@@ -45,10 +46,14 @@
 </template>
 
 <script setup lang="ts">
+import { useId } from 'vue'
 import { useOverlayComponent } from '../composables/useOverlayComponent'
 import type { SizeXl } from '../types/components'
 
 defineOptions({ name: 'Modal', inheritAttrs: false })
+
+/** 内容区唯一 ID（SSR 安全，用于 aria-describedby 关联正文内容） */
+const contentId = useId()
 
 defineSlots<{
   default: () => any

@@ -22,13 +22,11 @@
 </template>
 
 <script setup lang="ts">
-import { watch, onMounted, onUnmounted, ref } from 'vue'
 import { useAttrsWithClass } from '../composables/useAttrsWithClass'
+import { useNotification } from '../composables/useNotification'
 import type { NotificationType } from '../types/components'
 
 defineOptions({ name: 'Toast', inheritAttrs: false })
-
-type ToastPosition = 'top' | 'bottom'
 
 defineSlots<{
   /** 消息内容（优先于 message prop） */
@@ -46,8 +44,8 @@ interface Props {
   duration?: number
   /** 是否显示关闭按钮 */
   closable?: boolean
-  /** 显示位置 */
-  position?: ToastPosition
+  /** 显示位置（由 useToast 用于容器定位） */
+  position?: 'top' | 'bottom'
   /** 自定义图标 */
   icon?: string
 }
@@ -72,67 +70,10 @@ const emit = defineEmits<{
 // 处理外部属性透传（无内部动态类，仅合并外部 class）
 const { attrsWithoutClass, mergedClass } = useAttrsWithClass(() => ({}))
 
-/** 是否正在退出（触发 CSS 退出动画） */
-const leaving = ref(false)
-
-let timer: ReturnType<typeof setTimeout> | null = null
-
-/**
- * 启动自动关闭定时器
- */
-const startTimer = () => {
-  clearTimer()
-  if (props.duration > 0 && modelValue.value) {
-    timer = setTimeout(() => {
-      handleClose()
-    }, props.duration)
-  }
-}
-
-/**
- * 清除定时器
- */
-const clearTimer = () => {
-  if (timer) {
-    clearTimeout(timer)
-    timer = null
-  }
-}
-
-/**
- * 关闭 Toast
- * 先播放退出动画，外层的 createOverlay 会在动画结束后清理 DOM
- */
-const handleClose = () => {
-  clearTimer()
-  leaving.value = true
-  emit('close')
-}
-
-// 监听 modelValue 变化，控制定时器启停
-watch(
-  () => modelValue.value,
-  (val) => {
-    if (val) {
-      // 打开：启动自动关闭定时器
-      startTimer()
-    } else {
-      // 关闭：清除定时器
-      clearTimer()
-    }
-  },
-  { immediate: true },
+// 共享通知逻辑：定时器 / 退场动画 / 生命周期清理（SSR 安全）
+const { leaving, handleClose } = useNotification(
+  modelValue,
+  () => props.duration,
+  () => emit('close'),
 )
-
-// 组件挂载时，如果初始为显示状态，启动定时器
-onMounted(() => {
-  if (modelValue.value) {
-    startTimer()
-  }
-})
-
-// 组件卸载时清理定时器
-onUnmounted(() => {
-  clearTimer()
-})
 </script>

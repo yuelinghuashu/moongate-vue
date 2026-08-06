@@ -32,6 +32,23 @@ if (typeof window.scrollTo !== 'function') {
   window.scrollTo = () => {}
 }
 
+/** jsdom 未实现 scrollIntoView（Select 键盘导航依赖） */
+if (typeof Element.prototype.scrollIntoView !== 'function') {
+  Element.prototype.scrollIntoView = () => {}
+}
+
+/**
+ * jsdom 未实现 offsetParent（始终返回 null），
+ * 这会导致 useScrollLock 的 getFocusableElements 过滤掉所有元素。
+ * 这里 mock 为返回自身（非 null），使焦点陷阱逻辑可以正常工作。
+ */
+Object.defineProperty(HTMLElement.prototype, 'offsetParent', {
+  configurable: true,
+  get() {
+    return this as HTMLElement
+  },
+})
+
 // ==================== DOMRect mock（Tooltip 位置计算依赖） ====================
 
 /** 默认 DOMRect mock：返回可控的尺寸与位置数据 */

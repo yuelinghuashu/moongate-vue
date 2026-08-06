@@ -16,6 +16,7 @@
 </template>
 
 <script setup lang="ts">
+import { useFormField } from '../composables/useFormField'
 import type { Size, InputType } from '../types/components'
 
 defineOptions({ name: 'Input', inheritAttrs: false })
@@ -58,34 +59,9 @@ const emit = defineEmits<{
   blur: [event: FocusEvent]
 }>()
 
-/**
- * 处理输入事件
- * 更新 v-model 并透传原生 input 事件
- */
-const handleInput = (event: Event) => {
-  const target = event.target as HTMLInputElement
-  modelValue.value = target.value
-  emit('input', event)
-}
-
-/**
- * 失去焦点事件透传
- */
-const handleBlur = (event: FocusEvent) => {
-  emit('blur', event)
-}
-
-/**
- * 获得焦点事件透传
- */
-const handleFocus = (event: FocusEvent) => {
-  emit('focus', event)
-}
-
-/**
- * 值变化事件透传（原生 change 事件）
- */
-const handleChange = (event: Event) => {
-  emit('change', event)
-}
+// 共享表单字段逻辑：v-model 更新 + 原生事件透传
+const { handleInput, handleChange, handleBlur, handleFocus } = useFormField(
+  modelValue,
+  emit as (event: string, ...args: any[]) => void,
+)
 </script>

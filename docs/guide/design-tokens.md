@@ -20,7 +20,7 @@ Moongate Vue 的所有样式都基于 CSS 变量（设计令牌）构建。你�
 | -------------------- | ------------- | --------- | --------- |
 | `--ui-text`          | 主要文本      | `#0f172a` | `#e2e8f0` |
 | `--ui-text-dim`      | 次要文本      | `#475569` | `#cbd5e1` |
-| `--ui-text-muted`    | 占位/禁用文本 | `#475569` | `#94a3b8` |
+| `--ui-text-muted`    | 占位/禁用文本 | `#475569` | `#7a8c9e` |
 | `--ui-text-inactive` | 非活跃文本    | `#94a3b8` | `#94a3b8` |
 
 ### 背景颜色
@@ -61,7 +61,7 @@ Moongate Vue 的所有样式都基于 CSS 变量（设计令牌）构建。你�
 | `--ui-bracket3` | `#b45309` | `#fbbf24` |
 | `--ui-bracket4` | `#7e22ce` | `#c084fc` |
 | `--ui-bracket5` | `#0e7490` | `#3b82f6` |
-| `--ui-bracket6` | `#94a3b8` | `#94a3b8` |
+| `--ui-bracket6` | `#64748b` | `#94a3b8` |
 
 ### Git 颜色
 
@@ -70,7 +70,7 @@ Moongate Vue 的所有样式都基于 CSS 变量（设计令牌）构建。你�
 | `--ui-git-added`     | 新增   | `#059669` | `#34d399` |
 | `--ui-git-modified`  | 修改   | `#b45309` | `#fbbf24` |
 | `--ui-git-deleted`   | 删除   | `#b91c1c` | `#f87171` |
-| `--ui-git-untracked` | 未跟踪 | `#94a3b8` | `#94a3b8` |
+| `--ui-git-untracked` | 未跟踪 | `#64748b` | `#94a3b8` |
 | `--ui-git-ignored`   | 忽略   | `#94a3b8` | `#2d3748` |
 
 ## 间距

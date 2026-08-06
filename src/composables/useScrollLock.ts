@@ -10,14 +10,21 @@ import { watch, onBeforeUnmount, type Ref } from 'vue'
  */
 let lockCount = 0
 
+/** 是否在浏览器环境（SSR 安全） */
+const isBrowser = typeof document !== 'undefined' && typeof window !== 'undefined'
+
 const lockBodyScroll = () => {
   lockCount += 1
-  document.body.style.overflow = 'hidden'
+  // SSR 环境下不操作 DOM
+  if (isBrowser) {
+    document.body.style.overflow = 'hidden'
+  }
 }
 
 const unlockBodyScroll = () => {
   lockCount = Math.max(0, lockCount - 1)
-  if (lockCount === 0) {
+  // SSR 环境下不操作 DOM
+  if (isBrowser && lockCount === 0) {
     document.body.style.overflow = ''
   }
 }
@@ -86,9 +93,6 @@ export function useOverlayBehavior(
 ) {
   const { enableEsc = true, enableFocusTrap = true } = options
 
-  /** 是否在浏览器环境（SSR 安全） */
-  const isBrowser = typeof document !== 'undefined' && typeof window !== 'undefined'
-
   /** 处理键盘事件（ESC 关闭 + Tab 焦点陷阱） */
   const handleKeydown = (event: KeyboardEvent) => {
     if (event.key === 'Escape' && enableEsc && isOpen.value) {
@@ -109,7 +113,7 @@ export function useOverlayBehavior(
         lockBodyScroll()
         document.addEventListener('keydown', handleKeydown)
         // 等过渡/渲染完成后聚焦容器内的第一个可聚焦元素
-        requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => {
           const container = overlayRef.value
           if (!container) return
           const focusableElements = getFocusableElements(container)

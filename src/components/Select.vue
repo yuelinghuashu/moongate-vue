@@ -18,8 +18,8 @@
         @input="handleSearchInput"
         @focus="handleInputFocus"
         @blur="handleInputBlur"
-        @keydown.down.prevent="handleKeyDown"
-        @keydown.up.prevent="handleKeyUp"
+        @keydown.down.prevent="moveFocus(1)"
+        @keydown.up.prevent="moveFocus(-1)"
         @keydown.enter.prevent="handleKeyEnter"
         @keydown.esc="handleKeyEsc"
       />
@@ -50,6 +50,7 @@
           class="mg-select-dropdown"
           role="listbox"
           :aria-label="listboxAriaLabel"
+          :aria-activedescendant="focusedIndex >= 0 ? getOptionId(focusedIndex) : undefined"
           :style="{ maxHeight: `${maxHeight}px` }"
         >
           <!-- 空状态 -->
@@ -63,6 +64,7 @@
           <div
             v-for="(item, index) in filteredOptions"
             v-else
+            :id="getOptionId(index)"
             :key="getValue(item)"
             class="mg-select-option"
             role="option"
@@ -109,10 +111,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, nextTick, useAttrs } from 'vue'
+import { ref, computed, watch, nextTick, useAttrs, useId } from 'vue'
 import type { Size } from '../types/components'
 
 defineOptions({ name: 'Select', inheritAttrs: false })
+
+/** 生成 select 实例的唯一基础 ID（SSR 安全，hydration 时服务端与客户端一致） */
+const selectBaseId = useId()
+
+/**
+ * 获取指定索引选项的唯一 ID
+ * @param index - 选项索引
+ * @returns 用于 aria-activedescendant / 选项 id 的唯一 ID
+ */
+const getOptionId = (index: number): string => `${selectBaseId}-option-${index}`
 
 /**
  * 属性透传拆分：
@@ -355,15 +367,32 @@ const handleSearchInput = (event: Event) => {
 }
 
 /**
+ * 打开下拉面板（清空搜索文本、重置高亮索引）
+ */
+const openDropdown = () => {
+  isEditing.value = true
+  isOpen.value = true
+  searchText.value = ''
+  focusedIndex.value = -1
+}
+
+/**
+ * 关闭下拉面板（清空搜索文本、重置高亮索引）
+ */
+const closeDropdown = () => {
+  isEditing.value = false
+  isOpen.value = false
+  searchText.value = ''
+  focusedIndex.value = -1
+}
+
+/**
  * 处理输入框聚焦
  * 进入编辑模式，清空搜索文本，显示下拉面板
  */
 const handleInputFocus = () => {
   if (props.disabled) return
-  isEditing.value = true
-  isOpen.value = true
-  searchText.value = ''
-  focusedIndex.value = -1
+  openDropdown()
 }
 
 /**
@@ -379,8 +408,7 @@ const handleInputBlur = () => {
     mousedownInside.value = false
     return
   }
-  isEditing.value = false
-  isOpen.value = false
+  closeDropdown()
 }
 
 /**
@@ -390,17 +418,9 @@ const toggleDropdown = () => {
   if (props.disabled) return
 
   if (isOpen.value) {
-    // 关闭下拉
-    isEditing.value = false
-    isOpen.value = false
-    searchText.value = ''
-    focusedIndex.value = -1
+    closeDropdown()
   } else {
-    // 打开下拉
-    isEditing.value = true
-    isOpen.value = true
-    searchText.value = ''
-    focusedIndex.value = -1
+    openDropdown()
     mousedownInside.value = false
     nextTick(() => {
       inputRef.value?.focus()
@@ -419,30 +439,19 @@ const selectOption = (item: SelectOption) => {
   modelValue.value = value
   emit('change', value)
 
-  // 选择后退出编辑模式，关闭下拉，清空搜索状态
-  isEditing.value = false
-  isOpen.value = false
-  searchText.value = ''
-  focusedIndex.value = -1
+  // 选择后关闭下拉并清空搜索状态
+  closeDropdown()
   mousedownInside.value = false
 }
 
 /**
- * 键盘向下导航
+ * 键盘导航：移动高亮选项
+ * @param offset - 移动方向：1 向下，-1 向上
  */
-const handleKeyDown = () => {
-  if (focusedIndex.value < filteredOptions.value.length - 1) {
-    focusedIndex.value++
-    scrollToFocusedOption()
-  }
-}
-
-/**
- * 键盘向上导航
- */
-const handleKeyUp = () => {
-  if (focusedIndex.value > 0) {
-    focusedIndex.value--
+const moveFocus = (offset: 1 | -1) => {
+  const nextIndex = focusedIndex.value + offset
+  if (nextIndex >= 0 && nextIndex < filteredOptions.value.length) {
+    focusedIndex.value = nextIndex
     scrollToFocusedOption()
   }
 }
@@ -460,10 +469,7 @@ const handleKeyEnter = () => {
  * 键盘 ESC 关闭下拉
  */
 const handleKeyEsc = () => {
-  isEditing.value = false
-  isOpen.value = false
-  searchText.value = ''
-  focusedIndex.value = -1
+  closeDropdown()
 }
 
 /**

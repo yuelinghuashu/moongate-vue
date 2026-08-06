@@ -90,4 +90,56 @@ describe('Button', () => {
     expect(wrapper.attributes('id')).toBe('submit-btn')
     expect(wrapper.attributes('data-test')).toBe('test-id')
   })
+
+  it('icon 为组件对象时渲染 component', () => {
+    const IconComp = { template: '<svg class="custom-svg-icon" />' }
+    const wrapper = mount(Button, {
+      props: { icon: IconComp },
+    })
+    expect(wrapper.find('.custom-svg-icon').exists()).toBe(true)
+    expect(wrapper.find('.mg-button-icon').exists()).toBe(true)
+  })
+
+  it('icon 为字符串时渲染文本', () => {
+    const wrapper = mount(Button, {
+      props: { icon: '★' },
+    })
+    expect(wrapper.find('.mg-button-icon').text()).toBe('★')
+  })
+
+  it('type prop 透传到原生 button', () => {
+    const wrapper = mount(Button, {
+      props: { type: 'submit', label: '提交' },
+    })
+    expect(wrapper.attributes('type')).toBe('submit')
+  })
+
+  it('默认 type 为 button', () => {
+    const wrapper = mount(Button, { props: { label: '默认' } })
+    expect(wrapper.attributes('type')).toBe('button')
+  })
+
+  it('loading-label 插槽覆盖默认加载文字', () => {
+    const wrapper = mount(Button, {
+      props: { loading: true, showLabelWhileLoading: true, label: '保存' },
+      slots: { 'loading-label': '<span class="custom-loading">自定义加载</span>' },
+    })
+    expect(wrapper.find('.custom-loading').exists()).toBe(true)
+  })
+
+  it('label 为 undefined 时显示空 label（内部逻辑）', () => {
+    const wrapper = mount(Button, { props: { label: undefined } })
+    // hasLabel 计算属性：label !== undefined 为 true，因此会渲染 label 容器
+    expect(wrapper.find('.mg-button-label').exists()).toBe(true)
+  })
+
+  it('icon 插槽优先于 icon prop', () => {
+    const IconComp = { template: '<svg class="prop-icon" />' }
+    const wrapper = mount(Button, {
+      props: { icon: IconComp },
+      slots: { icon: '<span class="slot-icon">自定义</span>' },
+    })
+    expect(wrapper.find('.slot-icon').exists()).toBe(true)
+    expect(wrapper.find('.prop-icon').exists()).toBe(false)
+  })
 })

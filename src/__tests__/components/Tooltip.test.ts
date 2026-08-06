@@ -67,6 +67,50 @@ describe('Tooltip', () => {
     vi.useRealTimers()
   })
 
+  it('键盘聚焦后显示 tooltip，失焦后隐藏', async () => {
+    const wrapper = mount(Tooltip, {
+      props: { content: '提示内容' },
+      attachTo: document.body,
+    })
+    const trigger = wrapper.find('.mg-tooltip-trigger')
+
+    // 键盘 Tab 聚焦（focus 事件）
+    await trigger.trigger('focus')
+    await new Promise((r) => setTimeout(r, 0))
+    expect(document.body.querySelector('.mg-tooltip')).not.toBeNull()
+
+    // 失焦（blur 事件）
+    await trigger.trigger('blur')
+    expect(document.body.querySelector('.mg-tooltip')).toBeNull()
+  })
+
+  it('显示时触发元素具备 aria-describedby 关联 tooltip', async () => {
+    const wrapper = mount(Tooltip, {
+      props: { content: '提示内容' },
+      attachTo: document.body,
+    })
+    const trigger = wrapper.find('.mg-tooltip-trigger')
+
+    // 初始未显示时无 aria-describedby
+    expect(trigger.attributes('aria-describedby')).toBeUndefined()
+
+    // 聚焦显示后
+    await trigger.trigger('focus')
+    await new Promise((r) => setTimeout(r, 0))
+
+    const tooltip = document.body.querySelector('.mg-tooltip') as HTMLElement
+    expect(tooltip).not.toBeNull()
+
+    // aria-describedby 应指向 tooltip 的 id
+    const describedby = trigger.attributes('aria-describedby')
+    expect(describedby).toBeDefined()
+    expect(tooltip.id).toBe(describedby)
+
+    // 隐藏后移除 aria-describedby
+    await trigger.trigger('blur')
+    expect(trigger.attributes('aria-describedby')).toBeUndefined()
+  })
+
   it('placement 添加对应 class', async () => {
     const wrapper = mount(Tooltip, {
       props: { content: '提示', placement: 'bottom' },

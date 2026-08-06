@@ -3,8 +3,11 @@
     ref="triggerRef"
     v-bind="attrsWithoutClass"
     :class="['mg-tooltip-trigger', mergedClass]"
+    :aria-describedby="visible ? tooltipId : undefined"
     @mouseenter="show"
     @mouseleave="hide"
+    @focus="show"
+    @blur="hide"
   >
     <slot name="trigger">
       <slot />
@@ -14,6 +17,7 @@
       <div
         v-if="visible"
         ref="floatingRef"
+        :id="tooltipId"
         class="mg-tooltip"
         :class="[{ 'mg-tooltip-visible': visible }, `mg-tooltip-${currentPlacement}`]"
         :style="floatStyle"
@@ -29,11 +33,15 @@
 </template>
 
 <script setup lang="ts">
+import { useId } from 'vue'
 import { useAttrsWithClass } from '../composables/useAttrsWithClass'
 import { useFloating } from '../composables/useFloating'
 import type { Placement } from '../types/components'
 
 defineOptions({ name: 'Tooltip', inheritAttrs: false })
+
+// 生成 tooltip 的唯一 ID（SSR 安全，用于 aria-describedby 关联）
+const tooltipId = useId()
 
 // ==================== 类型定义 ====================
 

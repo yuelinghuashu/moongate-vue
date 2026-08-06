@@ -18,6 +18,7 @@
         :class="[`mg-drawer-${placement}`, `mg-drawer-${size}`, { 'mg-drawer-open': modelValue }]"
         role="dialog"
         :aria-labelledby="titleId"
+        :aria-describedby="contentId"
         aria-modal="true"
       >
         <div class="mg-drawer-header">
@@ -34,7 +35,7 @@
             &times;
           </button>
         </div>
-        <div class="mg-drawer-body">
+        <div class="mg-drawer-body" :id="contentId">
           <slot />
         </div>
         <div v-if="$slots.footer" class="mg-drawer-footer">
@@ -46,10 +47,14 @@
 </template>
 
 <script setup lang="ts">
+import { useId } from 'vue'
 import { useOverlayComponent } from '../composables/useOverlayComponent'
 import type { Placement, SizeFull } from '../types/components'
 
 defineOptions({ name: 'Drawer', inheritAttrs: false })
+
+/** 内容区唯一 ID（SSR 安全，用于 aria-describedby 关联正文内容） */
+const contentId = useId()
 
 defineSlots<{
   default: () => any

@@ -20,6 +20,7 @@
 defineOptions({ name: 'Textarea', inheritAttrs: false })
 
 import { ref } from 'vue'
+import { useFormField } from '../composables/useFormField'
 import type { Size } from '../types/components'
 
 interface Props {
@@ -62,36 +63,11 @@ const emit = defineEmits<{
 
 const textareaRef = ref<HTMLTextAreaElement>()
 
-/**
- * 处理输入事件
- * 更新 v-model 并透传原生 input 事件
- */
-const handleInput = (event: Event) => {
-  const target = event.target as HTMLTextAreaElement
-  modelValue.value = target.value
-  emit('input', event)
-}
-
-/**
- * 值变化事件透传
- */
-const handleChange = (event: Event) => {
-  emit('change', event)
-}
-
-/**
- * 失去焦点事件透传
- */
-const handleBlur = (event: FocusEvent) => {
-  emit('blur', event)
-}
-
-/**
- * 获得焦点事件透传
- */
-const handleFocus = (event: FocusEvent) => {
-  emit('focus', event)
-}
+// 共享表单字段逻辑：v-model 更新 + 原生事件透传
+const { handleInput, handleChange, handleBlur, handleFocus } = useFormField(
+  modelValue,
+  emit as (event: string, ...args: any[]) => void,
+)
 
 // 暴露 textarea 元素引用，方便外部操作（如手动聚焦）
 defineExpose({

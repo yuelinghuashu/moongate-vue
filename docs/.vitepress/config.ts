@@ -23,6 +23,7 @@ const sidebar = {
         { text: '安装', link: '/guide/install' },
         { text: '快速开始', link: '/guide/getting-started' },
         { text: '设计令牌', link: '/guide/design-tokens' },
+        { text: 'Nuxt 集成', link: '/guide/nuxt-integration' },
       ],
     },
   ],

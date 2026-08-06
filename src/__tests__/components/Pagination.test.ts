@@ -90,4 +90,50 @@ describe('Pagination', () => {
     await input.trigger('blur')
     expect(wrapper.emitted('update:modelValue')).toEqual([[10]])
   })
+
+  it('输入非法值（NaN）时回退当前页', async () => {
+    const wrapper = mount(Pagination, {
+      props: { totalPages: 10, modelValue: 3 },
+    })
+    await wrapper.find('.mg-pagination-current').trigger('click')
+    const input = wrapper.find('.mg-pagination-input')
+    await input.setValue('abc')
+    await input.trigger('blur')
+    // 不发出更新事件
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+    // 退出编辑模式
+    expect(wrapper.find('.mg-pagination-input').exists()).toBe(false)
+  })
+
+  it('输入与当前页相同时不触发 change', async () => {
+    const wrapper = mount(Pagination, {
+      props: { totalPages: 10, modelValue: 3 },
+    })
+    await wrapper.find('.mg-pagination-current').trigger('click')
+    const input = wrapper.find('.mg-pagination-input')
+    await input.setValue('3')
+    await input.trigger('keyup.enter')
+    // 相同页码不触发更新
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+  })
+
+  it('当前页为第一页时上一页不触发事件', async () => {
+    const wrapper = mount(Pagination, {
+      props: { totalPages: 5, modelValue: 1 },
+    })
+    const allBtns = wrapper.findAll('button')
+    // showQuickJump=true: « 上一页(索引1) 下一页 »
+    await allBtns[1].trigger('click')
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+  })
+
+  it('当前页为最后一页时下一页不触发事件', async () => {
+    const wrapper = mount(Pagination, {
+      props: { totalPages: 5, modelValue: 5 },
+    })
+    const allBtns = wrapper.findAll('button')
+    // showQuickJump=true: « 上一页 下一页(索引2) »
+    await allBtns[2].trigger('click')
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+  })
 })

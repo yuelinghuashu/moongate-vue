@@ -91,6 +91,14 @@ const users = [
 
 :::
 
+### 键盘操作
+
+可排序表头不仅支持鼠标点击，还支持**键盘操作**：
+
+- 按 `Tab` 聚焦到可排序表头
+- 按 `Enter` 或 `Space` 键触发排序
+- 排序状态通过 `aria-sort` 属性暴露给屏幕阅读器（`ascending` / `descending`）
+
 ### 受控模式
 
 通过 `sort-key` 和 `sort-order` 控制排序状态，并监听 `@sort` 事件。

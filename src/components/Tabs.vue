@@ -13,10 +13,15 @@
         :class="{ 'mg-tab-active': activeTab === index }"
         :disabled="tab.disabled"
         role="tab"
-        :id="`mg-tab-${index}`"
+        :id="getTabId(index)"
+        :tabindex="activeTab === index ? 0 : -1"
         :aria-selected="activeTab === index"
         :aria-controls="`mg-tab-panel-${index}`"
         @click="handleTabClick(index)"
+        @keydown.left.prevent="moveToPreviousTab()"
+        @keydown.right.prevent="moveToNextTab()"
+        @keydown.home.prevent="moveToFirstTab()"
+        @keydown.end.prevent="moveToLastTab()"
       >
         <span v-if="tab.icon" class="mg-tab-icon">{{ tab.icon }}</span>
         <span class="mg-tab-label">{{ tab.label }}</span>
@@ -32,7 +37,7 @@
         class="mg-tab-panel"
         :class="{ 'mg-tab-panel-active': activeTab === index }"
         role="tabpanel"
-        :aria-labelledby="`mg-tab-${index}`"
+        :aria-labelledby="getTabId(index)"
       >
         <slot :name="`panel-${index}`">
           {{ tab.content }}
@@ -91,6 +96,11 @@ const emit = defineEmits<{
 }>()
 
 /**
+ * 获取指定索引标签的唯一 ID（SSR 安全的 useId 前缀 + 索引）
+ */
+const getTabId = (index: number): string => `mg-tab-${index}`
+
+/**
  * 当前激活的标签索引
  * 使用 ref 存储内部状态，通过 watch 与 modelValue 双向同步
  */
@@ -141,8 +151,69 @@ const handleTabClick = (index: number) => {
   if (activeTab.value === index) return
 
   // 更新激活索引（触发 watch 同步到外部）
+  activateTab(index)
+}
+
+/** 激活指定标签 */
+const activateTab = (index: number) => {
   activeTab.value = index
   // 触发 change 事件
   emit('change', index, props.tabs[index])
+}
+
+/**
+ * 查找下一个可用的标签索引（跳过禁用的）
+ * @param fromIndex - 起始索引
+ * @param direction - 方向：1 向后，-1 向前
+ */
+const findNextEnabledTab = (fromIndex: number, direction: 1 | -1): number => {
+  const length = props.tabs.length
+  for (let i = 1; i <= length; i++) {
+    let nextIndex = (fromIndex + direction * i) % length
+    if (nextIndex < 0) nextIndex += length
+    if (!props.tabs[nextIndex]?.disabled) {
+      return nextIndex
+    }
+  }
+  return fromIndex // 没有可用标签时保持当前
+}
+
+/** 切换到前一个标签（← 方向键） */
+const moveToPreviousTab = () => {
+  const nextIndex = findNextEnabledTab(activeTab.value, -1)
+  if (nextIndex !== activeTab.value) {
+    activateTab(nextIndex)
+  }
+}
+
+/** 切换到下一个标签（→ 方向键） */
+const moveToNextTab = () => {
+  const nextIndex = findNextEnabledTab(activeTab.value, 1)
+  if (nextIndex !== activeTab.value) {
+    activateTab(nextIndex)
+  }
+}
+
+/** 跳转到第一个可用的标签（Home 键） */
+const moveToFirstTab = () => {
+  const firstEnabled = props.tabs.findIndex((tab) => !tab.disabled)
+  if (firstEnabled >= 0 && firstEnabled !== activeTab.value) {
+    activateTab(firstEnabled)
+  }
+}
+
+/** 跳转到最后一个可用的标签（End 键） */
+const moveToLastTab = () => {
+  // 从后往前查找最后一个可用的标签（兼容 ES2022 以下目标，避免 findLastIndex）
+  let lastEnabled = -1
+  for (let i = props.tabs.length - 1; i >= 0; i--) {
+    if (!props.tabs[i]?.disabled) {
+      lastEnabled = i
+      break
+    }
+  }
+  if (lastEnabled >= 0 && lastEnabled !== activeTab.value) {
+    activateTab(lastEnabled)
+  }
 }
 </script>

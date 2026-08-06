@@ -15,8 +15,6 @@ coverage
 coverage/
 *.local
 temp-types/
-assets/
-assets/*
 !.gitkeep
 
 # Editor directories and files
