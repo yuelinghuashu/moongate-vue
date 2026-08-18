@@ -43,6 +43,7 @@ jobs:
           context: .
           file: Dockerfile
           push: true
+          provenance: false
           tags: |
             ${{ secrets.ACR_REGISTRY }}/moongate/moongate-vue:latest
             ${{ secrets.ACR_REGISTRY }}/moongate/moongate-vue:${{ github.sha }}
