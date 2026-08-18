@@ -1,6 +1,10 @@
 import { describe, it, expect, vi } from 'vitest'
 import { ref } from 'vue'
 import { useForm } from '../../composables/useForm'
+import { setConfig } from '../../config'
+
+// 该测试文件依赖默认中文文案，显式设置
+setConfig({ locale: 'zh-CN' })
 
 describe('useForm', () => {
   it('初始化 values 为 initialValues 的副本', () => {
@@ -307,5 +311,33 @@ describe('useForm', () => {
     expect(values.email).toBe('zhao@example.com')
     // age 不在新值中，应从结构中移除
     expect('age' in values).toBe(false)
+  })
+
+  it('validateOnMount：挂载时自动校验字段', async () => {
+    // 使用 vue-test-utils 挂载一个使用 useForm 的组件，验证 onMounted 自动校验
+    const { mount } = await import('@vue/test-utils')
+    const { defineComponent, h, nextTick } = await import('vue')
+
+    let formApi: any = null
+
+    const TestForm = defineComponent({
+      setup() {
+        formApi = useForm({
+          initialValues: { name: '' },
+          rules: {
+            name: (v: string) => (v ? true : '姓名必填'),
+          },
+          validateOnMount: true,
+        })
+        return () => h('div', { class: 'test-form' })
+      },
+    })
+
+    mount(TestForm)
+    await nextTick()
+    await new Promise((r) => setTimeout(r, 0))
+
+    expect(formApi.errors.name).toBe('姓名必填')
+    expect(formApi.valid.value).toBe(false)
   })
 })

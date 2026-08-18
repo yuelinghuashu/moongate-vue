@@ -2,6 +2,39 @@
 
 **English** | [中文](./CHANGELOG.zh-CN.md)
 
+## [1.6.0] - 2026-08-18
+
+### 🚀 New Features
+
+- **Dropdown 下拉菜单组件**：点击触发的弹出操作菜单，支持键盘导航（↑↓ Home End Enter Escape TypeAhead）、分隔线、危险操作高亮、9 方位定位（含 start/end 对齐）、受控模式（`v-model:open`）、WAI-ARIA `role="menu"` + `role="menuitem"`；新增 `useMenuKeyboard` composable（泛型，可复用于自定义菜单）；新增 `DropdownPlacement`、`DropdownOption` 类型
+- **`setConfig` 全局文案配置**：内置文案自动适配中英文；`setConfig({ locale: 'en-US' })` 切换语言，`setConfig({ texts: {...} })` 部分覆盖；优先级 **组件 prop > setConfig > 内置文案**，已挂载组件响应式更新
+- **组件 Props 类型导出**：所有 28 个组件的 Props 类型（`ButtonProps`、`TableProps` 等）均可从 `'moongate-vue'` 直接导入；泛型组件（Table/Form）的类型定义在独立 `.ts` 文件中（`types/table.ts`、`types/form.ts`），避免 shim 冲突；新增 `MenuItemBase`、`disposeConfig()`、`getDefaultIcon()` 等公共类型/函数
+- **Message/Toast 默认类型图标**：每种通知类型自动显示默认图标（✓ ✗ ⚠ ℹ），可通过 `icon` prop 或 `#icon` 插槽覆盖
+- **FormItem `for` prop**：可选 `for` prop 关联 label 与 input，支持点击聚焦
+- **`disposeConfig()` 导出**：断开 MutationObserver 监听，适用于 SSR 清理和测试 teardown
+- **Tooltip/Popover Escape 键关闭 + click-outside**：两个组件支持 Escape 键关闭；Popover 新增点击外部区域自动关闭
+
+### 🐛 Bug Fixes
+
+- **Table 半选状态不生效**：`:indeterminate` 是 DOM property 而非 HTML attribute，Vue `:attr` 绑定无法设置；改用模板 ref + watch
+- **Drawer 点击穿透**：遮罩层 click 事件缺少 `.self` 修饰符，导致点击抽屉内容区域意外关闭
+- **Popover 属性双重绑定**：缺少 `inheritAttrs: false`，外部属性被应用两次
+
+### 🚀 Quality
+
+- **无障碍**：Switch 添加 `role="switch"` + `aria-checked`；Pagination 输入框添加 `aria-label`；Hero `<section>` 添加 `aria-labelledby`；所有键盘交互组件添加 `:focus-visible` 焦点样式
+- **Form provide 响应式**：`provide()` 值用 `computed()` 包装，`FormItem` 正确反映父组件变化
+- **Tabs 单向 watch**：替换双向 watch 为单向 external→internal + 直接 `modelValue` 同步
+- **useOverlayComponent 动态选项**：`enableEsc`/`enableFocusTrap` 支持 getter，挂载后 prop 变化可响应
+- **useScrollLock trapFocus**：无可聚焦元素时 Tab 键不再逃逸浮层
+- **构建优化**：`package.json` exports 校验脚本（verify-build 新增一致性检查）；移除 `check:size` 脚本简化流程
+- **CSS 改进**：消除 Table `!important`；新增 `--ui-typography-size-lg`（18px）和 `--ui-overlay-scrim`（light/dark）token
+- **测试**：449 个测试（32 文件），新增 Modal ESC 测试、Popover click-outside 测试、Dropdown/useMenuKeyboard 测试；Form/Table 补充 `resetConfig()` 清理
+
+### 📝 Documentation
+
+- **文档全面更新**：新增 Dropdown 组件文档（6 个交互示例 + 键盘导航 + API）；`design-tokens.md` 补充新 token；`install.md` 新增 TypeScript 类型章节；7 篇组件文档修正（popover `delay`→`showDelay`、card `as` 类型收窄、tabs 键盘导航、message/toast 默认图标等）
+
 ## [1.5.0] - 2026-08-06
 
 ### 🐛 Bug Fixes

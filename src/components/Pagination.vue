@@ -3,27 +3,27 @@
     v-bind="$attrs"
     class="mg-pagination"
     :class="`mg-pagination-${size}`"
-    :aria-label="`第 ${currentPage} 页，共 ${totalPages} 页`"
+    :aria-label="pageInfoLabel"
   >
     <!-- 跳转到第一页 -->
     <button
       v-if="showQuickJump"
       class="mg-pagination-btn"
       :disabled="currentPage === 1"
-      :aria-label="firstText"
+      :aria-label="firstTextValue"
       @click="goToFirst"
     >
-      {{ firstText }}
+      {{ firstTextValue }}
     </button>
 
     <!-- 上一页 -->
     <button
       class="mg-pagination-btn"
       :disabled="currentPage === 1"
-      :aria-label="prevText"
+      :aria-label="prevTextValue"
       @click="goToPrev"
     >
-      {{ prevText }}
+      {{ prevTextValue }}
     </button>
 
     <!-- 编辑模式：输入框 -->
@@ -35,6 +35,7 @@
       class="mg-pagination-input"
       :min="1"
       :max="totalPages"
+      :aria-label="pageInfoLabel"
       @blur="commitJump"
       @keyup.enter="commitJump"
     />
@@ -51,10 +52,10 @@
     <button
       class="mg-pagination-btn"
       :disabled="currentPage === totalPages"
-      :aria-label="nextText"
+      :aria-label="nextTextValue"
       @click="goToNext"
     >
-      {{ nextText }}
+      {{ nextTextValue }}
     </button>
 
     <!-- 跳转到最后一页 -->
@@ -62,44 +63,24 @@
       v-if="showQuickJump"
       class="mg-pagination-btn"
       :disabled="currentPage === totalPages"
-      :aria-label="lastText"
+      :aria-label="lastTextValue"
       @click="goToLast"
     >
-      {{ lastText }}
+      {{ lastTextValue }}
     </button>
   </nav>
 </template>
 
 <script setup lang="ts">
-import { ref, nextTick } from 'vue'
-import type { Size } from '../types/components'
+import { ref, nextTick, computed } from 'vue'
+import type { PaginationProps } from '../types/props'
+import { formatTemplate, useTexts } from '../config'
 
 defineOptions({ name: 'Pagination', inheritAttrs: false })
 
-interface Props {
-  /** 总页数 */
-  totalPages: number
-  /** 尺寸大小 */
-  size?: Size
-  /** 上一页按钮文字 */
-  prevText?: string
-  /** 下一页按钮文字 */
-  nextText?: string
-  /** 是否显示快速跳转按钮（首尾页） */
-  showQuickJump?: boolean
-  /** 第一页按钮文字 */
-  firstText?: string
-  /** 最后一页按钮文字 */
-  lastText?: string
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<PaginationProps>(), {
   size: 'md',
-  prevText: '上一页',
-  nextText: '下一页',
   showQuickJump: true,
-  firstText: '«',
-  lastText: '»',
 })
 
 /** v-model 双向绑定（当前页码）*/
@@ -109,6 +90,23 @@ const emit = defineEmits<{
   /** 页码变化时触发 */
   change: [page: number]
 }>()
+
+/** 全局文案（响应式） */
+const texts = useTexts()
+
+/** 最终生效文案：prop > 全局配置 */
+const prevTextValue = computed(() => props.prevText ?? texts.value.paginationPrev)
+const nextTextValue = computed(() => props.nextText ?? texts.value.paginationNext)
+const firstTextValue = computed(() => props.firstText ?? texts.value.paginationFirst)
+const lastTextValue = computed(() => props.lastText ?? texts.value.paginationLast)
+
+/** 页码信息 aria-label：模板 + 当前页/总页数 */
+const pageInfoLabel = computed(() =>
+  formatTemplate(texts.value.paginationPageInfo, {
+    current: currentPage.value,
+    total: props.totalPages,
+  }),
+)
 
 const isEditing = ref(false)
 const inputPage = ref(currentPage.value)

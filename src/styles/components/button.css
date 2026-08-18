@@ -28,7 +28,13 @@
 }
 .mg-button-lg {
   padding: var(--ui-spacing-lg) var(--ui-spacing-xl);
-  font-size: 1.125rem;
+  font-size: var(--ui-typography-size-lg);
+}
+
+/* 键盘焦点指示器 */
+.mg-button:focus-visible {
+  outline: var(--ui-physics-focus-ring) solid var(--ui-primary);
+  outline-offset: var(--ui-physics-focus-ring);
 }
 
 /* 块级按钮 */

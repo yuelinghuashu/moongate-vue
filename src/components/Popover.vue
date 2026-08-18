@@ -5,6 +5,9 @@
     class="mg-popover-trigger"
     @mouseenter="show"
     @mouseleave="startHideTimer"
+    @focusin="show"
+    @focusout="hide"
+    @keydown.esc="hide"
   >
     <!--
       触发元素插槽
@@ -22,6 +25,8 @@
         class="mg-popover"
         :class="[`mg-popover-${currentPlacement}`, { 'mg-popover-visible': visible }]"
         :style="floatStyle"
+        role="dialog"
+        :aria-label="ariaLabel"
         @mouseenter="cancelHideTimer"
         @mouseleave="startHideTimer"
       >
@@ -33,32 +38,35 @@
 </template>
 
 <script setup lang="ts">
+import { computed, useId, onMounted, onUnmounted } from 'vue'
 import { useFloating } from '../composables/useFloating'
-import type { Placement } from '../types/components'
+import type { PopoverProps } from '../types/props'
 
-defineOptions({ name: 'Popover' })
+defineOptions({ name: 'Popover', inheritAttrs: false })
+
+/** 弹出层唯一 ID（SSR 安全） */
+const popoverId = useId()
+
+defineSlots<{
+  trigger: () => any
+  content: () => any
+  default: () => any
+}>()
 
 // ==================== 类型定义 ====================
 
-interface Props {
-  /** 弹出层位置，默认 bottom */
-  placement?: Placement
-  /** 显示延迟时间（毫秒），避免鼠标划过时误弹，默认 0 */
-  showDelay?: number
-  /** 隐藏延迟时间（毫秒），方便移入内容区，默认 100 */
-  hideDelay?: number
-  /** 弹出层与触发元素的偏移量（像素），默认 8 */
-  offset?: number
-}
-
 // ==================== Props ====================
 
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<PopoverProps>(), {
   placement: 'bottom',
   showDelay: 0,
   hideDelay: 100,
   offset: 8,
+  ariaLabel: '',
 })
+
+/** 弹出层的可访问名称：优先使用 ariaLabel prop，否则使用生成的 ID */
+const ariaLabel = computed(() => props.ariaLabel || `popover-${popoverId}`)
 
 // ==================== 共享浮层逻辑 ====================
 
@@ -69,6 +77,7 @@ const {
   currentPlacement,
   floatStyle,
   show,
+  hide,
   startHideTimer,
   cancelHideTimer,
 } = useFloating({
@@ -79,5 +88,35 @@ const {
   // Popover 翻转后做视口边界修正，且显示后先等下一帧再定位
   boundsCorrection: true,
   awaitNextTick: true,
+})
+
+// ==================== 点击外部关闭 ====================
+
+/** SSR 安全 */
+const isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined'
+
+const handleClickOutside = (event: MouseEvent) => {
+  if (!visible.value) return
+  const target = event.target as Node
+  // 点击触发区或弹出层内部不关闭
+  if (
+    (triggerRef.value && triggerRef.value.contains(target)) ||
+    (floatingRef.value && floatingRef.value.contains(target))
+  ) {
+    return
+  }
+  hide()
+}
+
+onMounted(() => {
+  if (isBrowser) {
+    document.addEventListener('mousedown', handleClickOutside)
+  }
+})
+
+onUnmounted(() => {
+  if (isBrowser) {
+    document.removeEventListener('mousedown', handleClickOutside)
+  }
 })
 </script>

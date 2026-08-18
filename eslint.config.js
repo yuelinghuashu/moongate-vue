@@ -10,7 +10,13 @@ export default defineConfigWithVueTs(
 
   {
     name: 'app/files-to-ignore',
-    ignores: ['**/dist/**', '**/coverage/**', '**/docs/.vitepress/**', 'node_modules/**'],
+    ignores: [
+      '**/dist/**',
+      '**/dist-e2e/**',
+      '**/coverage/**',
+      '**/docs/.vitepress/**',
+      'node_modules/**',
+    ],
   },
 
   pluginVue.configs['flat/essential'],

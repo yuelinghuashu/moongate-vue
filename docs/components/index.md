@@ -1,6 +1,6 @@
 # 组件
 
-Moongate Vue 提供了 27 个组件 + 2 个样式工具（Code / Link），覆盖日常开发需求。
+Moongate Vue 提供了 28 个组件 + 2 个样式工具（Code / Link），覆盖日常开发需求。
 
 ## 基础组件
 
@@ -43,15 +43,16 @@ Moongate Vue 提供了 27 个组件 + 2 个样式工具（Code / Link），覆�
 
 ## 反馈组件
 
-| 组件                          | 说明                   |
-| ----------------------------- | ---------------------- |
-| [Modal 模态框](./modal)       | 弹窗                   |
-| [Toast 通知](./toast)         | 轻提示（函数式调用）   |
-| [Message 消息提示](./message) | 消息提示（函数式调用） |
-| [Tooltip 提示](./tooltip)     | 文字提示               |
-| [Popover 弹出层](./popover)   | 弹出层卡片             |
-| [Drawer 抽屉](./drawer)       | 侧边抽屉               |
-| [Skeleton 骨架屏](./skeleton) | 加载占位               |
+| 组件                            | 说明                   |
+| ------------------------------- | ---------------------- |
+| [Modal 模态框](./modal)         | 弹窗                   |
+| [Toast 通知](./toast)           | 轻提示（函数式调用）   |
+| [Message 消息提示](./message)   | 消息提示（函数式调用） |
+| [Tooltip 提示](./tooltip)       | 文字提示               |
+| [Popover 弹出层](./popover)     | 弹出层卡片             |
+| [Dropdown 下拉菜单](./dropdown) | 下拉菜单               |
+| [Drawer 抽屉](./drawer)         | 侧边抽屉               |
+| [Skeleton 骨架屏](./skeleton)   | 加载占位               |
 
 ## 样式工具
 

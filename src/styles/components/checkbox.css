@@ -103,7 +103,7 @@
 }
 
 .mg-checkbox-lg {
-  font-size: 1.125rem;
+  font-size: var(--ui-typography-size-lg);
   gap: var(--ui-spacing-md);
 }
 .mg-checkbox-lg .mg-checkbox-box {

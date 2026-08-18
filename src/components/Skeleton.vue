@@ -21,7 +21,7 @@
       <div class="mg-skeleton-list">
         <div v-for="i in rows" :key="i" class="mg-skeleton-list-item">
           <div v-if="avatar" class="mg-skeleton-avatar" :class="avatarClass" />
-          <div class="mg-skeleton-content" style="flex: 1">
+          <div class="mg-skeleton-content mg-skeleton-content-flex">
             <div class="mg-skeleton-line mg-skeleton-line-md" />
             <div class="mg-skeleton-line mg-skeleton-line-sm" />
           </div>
@@ -43,27 +43,11 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { Size } from '../types/components'
+import type { SkeletonProps } from '../types/props'
 
 defineOptions({ name: 'Skeleton', inheritAttrs: false })
 
-type SkeletonType = 'default' | 'card' | 'list'
-type AvatarType = 'circle' | 'square'
-
-interface Props {
-  type?: SkeletonType
-  rows?: number
-  avatar?: boolean
-  avatarShape?: AvatarType
-  /** 头像尺寸 */
-  avatarSize?: Size
-  /** 第一行是否为标题 */
-  title?: boolean
-  /** 行宽度（仅 default 模式） */
-  rowSize?: Size
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<SkeletonProps>(), {
   type: 'default',
   rows: 4,
   avatar: false,

@@ -58,7 +58,7 @@
 .mg-select-lg {
   padding: var(--ui-spacing-md) var(--ui-spacing-lg);
   padding-right: var(--ui-spacing-2xl);
-  font-size: 1.125rem;
+  font-size: var(--ui-typography-size-lg);
   background-size: 16px;
 }
 
@@ -224,7 +224,7 @@
 
 .mg-select-lg .mg-select-input {
   padding: var(--ui-spacing-md) var(--ui-spacing-2xl) var(--ui-spacing-md) var(--ui-spacing-lg);
-  font-size: 1.125rem;
+  font-size: var(--ui-typography-size-lg);
 }
 .mg-select-lg .mg-select-arrow svg {
   width: 18px;

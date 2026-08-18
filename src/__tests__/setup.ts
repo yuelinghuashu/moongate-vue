@@ -1,6 +1,17 @@
 import { vi, afterEach } from 'vitest'
 import { nextTick } from 'vue'
 import { destroyAllOverlays } from '../composables/createOverlay'
+import { resetConfig } from '../config'
+
+// ==================== 国际化默认语言 ====================
+
+/**
+ * 测试环境默认语言设为中文：
+ * - 组件库默认语言为英文（非中文 lang 一律视为英文）
+ * - 但绝大多数测试依赖中文默认文案，因此将 jsdom 的 lang 设为 zh-CN
+ * - config.test.ts 会显式设置 lang='' 来测试默认英文（en-US）
+ */
+document.documentElement.lang = 'zh-CN'
 
 // ==================== 浏览器 API Polyfill ====================
 
@@ -76,6 +87,9 @@ export const createMockRect = (overrides: Partial<DOMRect> = {}) => {
  */
 afterEach(async () => {
   destroyAllOverlays()
+  // 重置全局配置，恢复默认语言为中文（测试环境）
+  resetConfig()
+  document.documentElement.lang = 'zh-CN'
   await nextTick()
   await new Promise((r) => setTimeout(r, 0))
   document.body.innerHTML = ''

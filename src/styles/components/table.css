@@ -158,9 +158,9 @@
 }
 
 /* ========== 行选择 ========== */
-.mg-table-selection-col {
+.mg-table .mg-table-selection-col {
   width: 48px;
-  text-align: center !important;
+  text-align: center;
 }
 
 .mg-table-selection-col .mg-table-checkbox {
@@ -179,9 +179,9 @@
 }
 
 /* ========== 空状态 ========== */
-.mg-table-empty {
-  text-align: center !important;
-  padding: var(--ui-spacing-3xl) !important;
+.mg-table .mg-table-empty {
+  text-align: center;
+  padding: var(--ui-spacing-3xl);
 }
 
 .mg-table-empty-content {

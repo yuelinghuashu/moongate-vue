@@ -13,7 +13,7 @@ import { Popover, Button } from 'moongate-vue'
 
 <template>
   <div style="padding: 40px;">
-    <Popover placement="bottom" :delay="100">
+    <Popover placement="bottom" :show-delay="100">
       <template #trigger>
         <Button>悬浮弹出</Button>
       </template>
@@ -56,7 +56,7 @@ const setLanguage = (code) => {
 
 <template>
   <div style="padding: 40px;">
-    <Popover placement="bottom" :delay="100" :hide-delay="200">
+    <Popover placement="bottom" :show-delay="100" :hide-delay="200">
       <template #trigger>
         <span style="cursor: pointer; font-size: 20px;">🌐</span>
       </template>
@@ -92,12 +92,13 @@ const setLanguage = (code) => {
 
 ### Props
 
-| 属性        | 类型                                     | 默认值     | 说明                       |
-| ----------- | ---------------------------------------- | ---------- | -------------------------- |
-| `placement` | `'top' \| 'bottom' \| 'left' \| 'right'` | `'bottom'` | 弹出位置                   |
-| `delay`     | `number`                                 | `0`        | 显示延迟（毫秒）           |
-| `hideDelay` | `number`                                 | `100`      | 隐藏延迟（毫秒）           |
-| `offset`    | `number`                                 | `8`        | 与触发元素的偏移量（像素） |
+| 属性        | 类型                                     | 默认值     | 说明                             |
+| ----------- | ---------------------------------------- | ---------- | -------------------------------- |
+| `placement` | `'top' \| 'bottom' \| 'left' \| 'right'` | `'bottom'` | 弹出位置                         |
+| `showDelay` | `number`                                 | `0`        | 显示延迟（毫秒）                 |
+| `hideDelay` | `number`                                 | `100`      | 隐藏延迟（毫秒）                 |
+| `offset`    | `number`                                 | `8`        | 与触发元素的偏移量（像素）       |
+| `ariaLabel` | `string`                                 | `''`       | 弹出层的无障碍标签（aria-label） |
 
 ### Slots
 
@@ -109,5 +110,7 @@ const setLanguage = (code) => {
 ## 注意事项
 
 - Popover 适用于鼠标悬浮触发的轻量内容，不适合需要点击外部关闭、受控模式的复杂场景。如需此类功能，可基于本组件扩展。
+- 支持**键盘焦点**触发：Tab 聚焦时显示，失焦后隐藏。
+- 按 **Escape** 键可关闭弹出层（键盘无障碍支持）。
 - 触发区域和内容区域之间移动时，延迟机制保证不会闪烁消失。
 - 内容宽度由内容决定，可通过 CSS 设置 `min-width` 或 `width`。

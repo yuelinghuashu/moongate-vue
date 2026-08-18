@@ -16,7 +16,7 @@
         :id="getTabId(index)"
         :tabindex="activeTab === index ? 0 : -1"
         :aria-selected="activeTab === index"
-        :aria-controls="`mg-tab-panel-${index}`"
+        :aria-controls="getPanelId(index)"
         @click="handleTabClick(index)"
         @keydown.left.prevent="moveToPreviousTab()"
         @keydown.right.prevent="moveToNextTab()"
@@ -33,7 +33,7 @@
       <div
         v-if="!lazy || (lazy && renderedPanels.has(index))"
         v-show="activeTab === index"
-        :id="`mg-tab-panel-${index}`"
+        :id="getPanelId(index)"
         class="mg-tab-panel"
         :class="{ 'mg-tab-panel-active': activeTab === index }"
         role="tabpanel"
@@ -48,36 +48,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import type { Size } from '../types/components'
+import { ref, watch, useId } from 'vue'
+import type { TabsProps, TabItem } from '../types/props'
 
 defineOptions({ name: 'Tabs', inheritAttrs: false })
 
-type Variant = 'line' | 'card'
+/** 当前 Tabs 实例的唯一基础 ID（SSR 安全，hydration 时服务端与客户端一致） */
+const tabsBaseId = useId()
 
-export interface TabItem {
-  /** 标签文字 */
-  label: string
-  /** 标签图标 */
-  icon?: string
-  /** 标签内容 */
-  content?: string
-  /** 是否禁用 */
-  disabled?: boolean
-}
-
-interface Props {
-  /** 标签列表 */
-  tabs?: TabItem[]
-  /** 尺寸大小 */
-  size?: Size
-  /** 视觉变体 */
-  variant?: Variant
-  /** 是否懒加载（只有激活的面板才会渲染内容） */
-  lazy?: boolean
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<TabsProps>(), {
   tabs: () => [],
   size: 'md',
   variant: 'line',
@@ -97,12 +76,17 @@ const emit = defineEmits<{
 
 /**
  * 获取指定索引标签的唯一 ID（SSR 安全的 useId 前缀 + 索引）
+ * 使用 useId 确保同一页面多个 Tabs 实例的 id 不冲突
  */
-const getTabId = (index: number): string => `mg-tab-${index}`
+const getTabId = (index: number): string => `${tabsBaseId}-tab-${index}`
 
 /**
- * 当前激活的标签索引
- * 使用 ref 存储内部状态，通过 watch 与 modelValue 双向同步
+ * 获取指定索引面板的唯一 ID（SSR 安全的 useId 前缀 + 索引）
+ */
+const getPanelId = (index: number): string => `${tabsBaseId}-panel-${index}`
+
+/**
+ * 当前激活的标签索引（内部状态）
  */
 const activeTab = ref(modelValue.value)
 
@@ -114,6 +98,7 @@ const renderedPanels = ref<Set<number>>(new Set([activeTab.value]))
 
 /**
  * 监听外部 modelValue 变化，同步到内部 activeTab
+ * 单向数据流：外部 → 内部（内部变化通过 emit 直接同步回外部）
  */
 watch(
   () => modelValue.value,
@@ -129,19 +114,6 @@ watch(
 )
 
 /**
- * 监听内部 activeTab 变化，同步到外部 modelValue
- */
-watch(activeTab, (val) => {
-  if (val !== modelValue.value) {
-    modelValue.value = val
-  }
-  // 懒加载：记录已渲染的面板
-  if (props.lazy) {
-    renderedPanels.value.add(val)
-  }
-})
-
-/**
  * 处理标签点击
  * @param index - 点击的标签索引
  */
@@ -150,13 +122,21 @@ const handleTabClick = (index: number) => {
   if (props.tabs[index]?.disabled) return
   if (activeTab.value === index) return
 
-  // 更新激活索引（触发 watch 同步到外部）
+  // 更新激活索引
   activateTab(index)
 }
 
-/** 激活指定标签 */
+/** 激活指定标签（直接更新内部状态 + 同步外部 modelValue + 触发 change 事件） */
 const activateTab = (index: number) => {
   activeTab.value = index
+  // 直接同步外部 modelValue（替代 watch 双向同步，减少不必要的回调）
+  if (modelValue.value !== index) {
+    modelValue.value = index
+  }
+  // 懒加载：记录已渲染的面板
+  if (props.lazy) {
+    renderedPanels.value.add(index)
+  }
   // 触发 change 事件
   emit('change', index, props.tabs[index])
 }

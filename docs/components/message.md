@@ -95,14 +95,15 @@ const show = ref(false)
 
 ### Props
 
-| 属性         | 类型                                          | 默认值   | 说明                               |
-| ------------ | --------------------------------------------- | -------- | ---------------------------------- |
-| `modelValue` | `boolean`                                     | `false`  | 是否显示（v-model）                |
-| `message`    | `string`                                      | `''`     | 消息内容                           |
-| `type`       | `'success' \| 'error' \| 'warning' \| 'info'` | `'info'` | 消息类型                           |
-| `duration`   | `number`                                      | `3000`   | 持续时间（毫秒），0 表示不自动关闭 |
-| `closable`   | `boolean`                                     | `false`  | 是否显示关闭按钮                   |
-| `icon`       | `string`                                      | `''`     | 自定义图标                         |
+| 属性             | 类型                                          | 默认值   | 说明                                           |
+| ---------------- | --------------------------------------------- | -------- | ---------------------------------------------- |
+| `modelValue`     | `boolean`                                     | `false`  | 是否显示（v-model）                            |
+| `message`        | `string`                                      | `''`     | 消息内容                                       |
+| `type`           | `'success' \| 'error' \| 'warning' \| 'info'` | `'info'` | 消息类型                                       |
+| `duration`       | `number`                                      | `3000`   | 持续时间（毫秒），0 表示不自动关闭             |
+| `closable`       | `boolean`                                     | `false`  | 是否显示关闭按钮                               |
+| `icon`           | `string`                                      | `''`     | 自定义图标（不传则按类型显示默认图标 ✓ ✗ ⚠ ℹ） |
+| `closeAriaLabel` | `string`                                      | `''`     | 关闭按钮的 aria-label                          |
 
 ### Slots
 
@@ -155,4 +156,5 @@ const show = ref(false)
 - **Nuxt 环境中**：请参考 [Nuxt 集成指南](/guide/nuxt-integration)
 - 同时显示多条消息时会堆叠显示（后出现的在下方）
 - 消息会自动消失，也可手动关闭（需启用 `closable`）
+- 未传 `icon` 时，每种类型会自动显示默认图标：`success` → ✓、`error` → ✗、`warning` → ⚠、`info` → ℹ
 - 移动端自动适配铺满宽度

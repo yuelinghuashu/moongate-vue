@@ -21,24 +21,11 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { Size } from '../types/components'
+import type { RadioProps } from '../types/props'
 
 defineOptions({ name: 'Radio', inheritAttrs: false })
 
-interface Props {
-  /** 单选框标签文字 */
-  label?: string
-  /** 单选框的值 */
-  value?: string | number
-  /** 尺寸大小 */
-  size?: Size
-  /** 是否禁用 */
-  disabled?: boolean
-  /** 是否显示错误状态 */
-  error?: boolean
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<RadioProps>(), {
   label: '',
   value: undefined,
   size: 'md',

@@ -58,7 +58,7 @@ import { Tooltip, Button } from 'moongate-vue'
 ```vue
 <template>
   <div style="padding: 40px;">
-    <Tooltip content="延迟 500ms 显示" :delay="500">
+    <Tooltip content="延迟 500ms 显示" :show-delay="500">
       <Button label="延迟显示" />
     </Tooltip>
   </div>
@@ -129,7 +129,7 @@ import { Tooltip, Button } from 'moongate-vue'
 | ----------- | ---------------------------------------- | ------- | -------------------------- |
 | `content`   | `string`                                 | `''`    | 提示内容                   |
 | `placement` | `'top' \| 'bottom' \| 'left' \| 'right'` | `'top'` | 提示位置                   |
-| `delay`     | `number`                                 | `0`     | 显示延迟（毫秒）           |
+| `showDelay` | `number`                                 | `0`     | 显示延迟（毫秒）           |
 | `offset`    | `number`                                 | `8`     | 与触发元素的偏移量（像素） |
 
 ### Slots
@@ -147,5 +147,5 @@ import { Tooltip, Button } from 'moongate-vue'
 - 靠近视口边缘时自动翻转方向（防止超出屏幕）
 - Tooltip 使用 `Teleport` 挂载到 `body`，避免被父容器裁剪
 - 支持延迟显示，适合防止误触
-- **无障碍**：显示时触发元素自动关联 `aria-describedby`，屏幕阅读器可正确读取提示内容；键盘用户可通过 `Tab` 聚焦查看提示
+- **无障碍**：显示时触发元素自动关联 `aria-describedby`，屏幕阅读器可正确读取提示内容；键盘用户可通过 `Tab` 聚焦查看提示；按 **Escape** 键可关闭提示
 - 完全支持 SSR，`useId()` 保证服务端渲染与客户端 hydration 的关联 ID 一致

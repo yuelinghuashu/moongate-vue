@@ -367,7 +367,7 @@ describe('useFloating', () => {
     const removeScrollSpy = vi.spyOn(window, 'removeEventListener')
     const wrapper = mount(Host)
     wrapper.unmount()
-    expect(removeScrollSpy).toHaveBeenCalledWith('scroll', expect.any(Function), true)
+    expect(removeScrollSpy).toHaveBeenCalledWith('scroll', expect.any(Function), { capture: true })
     expect(removeScrollSpy).toHaveBeenCalledWith('resize', expect.any(Function))
   })
 
@@ -386,5 +386,46 @@ describe('useFloating', () => {
     await flushAll()
     expect(vm.visible).toBe(true)
     expect(vm.floatStyle.top).toBe('138px')
+  })
+
+  it('boundsCorrection=true 时顶部溢出 clamp 到 0', async () => {
+    const wrapper = mount(Host, {
+      props: { placement: 'top', offset: 8, boundsCorrection: true },
+    })
+    const vm = wrapper.vm as any
+
+    const trigger = wrapper.find('.trigger').element as HTMLElement
+    const floating = wrapper.find('.floating').element as HTMLElement
+    // trigger 靠近视口顶部，top 方向会计算为负值
+    mockRect(trigger, { top: 5, left: 50, width: 200, height: 30 })
+    mockRect(floating, { width: 100, height: 50 })
+
+    vm.show()
+    await flushAll()
+
+    // 顶部溢出时应 clamp 到 0
+    const topValue = Number.parseFloat(vm.floatStyle.top)
+    expect(topValue).toBeGreaterThanOrEqual(0)
+  })
+
+  it('boundsCorrection=true 时底部溢出 clamp 到视口高度边界', async () => {
+    const wrapper = mount(Host, {
+      props: { placement: 'bottom', offset: 8, boundsCorrection: true },
+    })
+    const vm = wrapper.vm as any
+
+    const trigger = wrapper.find('.trigger').element as HTMLElement
+    const floating = wrapper.find('.floating').element as HTMLElement
+    // trigger 靠近视口底部
+    mockRect(trigger, { top: 700, left: 50, width: 200, height: 30 })
+    mockRect(floating, { width: 100, height: 50 })
+
+    vi.spyOn(window, 'innerHeight', 'get').mockReturnValue(800)
+
+    vm.show()
+    await flushAll()
+
+    const topValue = Number.parseFloat(vm.floatStyle.top)
+    expect(topValue).toBeLessThanOrEqual(800 - 50)
   })
 })

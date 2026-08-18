@@ -8,46 +8,45 @@
     <span class="mg-message-icon">
       <slot name="icon">
         <span v-if="icon">{{ icon }}</span>
-        <span v-else-if="type === 'success'">✓</span>
-        <span v-else-if="type === 'error'">✗</span>
-        <span v-else-if="type === 'warning'">⚠</span>
-        <span v-else-if="type === 'info'">ℹ</span>
+        <span v-else>{{ getDefaultIcon(type) }}</span>
       </slot>
     </span>
     <span class="mg-message-content">
       <slot>{{ message }}</slot>
     </span>
-    <button v-if="closable" class="mg-message-close" @click="handleClose">&times;</button>
+    <button
+      v-if="closable"
+      class="mg-message-close"
+      :aria-label="closeAriaLabel"
+      @click="handleClose"
+    >
+      &times;
+    </button>
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useAttrsWithClass } from '../composables/useAttrsWithClass'
 import { useNotification } from '../composables/useNotification'
-import type { NotificationType } from '../types/components'
+import { useTexts, getDefaultIcon } from '../config'
+import type { MessageProps } from '../types/props'
 
 defineOptions({ name: 'Message', inheritAttrs: false })
 
-interface Props {
-  /** 消息内容 */
-  message?: string
-  /** 消息类型 */
-  type?: NotificationType
-  /** 持续时间（毫秒），0 表示不自动关闭 */
-  duration?: number
-  /** 是否显示关闭按钮 */
-  closable?: boolean
-  /** 自定义图标 */
-  icon?: string
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<MessageProps>(), {
   message: '',
   type: 'info',
   duration: 3000,
   closable: false,
   icon: '',
 })
+
+/** 全局文案（响应式） */
+const texts = useTexts()
+
+/** 关闭按钮 aria-label：prop > 全局配置 */
+const closeAriaLabel = computed(() => props.closeAriaLabel ?? texts.value.messageClose)
 
 /** v-model 双向绑定（控制显示/隐藏） */
 const modelValue = defineModel<boolean>({ default: false })

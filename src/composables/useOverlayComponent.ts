@@ -48,13 +48,16 @@ export function useOverlayComponent(
   }
 
   // 统一管理滚动锁定 + ESC 关闭 + 焦点陷阱
+  // 使用 getter 确保动态变化的 enableEsc/enableFocusTrap 能被实时读取
   useOverlayBehavior(modelValue, overlayRef, handleClose, {
-    enableEsc:
-      typeof options.enableEsc === 'boolean' ? options.enableEsc : options.enableEsc?.value,
-    enableFocusTrap:
+    enableEsc: () =>
+      typeof options.enableEsc === 'boolean'
+        ? options.enableEsc
+        : (options.enableEsc?.value ?? true),
+    enableFocusTrap: () =>
       typeof options.enableFocusTrap === 'boolean'
         ? options.enableFocusTrap
-        : options.enableFocusTrap?.value,
+        : (options.enableFocusTrap?.value ?? true),
   })
 
   /**

@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import Input from '../../components/Input.vue'
+import FormItem from '../../components/FormItem.vue'
 
 describe('Input', () => {
   it('渲染基础 input', () => {
@@ -70,5 +71,33 @@ describe('Input', () => {
     expect(wrapper.attributes('id')).toBe('email')
     expect(wrapper.attributes('name')).toBe('email')
     expect(wrapper.attributes('autocomplete')).toBe('off')
+  })
+
+  it('包裹在 FormItem 内时自动获得字段 id', () => {
+    const wrapper = mount(FormItem, {
+      props: { name: 'username', label: '用户名' },
+      slots: { default: Input },
+    })
+
+    const inputId = wrapper.find('input').attributes('id')
+    const labelFor = wrapper.find('.mg-form-item__label').attributes('for')
+    expect(inputId).toBeTruthy()
+    expect(labelFor).toBe(inputId)
+  })
+
+  it('包裹在 FormItem 内时 aria-describedby 关联错误提示', async () => {
+    const wrapper = mount(FormItem, {
+      props: { name: 'username', label: '用户名' },
+      slots: { default: Input },
+    })
+
+    // 无错误时无 aria-describedby
+    expect(wrapper.find('input').attributes('aria-describedby')).toBeUndefined()
+
+    // 设置错误后出现 aria-describedby，且指向错误提示元素
+    await wrapper.setProps({ error: '用户名不能为空' })
+    const describedBy = wrapper.find('input').attributes('aria-describedby')
+    expect(describedBy).toBeTruthy()
+    expect(wrapper.find('.mg-form-item__error').text()).toBe('用户名不能为空')
   })
 })

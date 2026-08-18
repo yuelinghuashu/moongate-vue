@@ -241,7 +241,7 @@ const handleTabChange = (index, tab) => {
 
 ### TabItem 类型
 
-`TabItem` 为组件内部定义的类型，**不对外导出**。如需在 TS 中标注类型，请自行声明：
+`TabItem` 为组件内部定义的类型，当前未通过包的公共 API 导出。如需在 TS 中标注类型，请自行声明：
 
 ```typescript
 interface TabItem {
@@ -285,3 +285,4 @@ interface TabItem {
 - 卡片模式下，激活标签的背景色会与内容区域融合
 - 禁用标签无法被点击，也不会触发切换事件
 - 懒加载模式下，自定义插槽内容只有在首次激活时才会被渲染
+- **键盘导航**：支持 `←` `→` 方向键切换标签，`Home` 跳转首个、`End` 跳转末个可用标签（WAI-ARIA roving tabindex 模式）

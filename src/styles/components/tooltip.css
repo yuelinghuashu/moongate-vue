@@ -22,13 +22,6 @@
   opacity: 1;
 }
 
-/* 浅色模式适配 */
-.light .mg-tooltip {
-  background-color: var(--ui-bg-elevated, #1e293b);
-  color: var(--ui-text, #0f172a);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
 /* 箭头 */
 .mg-tooltip-arrow {
   position: absolute;

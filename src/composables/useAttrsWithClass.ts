@@ -48,7 +48,12 @@ type ClassValue = string | any[] | Record<string, boolean>
 export function useAttrsWithClass(internalClassFactory: () => ClassValue) {
   // 获取组件的所有属性（包括外部传入的 class、style、id 等）
   const attrs = useAttrs()
+
   // 从 attrs 中分离出 class，其余属性用于后续透传
+  // 注意：这是 setup 时的快照。在当前使用场景下（组件根元素为 v-if/v-show 切换的 DOM），
+  // 父组件 attrs 变化会触发子组件重新渲染，但 setup 不会重新执行，
+  // 因此 attrsWithoutClass 不会更新。如果需要完全响应式的 attrs 透传，
+  // 应使用 Vue 3.3+ 的 $attrs 自动透传或手动 watch attrs。
   const { class: externalClass, ...attrsWithoutClass } = attrs
 
   // 创建一个计算属性来获得内部类名，该计算属性会在 internalClassFactory 中访问的响应式数据变化时自动重新计算

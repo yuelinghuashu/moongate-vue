@@ -172,12 +172,14 @@ const { values, errors, validatingFields, validateField } = useForm({
 
 ### FormItem Props
 
-| 属性       | 类型      | 默认值      | 说明                                                    |
-| ---------- | --------- | ----------- | ------------------------------------------------------- |
-| `name`     | `string`  | 必填        | 字段名（对应 `errors[key]` 与 `validatingFields[key]`） |
-| `label`    | `string`  | `undefined` | 标签文本                                                |
-| `required` | `boolean` | `false`     | 是否显示必填星号（纯视觉提示）                          |
-| `error`    | `string`  | `undefined` | 自定义错误文案（覆盖注入的 `errors[name]`）             |
+| 属性             | 类型      | 默认值      | 说明                                                    |
+| ---------------- | --------- | ----------- | ------------------------------------------------------- |
+| `name`           | `string`  | 必填        | 字段名（对应 `errors[key]` 与 `validatingFields[key]`） |
+| `label`          | `string`  | `undefined` | 标签文本                                                |
+| `required`       | `boolean` | `false`     | 是否显示必填星号（纯视觉提示）                          |
+| `for`            | `string`  | `undefined` | 关联输入框的 `id`，点击 label 聚焦对应 input            |
+| `error`          | `string`  | `undefined` | 自定义错误文案（覆盖注入的 `errors[name]`）             |
+| `validatingText` | `string`  | `undefined` | 校验中文案（默认跟随全局配置）                          |
 
 ### Slots
 

@@ -37,40 +37,11 @@
 
 <script setup lang="ts">
 import { useSlots, computed } from 'vue'
-import type { Component } from 'vue'
-import type { Size, AddonColor } from '../types/components'
+import type { ButtonProps } from '../types/props'
 
 defineOptions({ name: 'Button', inheritAttrs: false })
 
-type Variant = 'filled' | 'outline'
-type ButtonType = 'button' | 'submit' | 'reset'
-
-interface Props {
-  /** 按钮文字 */
-  label?: string
-  /** 按钮样式 */
-  variant?: Variant
-  /** 按钮颜色 */
-  color?: AddonColor
-  /** 按钮大小 */
-  size?: Size
-  /** 原生按钮类型，默认 button 防止表单意外提交 */
-  type?: ButtonType
-  /** 是否禁用 */
-  disabled?: boolean
-  /** 是否加载中 */
-  loading?: boolean
-  /** 加载时是否保留文字 */
-  showLabelWhileLoading?: boolean
-  /** 加载时的文字（可选，默认使用 label） */
-  loadingLabel?: string
-  /** 是否为块级按钮 */
-  block?: boolean
-  /** 按钮图标 */
-  icon?: string | Component
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<ButtonProps>(), {
   label: '',
   variant: 'filled',
   color: 'primary',

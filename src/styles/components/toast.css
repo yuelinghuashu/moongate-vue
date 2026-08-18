@@ -87,7 +87,7 @@
   border: none;
   cursor: pointer;
   color: var(--ui-text-dim, #475569);
-  font-size: 1.125rem;
+  font-size: var(--ui-typography-size-lg);
   line-height: 1;
   padding: 0;
   margin-left: var(--ui-spacing-sm, 8px);

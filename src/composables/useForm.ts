@@ -1,5 +1,6 @@
 // composables/useForm.ts
 import { reactive, computed, toValue, onMounted, type MaybeRefOrGetter } from 'vue'
+import { useTexts } from '../config'
 
 /**
  * 表单校验规则。
@@ -37,7 +38,7 @@ export interface UseFormOptions<T extends Record<string, any>> {
   initialValues: T
   /** 校验规则映射：字段名 → 规则或规则数组 */
   rules?: Partial<Record<FormKey<T>, FieldRules>>
-  /** 可选的全局错误信息文案（默认 '校验未通过'） */
+  /** 可选的全局错误信息文案（不传则使用全局配置） */
   ruleMessage?: MaybeRefOrGetter<string>
   /** 首次调用 validate 前是否自动校验（默认 false） */
   validateOnMount?: boolean
@@ -79,9 +80,12 @@ export function useForm<T extends Record<string, any>>(options: UseFormOptions<T
   const {
     initialValues,
     rules = {} as NonNullable<UseFormOptions<T>['rules']>,
-    ruleMessage = '校验未通过',
+    ruleMessage,
     validateOnMount = false,
   } = options
+
+  /** 全局文案（响应式，用于默认校验失败文案） */
+  const texts = useTexts()
 
   /** 表单值（响应式，直接绑定到组件 v-model） */
   const values = reactive({ ...initialValues }) as T
@@ -95,21 +99,26 @@ export function useForm<T extends Record<string, any>>(options: UseFormOptions<T
   /** 是否正在校验中（异步规则未完成时为 true） */
   const isValidating = computed(() => Object.values(validatingFields).some(Boolean))
 
+  /** 错误数量（valid/hasErrors 共享，避免重复遍历） */
+  const errorCount = computed(() => Object.keys(errors).length)
+
   /** 表单是否通过校验（无错误且无正在进行的校验） */
-  const valid = computed(() => {
-    if (isValidating.value) return false
-    return Object.keys(errors).length === 0
-  })
+  const valid = computed(() => !isValidating.value && errorCount.value === 0)
 
   /** 是否有任何错误 */
-  const hasErrors = computed(() => Object.keys(errors).length > 0)
+  const hasErrors = computed(() => errorCount.value > 0)
 
-  /** 获取默认错误文案 */
-  const getRuleMessage = () => toValue(ruleMessage)
+  /** 获取默认错误文案：自定义 ruleMessage > 全局配置 */
+  const getRuleMessage = () =>
+    ruleMessage !== undefined ? toValue(ruleMessage) : texts.value.formRuleMessage
 
-  /** 单条规则校验 */
-  async function runRule(key: Key, rule: Rule): Promise<string | null> {
-    const result = await rule(values[key], { ...values })
+  /** 单条规则校验（接收共享的 values 快照，避免每条规则重复拷贝） */
+  async function runRule(
+    key: Key,
+    rule: Rule,
+    snapshot: Record<string, any>,
+  ): Promise<string | null> {
+    const result = await rule(values[key], snapshot)
     if (result === true) return null
     // string 直接作为错误信息；false 使用默认文案
     return typeof result === 'string' ? result : getRuleMessage()
@@ -123,12 +132,15 @@ export function useForm<T extends Record<string, any>>(options: UseFormOptions<T
     }
 
     const ruleList = Array.isArray(fieldRules) ? fieldRules : [fieldRules]
+    // 关联字段快照：每个字段校验只拷贝一次，供该字段所有规则共享
+    // 浅拷贝避免规则内修改 values 触发额外响应式更新
+    const snapshot = { ...values }
     validatingFields[key] = true
 
     try {
       // 依次执行规则，遇到第一个失败即返回
       for (const rule of ruleList) {
-        const message = await runRule(key, rule)
+        const message = await runRule(key, rule, snapshot)
         if (message !== null) {
           errors[key] = message
           return false

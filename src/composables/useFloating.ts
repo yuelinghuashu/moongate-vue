@@ -115,12 +115,13 @@ export function useFloating(options: UseFloatingOptions) {
    * @param targetPlacement - 目标放置方向
    * @param triggerRect - 触发元素边界矩形
    * @param floatRect - 悬浮层边界矩形
+   * @returns 计算后的 top/left 坐标
    */
   const recalculatePosition = (
     targetPlacement: Placement,
     triggerRect: DOMRect,
     floatRect: DOMRect,
-  ) => {
+  ): { top: number; left: number } => {
     let top = 0
     let left = 0
 
@@ -143,7 +144,7 @@ export function useFloating(options: UseFloatingOptions) {
         break
     }
 
-    position.value = { top, left }
+    return { top, left }
   }
 
   /**
@@ -159,66 +160,54 @@ export function useFloating(options: UseFloatingOptions) {
     const viewportWidth = window.innerWidth
     const viewportHeight = window.innerHeight
 
-    let top = 0
-    let left = 0
     let finalPlacement = placement()
+    let pos = recalculatePosition(finalPlacement, triggerRect, floatRect)
 
-    // 1. 根据期望方向计算初始位置，并检测是否超出视口
+    // 1. 检测是否超出视口，决定是否翻转
     switch (placement()) {
       case 'top':
-        top = triggerRect.top - floatRect.height - offset()
-        left = triggerRect.left + (triggerRect.width - floatRect.width) / 2
-        if (top < 0) finalPlacement = 'bottom'
+        if (pos.top < 0) finalPlacement = 'bottom'
         break
       case 'bottom':
-        top = triggerRect.bottom + offset()
-        left = triggerRect.left + (triggerRect.width - floatRect.width) / 2
-        if (top + floatRect.height > viewportHeight) finalPlacement = 'top'
+        if (pos.top + floatRect.height > viewportHeight) finalPlacement = 'top'
         break
       case 'left':
-        top = triggerRect.top + (triggerRect.height - floatRect.height) / 2
-        left = triggerRect.left - floatRect.width - offset()
-        if (left < 0) finalPlacement = 'right'
+        if (pos.left < 0) finalPlacement = 'right'
         break
       case 'right':
-        top = triggerRect.top + (triggerRect.height - floatRect.height) / 2
-        left = triggerRect.right + offset()
-        if (left + floatRect.width > viewportWidth) finalPlacement = 'left'
+        if (pos.left + floatRect.width > viewportWidth) finalPlacement = 'left'
         break
     }
 
-    // 2. 如果需要翻转方向，重新计算位置
+    // 2. 如果翻转了方向，重新计算位置
     if (finalPlacement !== placement()) {
       currentPlacement.value = finalPlacement
-      recalculatePosition(finalPlacement, triggerRect, floatRect)
+      pos = recalculatePosition(finalPlacement, triggerRect, floatRect)
       // 不做边界修正的组件（如 Tooltip）：翻转后直接结束
-      if (!boundsCorrection) return
-      top = position.value.top
-      left = position.value.left
+      if (!boundsCorrection) {
+        position.value = pos
+        return
+      }
     } else {
       currentPlacement.value = placement()
-      position.value = { top, left }
-      if (!boundsCorrection) return
     }
 
     // 3. 边界修正（确保悬浮层完全在视口内）——仅 boundsCorrection 启用时
-    const finalRect = floatingRef.value.getBoundingClientRect()
-    let finalTop = top
-    let finalLeft = left
-
-    if (finalLeft < 0) {
-      finalLeft = 0
-    } else if (finalLeft + finalRect.width > viewportWidth) {
-      finalLeft = viewportWidth - finalRect.width
+    if (boundsCorrection) {
+      const finalRect = floatingRef.value.getBoundingClientRect()
+      if (pos.left < 0) {
+        pos.left = 0
+      } else if (pos.left + finalRect.width > viewportWidth) {
+        pos.left = viewportWidth - finalRect.width
+      }
+      if (pos.top < 0) {
+        pos.top = 0
+      } else if (pos.top + finalRect.height > viewportHeight) {
+        pos.top = viewportHeight - finalRect.height
+      }
     }
 
-    if (finalTop < 0) {
-      finalTop = 0
-    } else if (finalTop + finalRect.height > viewportHeight) {
-      finalTop = viewportHeight - finalRect.height
-    }
-
-    position.value = { top: finalTop, left: finalLeft }
+    position.value = pos
   }
 
   // ==================== 显示/隐藏 ====================
@@ -282,13 +271,13 @@ export function useFloating(options: UseFloatingOptions) {
 
   onMounted(() => {
     if (!isBrowser) return
-    window.addEventListener('scroll', handleScroll, true)
+    window.addEventListener('scroll', handleScroll, { capture: true, passive: true })
     window.addEventListener('resize', handleResize)
   })
 
   onUnmounted(() => {
     if (!isBrowser) return
-    window.removeEventListener('scroll', handleScroll, true)
+    window.removeEventListener('scroll', handleScroll, { capture: true })
     window.removeEventListener('resize', handleResize)
     disableResizeObserver()
     clearTimers()

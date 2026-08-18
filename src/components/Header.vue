@@ -5,13 +5,11 @@
 </template>
 
 <script setup lang="ts">
+import type { HeaderProps } from '../types/props'
+
 defineOptions({ name: 'Header', inheritAttrs: false })
 
-interface Props {
-  sticky?: boolean
-}
-
-withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<HeaderProps>(), {
   sticky: false,
 })
 </script>

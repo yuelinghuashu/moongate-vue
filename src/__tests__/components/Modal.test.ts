@@ -95,4 +95,12 @@ describe('Modal', () => {
     await wrapper.setProps({ modelValue: true })
     expect(wrapper.emitted('open')).toHaveLength(1)
   })
+
+  it('ESC 键关闭弹窗', () => {
+    const wrapper = mount(Modal, {
+      props: { modelValue: true, 'onUpdate:modelValue': () => {} },
+    })
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
+    expect(wrapper.emitted('update:modelValue')).toEqual([[false]])
+  })
 })

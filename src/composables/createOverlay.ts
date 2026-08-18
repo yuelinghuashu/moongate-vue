@@ -162,12 +162,15 @@ export function createOverlay(
 }
 
 /**
- * 关闭所有活动的覆盖层实例
- * 可用于应用卸载或全局清理场景
+ * 关闭所有活动的覆盖层实例（等待离开动画结束后销毁）
+ * 每个实例的 destroy() 回调会自行从 activeInstances 中移除
  */
 export function closeAllOverlays(): void {
-  activeInstances.forEach((instance) => instance.close())
-  activeInstances.clear()
+  // 复制一份避免迭代中 Set 变化
+  const instances = [...activeInstances]
+  for (const instance of instances) {
+    instance.close()
+  }
 }
 
 /**

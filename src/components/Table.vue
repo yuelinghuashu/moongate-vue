@@ -22,11 +22,11 @@
             <!-- 选择列 -->
             <th v-if="selectable" class="mg-table-selection-col">
               <input
+                ref="selectAllCheckbox"
                 type="checkbox"
                 class="mg-table-checkbox"
                 :checked="isAllSelected"
-                :indeterminate="isIndeterminate"
-                :aria-label="selectAllText"
+                :aria-label="selectAllTextValue"
                 @change="handleSelectAll"
               />
             </th>
@@ -95,7 +95,7 @@
                 class="mg-table-checkbox"
                 :checked="isRowSelected(row)"
                 :disabled="!isRowSelectable(row, rowIndex)"
-                :aria-label="`选择 ${getRowLabel(row)}`"
+                :aria-label="rowSelectAriaLabel(getRowLabel(row))"
                 @change="handleRowSelect(row)"
               />
             </td>
@@ -123,7 +123,7 @@
             <td :colspan="columns.length" class="mg-table-empty">
               <slot name="empty">
                 <div class="mg-table-empty-content">
-                  <span>{{ emptyText }}</span>
+                  <span>{{ emptyTextValue }}</span>
                 </div>
               </slot>
             </td>
@@ -135,71 +135,43 @@
 </template>
 
 <script setup lang="ts" generic="T extends Record<string, any> = any">
-import { ref, computed } from 'vue'
-import type { TableColumn, SortParams } from '../types/table'
+import { ref, computed, watch } from 'vue'
+import type { TableColumn, TableProps, SortParams } from '../types/table'
+import { formatTemplate, useTexts } from '../config'
 
 defineOptions({ name: 'Table', inheritAttrs: false })
 
 // ==================== Props 定义 ====================
-const props = withDefaults(
-  defineProps<{
-    /** 列配置 */
-    columns: TableColumn<T>[]
-    /** 表格数据 */
-    data?: T[]
-    /** 空状态文案（插槽优先） */
-    emptyText?: string
-    /** 是否显示表头 */
-    showHeader?: boolean
-    /** 是否显示斑马纹 */
-    striped?: boolean
-    /** 是否显示悬停高亮 */
-    hoverable?: boolean
-    /** 是否强制横向滚动 */
-    scrollable?: boolean
-    /** 是否响应式（小屏自动滚动） */
-    responsive?: boolean
-    /** 是否固定表头 */
-    fixedHeader?: boolean
-    /** 固定表头时的最大高度（如 '400px', '60vh'） */
-    maxHeight?: string
-    /** 当前排序字段（受控模式） */
-    sortKey?: string
-    /** 当前排序方向（受控模式） */
-    sortOrder?: 'asc' | 'desc'
-    /** 全局默认标题字段名 */
-    labelKey?: string
-    /** 全局默认数据字段名 */
-    valueKey?: string
-    /** 行唯一标识字段名（稳定 key，排序时可避免 DOM 复用错乱） */
-    rowKey?: keyof T | string
-    /** 是否显示选择列（行选择） */
-    selectable?: boolean
-    /** 行是否可选（返回 false 禁用该行 checkbox） */
-    rowSelectable?: (row: T, index: number) => boolean
-    /** 全选 checkbox 的 aria-label */
-    selectAllText?: string
-  }>(),
-  {
-    data: () => [],
-    emptyText: '暂无数据',
-    showHeader: true,
-    striped: false,
-    hoverable: true,
-    scrollable: false,
-    responsive: true,
-    fixedHeader: false,
-    maxHeight: '400px',
-    sortKey: undefined,
-    sortOrder: undefined,
-    labelKey: 'label',
-    valueKey: 'value',
-    rowKey: undefined,
-    selectable: false,
-    rowSelectable: undefined,
-    selectAllText: '全选',
-  },
-)
+
+const props = withDefaults(defineProps<TableProps<T>>(), {
+  data: () => [],
+  showHeader: true,
+  striped: false,
+  hoverable: true,
+  scrollable: false,
+  responsive: true,
+  fixedHeader: false,
+  maxHeight: '400px',
+  sortKey: undefined,
+  sortOrder: undefined,
+  labelKey: 'label',
+  valueKey: 'value',
+  rowKey: undefined,
+  selectable: false,
+  rowSelectable: undefined,
+})
+
+/** 全局文案（响应式） */
+const texts = useTexts()
+
+/** 空状态文案：prop > 全局配置 */
+const emptyTextValue = computed(() => props.emptyText ?? texts.value.empty)
+
+/** 全选 checkbox 文案：prop > 全局配置 */
+const selectAllTextValue = computed(() => props.selectAllText ?? texts.value.tableSelectAll)
+
+/** 行选择 aria-label：全局配置模板 */
+const rowSelectAriaLabel = (label: string) => formatTemplate(texts.value.tableSelectRow, { label })
 
 // ==================== v-model 定义 ====================
 
@@ -419,6 +391,18 @@ const isIndeterminate = computed(() => {
   return selectedCount > 0 && selectedCount < selectableRows.value.length
 })
 
+/** 全选 checkbox DOM 引用（indeterminate 是 DOM property，不能通过 attribute 绑定） */
+const selectAllCheckbox = ref<HTMLInputElement | null>(null)
+watch(
+  isIndeterminate,
+  (val) => {
+    if (selectAllCheckbox.value) {
+      selectAllCheckbox.value.indeterminate = val
+    }
+  },
+  { immediate: true },
+)
+
 /**
  * 获取行的可访问名称（用于 checkbox aria-label）
  */
@@ -431,7 +415,7 @@ const getRowLabel = (row: T): string => {
   if (firstColumn) {
     return String(getRowValue(row, firstColumn))
   }
-  return '行'
+  return texts.value.tableRowLabel
 }
 
 /**

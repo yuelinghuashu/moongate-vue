@@ -112,7 +112,7 @@ import { Card } from 'moongate-vue'
 
 ## 改变根元素语义
 
-通过 `as` 属性改变根元素标签，提升 HTML 语义化。支持任意合法 HTML 标签。
+通过 `as` 属性改变根元素标签，提升 HTML 语义化。支持 `div`、`section`、`article`、`aside`、`li`。
 
 :::demo
 
@@ -136,8 +136,8 @@ import { Card } from 'moongate-vue'
     </ul>
 
     <!-- 自定义容器 -->
-    <Card as="fieldset" style="border: 1px solid #e5e5e5; padding: 12px;">
-      <legend style="padding: 0 8px;">卡片标题</legend>
+    <Card as="section" style="border: 1px solid #e5e5e5; padding: 12px;">
+      <h3 style="margin: 0 0 8px;">卡片标题</h3>
       <p>内容</p>
     </Card>
   </div>
@@ -209,12 +209,12 @@ import { Card, Badge } from 'moongate-vue'
 
 ### Props
 
-| 属性         | 类型      | 默认值  | 说明                               |
-| ------------ | --------- | ------- | ---------------------------------- |
-| `as`         | `string`  | `'div'` | 根元素标签，支持任意合法 HTML 标签 |
-| `hoverable`  | `boolean` | `false` | 是否启用悬停上浮 + 月晕效果        |
-| `hideBody`   | `boolean` | `false` | 是否隐藏主体区域（默认插槽）       |
-| `hideFooter` | `boolean` | `false` | 是否隐藏底部区域（`footer` 插槽）  |
+| 属性         | 类型                                                 | 默认值  | 说明                              |
+| ------------ | ---------------------------------------------------- | ------- | --------------------------------- |
+| `as`         | `'div' \| 'section' \| 'article' \| 'aside' \| 'li'` | `'div'` | 根元素标签                        |
+| `hoverable`  | `boolean`                                            | `false` | 是否启用悬停上浮 + 月晕效果       |
+| `hideBody`   | `boolean`                                            | `false` | 是否隐藏主体区域（默认插槽）      |
+| `hideFooter` | `boolean`                                            | `false` | 是否隐藏底部区域（`footer` 插槽） |
 
 ### Slots
 
@@ -231,4 +231,4 @@ import { Card, Badge } from 'moongate-vue'
 - 头部和底部插槽为可选，不传则对应区域不会渲染
 - 使用 `hideBody` 或 `hideFooter` 时，对应的 DOM 元素完全不会生成，适用于需要精确控制布局的场景
 - 若卡片内部包含多个可交互元素（如多个链接），请确保各元素的 `z-index` 或点击区域不冲突
-- `as` 属性支持任意合法 HTML 标签，提供最大的语义化灵活性
+- `as` 属性支持 `div`、`section`、`article`、`aside`、`li` 五种容器标签

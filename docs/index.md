@@ -5,7 +5,7 @@ layout: home
 hero:
   name: 'Moongate Vue'
   text: '极简 Vue 3 组件库'
-  tagline: 推开月之门，10KB 的极简秩序。
+  tagline: 推开月之门，25KB 的极简秩序。
   image:
     src: /logo.svg
     alt: Moongate Vue
@@ -21,7 +21,7 @@ features:
   - title: 🌙 月亮哲学
     details: 克制、冷静、秩序感，直角设计，不妥协的美学。
   - title: 📦 极致轻量
-    details: 完整组件库仅 10KB (gzipped)，比主流组件库轻 10 倍以上。
+    details: 完整组件库（JS + CSS）仅 25KB (gzipped)，比主流组件库轻一个数量级以上。
   - title: 🎨 设计令牌驱动
     details: 基于 CSS 变量，深色/浅色模式无缝切换。
   - title: 🔧 CSS 优先

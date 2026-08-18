@@ -13,8 +13,6 @@ import {
   Select,
   Pagination,
   Modal,
-  Toast,
-  Message,
   Tabs,
   Skeleton,
   Tooltip,
@@ -26,6 +24,9 @@ import {
   Main,
   Footer,
   Hero,
+  Dropdown,
+  Form,
+  FormItem,
 } from '../src/index'
 import '../src/styles/index.css'
 import '../src/styles/reset.css'
@@ -37,9 +38,14 @@ const page = ref(1)
 const selectedFruits = ref<Array<string | number>>([])
 const selectedRows = ref<Record<string, any>[]>([])
 const activeTab = ref<number>(0)
-const showToast = () => {
-  console.log('toast-placeholder')
-}
+const dropdownKey = ref('')
+
+const dropdownOptions = [
+  { key: 'edit', label: '编辑' },
+  { key: 'copy', label: '复制' },
+  { key: '__sep__', separator: true as const },
+  { key: 'delete', label: '删除', danger: true },
+]
 
 const tabs = [
   { label: '标签一', content: '标签一内容' },
@@ -111,6 +117,35 @@ const tableData = [
       <Skeleton :rows="3" style="margin-top: 12px" />
     </section>
 
+    <!-- 表单 -->
+    <section data-testid="form-section">
+      <h2>表单</h2>
+      <Form :errors="{ username: '用户名不能为空' }" label-width="80px" style="max-width: 320px">
+        <FormItem name="username" label="用户名" required>
+          <Input placeholder="请输入用户名" />
+        </FormItem>
+      </Form>
+    </section>
+
+    <!-- 下拉菜单 -->
+    <section data-testid="dropdown-section">
+      <h2>下拉菜单</h2>
+      <Dropdown
+        :options="dropdownOptions"
+        data-testid="dropdown"
+        @select="
+          (k) => {
+            dropdownKey = k
+          }
+        "
+      >
+        <Button label="操作菜单" />
+      </Dropdown>
+      <span v-if="dropdownKey" data-testid="dropdown-result" style="margin-left: 12px">
+        已选: {{ dropdownKey }}
+      </span>
+    </section>
+
     <!-- 布局组件 -->
     <section data-testid="layout">
       <h2>布局组件</h2>
@@ -139,12 +174,6 @@ const tableData = [
         <Popover content="弹出层内容">
           <Button variant="outline" label="悬停弹出" />
         </Popover>
-        <Button
-          variant="outline"
-          label="触发Toast"
-          @click="showToast"
-          data-testid="toast-trigger"
-        />
       </div>
     </section>
 

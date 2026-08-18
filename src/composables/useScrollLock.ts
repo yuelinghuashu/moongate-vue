@@ -58,7 +58,11 @@ const trapFocus = (event: KeyboardEvent, container: HTMLElement) => {
   if (event.key !== 'Tab') return
 
   const focusableElements = getFocusableElements(container)
-  if (focusableElements.length === 0) return
+  if (focusableElements.length === 0) {
+    // 没有可聚焦元素时，阻止 Tab 键逃逸出浮层
+    event.preventDefault()
+    return
+  }
 
   const firstElement = focusableElements[0]
   const lastElement = focusableElements[focusableElements.length - 1]
@@ -89,17 +93,26 @@ export function useOverlayBehavior(
   isOpen: Ref<boolean>,
   overlayRef: Ref<HTMLElement | null>,
   onClose: () => void,
-  options: { enableEsc?: boolean; enableFocusTrap?: boolean } = {},
+  options: {
+    enableEsc?: boolean | (() => boolean)
+    enableFocusTrap?: boolean | (() => boolean)
+  } = {},
 ) {
-  const { enableEsc = true, enableFocusTrap = true } = options
+  /** 解析选项值：支持静态 boolean 或动态 getter */
+  const getEnableEsc =
+    typeof options.enableEsc === 'function' ? options.enableEsc : () => options.enableEsc ?? true
+  const getEnableFocusTrap =
+    typeof options.enableFocusTrap === 'function'
+      ? options.enableFocusTrap
+      : () => options.enableFocusTrap ?? true
 
   /** 处理键盘事件（ESC 关闭 + Tab 焦点陷阱） */
   const handleKeydown = (event: KeyboardEvent) => {
-    if (event.key === 'Escape' && enableEsc && isOpen.value) {
+    if (event.key === 'Escape' && getEnableEsc() && isOpen.value) {
       event.stopPropagation()
       onClose()
     }
-    if (enableFocusTrap && overlayRef.value && isOpen.value) {
+    if (getEnableFocusTrap() && overlayRef.value && isOpen.value) {
       trapFocus(event, overlayRef.value)
     }
   }
@@ -117,7 +130,7 @@ export function useOverlayBehavior(
           const container = overlayRef.value
           if (!container) return
           const focusableElements = getFocusableElements(container)
-          if (focusableElements.length > 0 && enableFocusTrap) {
+          if (focusableElements.length > 0 && getEnableFocusTrap()) {
             focusableElements[0].focus()
           } else if (container) {
             container.setAttribute('tabindex', '-1')

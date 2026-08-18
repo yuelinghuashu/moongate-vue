@@ -10,10 +10,10 @@
   border: 1px solid var(--ui-border);
   border-radius: var(--ui-radius-sm);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  padding: 0.25rem 0;
+  padding: var(--ui-spacing-xs, 4px) 0;
   min-width: 120px;
   opacity: 0;
-  transition: opacity 0.15s ease;
+  transition: opacity var(--ui-motion-duration-neural, 150ms) ease;
   pointer-events: auto;
 }
 

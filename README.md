@@ -9,18 +9,18 @@
 
 Moongate Vue is a moon-inspired, minimal Vue 3 component library. Design-token driven, CSS-first, framework-agnostic.
 
-**The complete library is only 10KB (gzipped)** — over 10x lighter than mainstream component libraries.
+**The complete library stays under 25KB (JS + CSS gzipped combined)** — an order of magnitude lighter than mainstream component libraries. See the live [bundle size badge](https://bundlephobia.com/package/moongate-vue) above.
 
 ## Features
 
 - 🌙 **Moon Philosophy** — Restrained, calm, orderly
-- 📦 **Ultra Lightweight** — Complete library only **10KB** (gzipped)
+- 📦 **Ultra Lightweight** — Complete library (JS + CSS) under **25KB** (gzipped)
 - 🎨 **Design-Token Driven** — CSS variables based, effortless theme switching
 - 🔧 **CSS-First** — Styles decoupled from logic, reusable across frameworks
 - ✨ **Minimal API** — 2-8 props per component, easy to learn and use
 - 🚀 **Zero Dependencies** — No extra configuration, works out of the box
 - ⚡ **SSR Ready** — Perfect for Nuxt 4 / VitePress and other server-side rendering scenarios
-- ✅ **Tested** — Vitest + jsdom full coverage: 27 components + 3 public composables (`useForm` / `useMessage` / `useToast`) + SSR/a11y regression + Playwright e2e, 395 tests total (95% statements / 86% branches)
+- ✅ **Tested** — Vitest + jsdom full coverage: 28 components + 3 public composables (`useForm` / `useMessage` / `useToast`) + SSR/a11y regression + Playwright e2e, 449 tests total (95% statements / 86% branches)
 - 🔧 **Engineering Standards** — ESLint + Prettier unified style, husky pre-commit checks
 
 ## Installation
@@ -33,7 +33,7 @@ pnpm add moongate-vue
 
 > 💡 **Non-invasive styles**: The default `style.css` contains only component styles — it won't reset your global styles. Optionally import `moongate-vue/reset.css` to unify `box-sizing: border-box` across all elements.
 >
-> **Requirements**: Vue `^3.5.0` or higher. Browser support aligns with **VitePress** baseline (Chrome 111+ / Firefox 113+ / Edge 111+ / Safari 16.2+). See the [full install guide](https://vue.moongate.top/guide/install) for details.
+> **Requirements**: Vue `^3.5.0` or higher. Browser support aligns with **VitePress** baseline (Chrome 111+ / Firefox 113+ / Edge 111+ / Safari 16.2+). See the [full install guide](./docs/guide/install.md) for details.
 
 ## Quick Start
 
@@ -58,66 +58,38 @@ Visit the [**Moongate Vue Official Documentation**](https://vue.moongate.top) fo
 
 ## Components
 
-### Basic Components
+| Category        | Components                                                                   |
+| --------------- | ---------------------------------------------------------------------------- |
+| Basic           | `Button` `Card` `Badge` `Divider`                                            |
+| Form            | `Form` `FormItem` `Input` `Textarea` `Checkbox` `Radio` `Switch` `Select`    |
+| Data Display    | `Table` `Pagination` `Tabs`                                                  |
+| Layout          | `Container` `Header` `Main` `Footer` `Hero`                                  |
+| Feedback        | `Modal` `Toast` `Message` `Tooltip` `Popover` `Drawer` `Skeleton` `Dropdown` |
+| Style Utilities | `Link` `Code`                                                                |
 
-| Component | Description    |
-| --------- | -------------- |
-| Button    | Button         |
-| Card      | Card container |
-| Badge     | Badge          |
-| Divider   | Divider line   |
+> **Note**: **28 components + 2 style utilities** in total, covering most daily development scenarios.
 
-### Form Components
+## TypeScript Types
 
-| Component | Description                                           |
-| --------- | ----------------------------------------------------- |
-| Form      | Form layout + validation display (pairs with useForm) |
-| FormItem  | Single field: label / required asterisk / error       |
-| Input     | Input field                                           |
-| Textarea  | Multi-line textarea                                   |
-| Checkbox  | Checkbox                                              |
-| Radio     | Radio button                                          |
-| Switch    | Toggle switch                                         |
-| Select    | Dropdown select                                       |
+All components export their Props types, plus shared utility types:
 
-### Data Display
+```ts
+import type {
+  ButtonProps,
+  TableProps,
+  SelectValue,
+  SelectOption,
+  TabItem,
+  DropdownOption,
+  FormProps,
+} from 'moongate-vue'
 
-| Component  | Description |
-| ---------- | ----------- |
-| Table      | Data table  |
-| Pagination | Pagination  |
-| Tabs       | Tab panels  |
+function renderTable<T>(props: TableProps<T>) {
+  /* ... */
+}
+```
 
-### Layout Components
-
-| Component | Description            |
-| --------- | ---------------------- |
-| Container | Container              |
-| Header    | Header container       |
-| Main      | Main content container |
-| Footer    | Footer container       |
-| Hero      | Hero section           |
-
-### Feedback Components
-
-| Component | Description  |
-| --------- | ------------ |
-| Modal     | Modal dialog |
-| Toast     | Toast        |
-| Message   | Message      |
-| Tooltip   | Tooltip      |
-| Popover   | Popover      |
-| Drawer    | Drawer panel |
-| Skeleton  | Skeleton     |
-
-### Style Utilities
-
-| Utility | Class                                             | Description |
-| ------- | ------------------------------------------------- | ----------- |
-| Link    | `.mg-link` / `.nav-link`                          | Link styles |
-| Code    | `.mg-code` / `.mg-code-inline` / `.mg-code-block` | Code styles |
-
-> **Note**: **27 components + 2 style utilities** in total, covering most daily development scenarios.
+Full type list: every component's `XxxProps`, `TableColumn`/`SortParams`/`CellSlotProps`/`ColumnSlotProps`, `DropdownOption`/`DropdownPlacement`, `SelectValue`/`SelectOption`, `TabItem`, `FormProps`, `Config`/`LocaleTexts`, and composable types (`Rule`/`FieldRules`/`UseFormOptions`/`MenuItemBase`).
 
 ## Design Tokens
 
@@ -131,6 +103,24 @@ Moongate Vue is built on a complete design token system (`colors.css` and `layou
 ```
 
 See the [design tokens guide](https://vue.moongate.top/guide/design-tokens) for the full variable reference.
+
+## Global Config
+
+Built-in texts automatically adapt between Chinese and English based on `document.documentElement.lang` (binary detection: **non-Chinese `lang` defaults to English**). Override them globally via `setConfig`:
+
+```ts
+import { setConfig } from 'moongate-vue'
+
+// Switch to English built-in texts
+setConfig({ locale: 'en-US' })
+
+// Override individual texts
+setConfig({ texts: { empty: 'No data', paginationPrev: 'Prev' } })
+```
+
+Priority: **component prop > `setConfig` texts > built-in locale texts**. Template placeholders like `{current}`, `{total}`, and `{label}` are supported. Mounted components update reactively when config changes.
+
+Covered display texts include: Pagination page info / prev-next / first-last, Select empty state / remove tag, Table empty state / select-all / row-select / row label fallback, FormItem validating, Modal / Drawer / Message / Toast close buttons, and `useForm` default validation message.
 
 ## Attribute Inheritance
 

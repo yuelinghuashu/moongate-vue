@@ -14,21 +14,15 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: 'Divider', inheritAttrs: false })
-
 import { useSlots, computed } from 'vue'
+import type { DividerProps } from '../types/props'
+
+defineOptions({ name: 'Divider', inheritAttrs: false })
 
 const slots = useSlots()
 const hasDefault = computed(() => !!slots.default)
 
-interface Props {
-  /** 是否为垂直分割线 */
-  vertical?: boolean
-  /** 是否为虚线 */
-  dashed?: boolean
-}
-
-withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<DividerProps>(), {
   vertical: false,
   dashed: false,
 })

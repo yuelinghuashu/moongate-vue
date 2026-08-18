@@ -74,6 +74,7 @@
   --ui-debug-start: #059669;
   --ui-debug-pause: #b45309;
   --ui-debug-stop: #b91c1c;
+  --ui-overlay-scrim: rgba(0, 0, 0, 0.5);
 }
 
 /* 深色模式 */
@@ -146,4 +147,5 @@
   --ui-debug-start: #34d399;
   --ui-debug-pause: #fbbf24;
   --ui-debug-stop: #f87171;
+  --ui-overlay-scrim: rgba(0, 0, 0, 0.7);
 }

@@ -34,10 +34,10 @@ describe('Tooltip', () => {
     expect(tooltip.textContent).toContain('提示内容')
   })
 
-  it('有 delay 时延迟显示', async () => {
+  it('有 showDelay 时延迟显示', async () => {
     vi.useFakeTimers()
     const wrapper = mount(Tooltip, {
-      props: { content: '提示', delay: 100 },
+      props: { content: '提示', showDelay: 100 },
       attachTo: document.body,
     })
 

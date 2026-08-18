@@ -1,11 +1,13 @@
 <template>
   <input
-    v-bind="$attrs"
+    v-bind="inputAttrs"
+    :id="inputId"
     :type="type"
     :value="modelValue"
     :placeholder="placeholder"
     :disabled="disabled"
     :readonly="readonly"
+    :aria-describedby="describedBy"
     class="mg-input"
     :class="[`mg-input-${size}`, { 'mg-input-error': error }]"
     @input="handleInput"
@@ -16,27 +18,15 @@
 </template>
 
 <script setup lang="ts">
+import { computed, inject, useAttrs } from 'vue'
 import { useFormField } from '../composables/useFormField'
-import type { Size, InputType } from '../types/components'
+import type { FormFieldEvents } from '../composables/useFormField'
+import type { InputProps } from '../types/props'
+import { formFieldContextKey } from '../types/form-injection'
 
 defineOptions({ name: 'Input', inheritAttrs: false })
 
-interface Props {
-  /** 输入框类型 */
-  type?: InputType
-  /** 占位文本 */
-  placeholder?: string
-  /** 是否禁用 */
-  disabled?: boolean
-  /** 是否只读 */
-  readonly?: boolean
-  /** 尺寸大小 */
-  size?: Size
-  /** 是否显示错误状态 */
-  error?: boolean
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<InputProps>(), {
   type: 'text',
   placeholder: '',
   disabled: false,
@@ -48,20 +38,32 @@ const props = withDefaults(defineProps<Props>(), {
 /** v-model 双向绑定值 */
 const modelValue = defineModel<string>({ default: '' })
 
-const emit = defineEmits<{
-  /** 输入时触发（原生事件透传） */
-  input: [event: Event]
-  /** 值变化时触发（原生事件透传） */
-  change: [event: Event]
-  /** 获得焦点时触发（原生事件透传） */
-  focus: [event: FocusEvent]
-  /** 失去焦点时触发（原生事件透传） */
-  blur: [event: FocusEvent]
-}>()
+const emit = defineEmits<FormFieldEvents>()
+
+// ==================== FormItem 字段上下文（自动 id + aria-describedby） ====================
+
+/** 外层 FormItem 注入的字段上下文；未包裹时静默降级 */
+const fieldContext = inject(formFieldContextKey, undefined)
+
+/** 输入框 id：显式 id > FormItem 提供的字段 id */
+const inputId = computed(() => {
+  const attrs = useAttrs()
+  return (attrs.id as string | undefined) ?? fieldContext?.id.value
+})
+
+/** aria-describedby：关联 FormItem 的错误/校验中提示 */
+const describedBy = computed(() => fieldContext?.describedBy.value)
+
+// 剥离 attrs 中的 id（已由 inputId 处理），避免重复
+const inputAttrs = computed(() => {
+  const attrs = useAttrs()
+  const rest: Record<string, unknown> = {}
+  for (const [key, value] of Object.entries(attrs)) {
+    if (key !== 'id') rest[key] = value
+  }
+  return rest
+})
 
 // 共享表单字段逻辑：v-model 更新 + 原生事件透传
-const { handleInput, handleChange, handleBlur, handleFocus } = useFormField(
-  modelValue,
-  emit as (event: string, ...args: any[]) => void,
-)
+const { handleInput, handleChange, handleBlur, handleFocus } = useFormField(modelValue, emit)
 </script>

@@ -37,5 +37,5 @@
 }
 .mg-input-lg {
   padding: var(--ui-spacing-md) var(--ui-spacing-lg);
-  font-size: 1.125rem;
+  font-size: var(--ui-typography-size-lg);
 }

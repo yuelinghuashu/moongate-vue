@@ -1,7 +1,11 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { h, nextTick } from 'vue'
 import Table from '../../components/Table.vue'
+import { setConfig, resetConfig } from '../../config'
+
+// 该测试文件依赖默认中文文案，显式设置
+setConfig({ locale: 'zh-CN' })
 
 interface User {
   id: number
@@ -22,6 +26,8 @@ const data: User[] = [
 ]
 
 describe('Table', () => {
+  afterEach(() => resetConfig())
+
   it('渲染表头与数据', () => {
     const wrapper = mount(Table, { props: { columns, data } })
     const headers = wrapper.findAll('th')
@@ -570,5 +576,43 @@ describe('Table', () => {
     const wrapper = mount(Table, { props: { columns, data } })
     expect(wrapper.find('table').exists()).toBe(true)
     expect(wrapper.findAll('thead th')).toHaveLength(3)
+  })
+
+  // ==================== 补充：getColumnTitle 回退分支 ====================
+
+  it('column 仅有 labelKey 时从 column[labelKey] 取列标题', () => {
+    const customColumns = [{ labelKey: 'label', key: 'name' }]
+    const customData = [{ name: 'A' }]
+    const wrapper = mount(Table, {
+      props: { columns: customColumns, data: customData },
+    })
+    // labelKey='label'，从 column 对象取 column['label'] 作为标题
+    expect(wrapper.find('th').text()).toContain('name')
+  })
+
+  it('column[props.labelKey] 非空时回退到 props.labelKey 取列标题', () => {
+    const customColumns = [{ key: 'name', label: '自定义列名' }]
+    const customData = [{ name: 'A' }]
+    const wrapper = mount(Table, {
+      props: { columns: customColumns, data: customData, labelKey: 'label' },
+    })
+    // column 无 title/labelKey，走 props.labelKey='label' 回退：column['label']='自定义列名'
+    expect(wrapper.find('th').text()).toContain('自定义列名')
+  })
+
+  it('getSortAria：排序方向为 undefined（无 sortOrder）时不设置 aria-sort', () => {
+    const wrapper = mount(Table, {
+      props: {
+        columns,
+        data,
+        sortKey: 'age',
+        sortOrder: undefined,
+        'onUpdate:sortKey': () => {},
+        'onUpdate:sortOrder': () => {},
+      },
+    })
+    // 受控模式但 sortOrder 为 undefined：aria-sort 应保持未设置
+    const th = wrapper.findAll('th')[2]
+    expect(th.attributes('aria-sort')).toBeUndefined()
   })
 })

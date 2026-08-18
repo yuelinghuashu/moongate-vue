@@ -10,7 +10,7 @@
       <div
         class="mg-drawer-overlay"
         :class="{ 'mg-drawer-overlay-open': modelValue }"
-        @click="closeOnOverlay && handleClose()"
+        @click.self="closeOnOverlay && handleClose()"
       />
       <!-- 抽屉内容 -->
       <div
@@ -29,7 +29,7 @@
             v-if="closable"
             class="mg-drawer-close"
             type="button"
-            :aria-label="closeAriaLabel"
+            :aria-label="closeAriaLabelValue"
             @click="handleClose"
           >
             &times;
@@ -47,9 +47,10 @@
 </template>
 
 <script setup lang="ts">
-import { useId } from 'vue'
+import { computed, useId } from 'vue'
 import { useOverlayComponent } from '../composables/useOverlayComponent'
-import type { Placement, SizeFull } from '../types/components'
+import { useTexts } from '../config'
+import type { DrawerProps } from '../types/props'
 
 defineOptions({ name: 'Drawer', inheritAttrs: false })
 
@@ -62,35 +63,21 @@ defineSlots<{
   footer: () => any
 }>()
 
-interface Props {
-  /** 抽屉弹出方向 */
-  placement?: Placement
-  /** 抽屉尺寸（宽度/高度） */
-  size?: SizeFull
-  /** 标题文本 */
-  title?: string
-  /** 是否显示关闭按钮 */
-  closable?: boolean
-  /** 点击遮罩层是否关闭 */
-  closeOnOverlay?: boolean
-  /** 关闭按钮的 aria-label */
-  closeAriaLabel?: string
-  /** 是否启用 ESC 键关闭，默认 true */
-  enableEsc?: boolean
-  /** 是否启用焦点陷阱，默认 true */
-  enableFocusTrap?: boolean
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<DrawerProps>(), {
   placement: 'right',
   size: 'md',
   title: '',
   closable: true,
   closeOnOverlay: true,
-  closeAriaLabel: '关闭抽屉',
   enableEsc: true,
   enableFocusTrap: true,
 })
+
+/** 全局文案（响应式） */
+const texts = useTexts()
+
+/** 关闭按钮 aria-label：prop > 全局配置 */
+const closeAriaLabelValue = computed(() => props.closeAriaLabel ?? texts.value.drawerClose)
 
 /** v-model 双向绑定（由 defineModel 自动处理 update:modelValue） */
 const modelValue = defineModel<boolean>({ default: false })

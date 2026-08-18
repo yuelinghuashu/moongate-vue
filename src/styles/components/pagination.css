@@ -28,6 +28,11 @@
   cursor: not-allowed;
 }
 
+.mg-pagination-btn:focus-visible {
+  outline: var(--ui-physics-focus-ring) solid var(--ui-primary);
+  outline-offset: var(--ui-physics-focus-ring);
+}
+
 /* 当前页码（可点击） */
 .mg-pagination-current {
   display: inline-flex;
@@ -116,18 +121,18 @@
 }
 .mg-pagination-lg .mg-pagination-btn {
   padding: var(--ui-spacing-md) var(--ui-spacing-xl);
-  font-size: 1.125rem;
+  font-size: var(--ui-typography-size-lg);
 }
 .mg-pagination-lg .mg-pagination-current {
   min-width: 3rem;
-  font-size: 1.125rem;
+  font-size: var(--ui-typography-size-lg);
 }
 .mg-pagination-lg .mg-pagination-sep,
 .mg-pagination-lg .mg-pagination-total {
-  font-size: 1.125rem;
+  font-size: var(--ui-typography-size-lg);
 }
 .mg-pagination-lg .mg-pagination-input {
   width: 4.5rem;
   padding: var(--ui-spacing-md) var(--ui-spacing-lg);
-  font-size: 1.125rem;
+  font-size: var(--ui-typography-size-lg);
 }

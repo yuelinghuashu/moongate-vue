@@ -6,7 +6,9 @@
     <input
       type="checkbox"
       class="mg-switch-input"
+      role="switch"
       :checked="modelValue"
+      :aria-checked="modelValue"
       :disabled="disabled"
       v-bind="$attrs"
       @change="handleChange"
@@ -19,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Size } from '../types/components'
+import type { SwitchProps } from '../types/props'
 
 defineOptions({ name: 'Switch', inheritAttrs: false })
 
@@ -28,18 +30,7 @@ defineSlots<{
   label: () => any
 }>()
 
-interface Props {
-  /** 开关标签文字 */
-  label?: string
-  /** 尺寸大小 */
-  size?: Size
-  /** 是否禁用 */
-  disabled?: boolean
-  /** 是否显示错误状态 */
-  error?: boolean
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<SwitchProps>(), {
   label: '',
   size: 'md',
   disabled: false,

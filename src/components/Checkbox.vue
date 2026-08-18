@@ -23,24 +23,11 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { Size } from '../types/components'
+import type { CheckboxProps } from '../types/props'
 
 defineOptions({ name: 'Checkbox', inheritAttrs: false })
 
-interface Props {
-  /** 复选框标签文字 */
-  label?: string
-  /** 复选框的值（用于数组多选模式） */
-  value?: string | number
-  /** 尺寸大小 */
-  size?: Size
-  /** 是否禁用 */
-  disabled?: boolean
-  /** 是否显示错误状态 */
-  error?: boolean
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<CheckboxProps>(), {
   label: '',
   value: undefined,
   size: 'md',

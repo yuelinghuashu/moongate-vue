@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--ui-overlay-scrim, rgba(0, 0, 0, 0.5));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -74,6 +74,11 @@
 
 .mg-modal-close:hover {
   color: var(--ui-primary);
+}
+
+.mg-modal-close:focus-visible {
+  outline: var(--ui-physics-focus-ring) solid var(--ui-primary);
+  outline-offset: var(--ui-physics-focus-ring);
 }
 
 /* 内容 */

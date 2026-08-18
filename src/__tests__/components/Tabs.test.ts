@@ -26,14 +26,66 @@ describe('Tabs', () => {
     const wrapper = mount(Tabs, { props: { tabs } })
     const firstTab = wrapper.findAll('.mg-tab')[0]
     const firstPanel = wrapper.findAll('.mg-tab-panel')[0]
-    // tab 按钮拥有 id 和 aria-controls
-    expect(firstTab.attributes('id')).toBe('mg-tab-0')
-    expect(firstTab.attributes('aria-controls')).toBe('mg-tab-panel-0')
+    const tabId = firstTab.attributes('id')
+    const panelId = firstPanel.attributes('id')
+    // tab 按钮拥有 id 和 aria-controls（指向对应面板）
+    expect(tabId).toBeDefined()
+    expect(firstTab.attributes('aria-controls')).toBe(panelId)
     // 面板 aria-labelledby 指向对应 tab 按钮
-    expect(firstPanel.attributes('aria-labelledby')).toBe('mg-tab-0')
+    expect(firstPanel.attributes('aria-labelledby')).toBe(tabId)
+    // 面板 id 以 useId 前缀区分（非硬编码 mg-tab-panel-）
+    expect(panelId?.endsWith('-panel-0')).toBe(true)
     // aria-selected 状态正确
     expect(firstTab.attributes('aria-selected')).toBe('true')
     expect(wrapper.findAll('.mg-tab')[1].attributes('aria-selected')).toBe('false')
+  })
+
+  it('多个实例共存时 ID 不冲突（useId 保证唯一性）', () => {
+    const wrapper = mount({
+      components: { Tabs },
+      template: '<div><Tabs :tabs="tabs" /><Tabs :tabs="tabs" /></div>',
+      setup() {
+        return { tabs }
+      },
+    })
+    const tabButtons = wrapper.findAll('.mg-tab')
+    const panelIds = wrapper.findAll('.mg-tab-panel').map((p) => p.attributes('id'))
+    const tabIds = tabButtons.map((t) => t.attributes('id'))
+    // 6 个 tab 按钮（2 实例 × 3 标签）的 id 互不相同
+    expect(new Set(tabIds).size).toBe(6)
+    // 6 个面板的 id 互不相同
+    expect(new Set(panelIds).size).toBe(6)
+    // 每个 tab 的 aria-controls 指向正确的面板
+    tabButtons.forEach((tab, i) => {
+      expect(panelIds).toContain(tab.attributes('aria-controls'))
+      expect(tab.attributes('aria-controls')).toBe(panelIds[i])
+    })
+    // 每个面板 aria-labelledby 指向对应的 tab
+    const panels = wrapper.findAll('.mg-tab-panel')
+    panels.forEach((panel, i) => {
+      expect(tabIds).toContain(panel.attributes('aria-labelledby'))
+      expect(panel.attributes('aria-labelledby')).toBe(tabIds[i])
+    })
+  })
+
+  it('所有标签都禁用时方向键保持当前索引', async () => {
+    const allDisabled = [
+      { label: '一', content: 'A', disabled: true },
+      { label: '二', content: 'B', disabled: true },
+      { label: '三', content: 'C', disabled: true },
+    ]
+    const wrapper = mount(Tabs, { props: { tabs: allDisabled } })
+    const tabButtons = wrapper.findAll('.mg-tab')
+    // 初始索引 0
+    expect(tabButtons[0].classes()).toContain('mg-tab-active')
+    // 方向键 ▶ 不改变激活索引（所有标签都禁用）
+    await tabButtons[0].trigger('keydown.right')
+    expect(wrapper.findAll('.mg-tab')[0].classes()).toContain('mg-tab-active')
+    expect(wrapper.emitted('change')).toBeUndefined()
+    // 方向键 ◀ 同样不改变
+    await wrapper.findAll('.mg-tab')[0].trigger('keydown.left')
+    expect(wrapper.findAll('.mg-tab')[0].classes()).toContain('mg-tab-active')
+    expect(wrapper.emitted('change')).toBeUndefined()
   })
 
   it('size/variant class', () => {

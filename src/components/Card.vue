@@ -18,24 +18,18 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: 'Card', inheritAttrs: false })
-
 import { useSlots, computed } from 'vue'
 import { useAttrsWithClass } from '../composables/useAttrsWithClass'
+import type { CardProps } from '../types/props'
+
+defineOptions({ name: 'Card', inheritAttrs: false })
 
 const slots = useSlots()
 
 const hasHeader = computed(() => !!slots.header)
 const hasFooter = computed(() => !!slots.footer)
 
-interface Props {
-  as?: string
-  hoverable?: boolean
-  hideBody?: boolean
-  hideFooter?: boolean
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<CardProps>(), {
   as: 'div',
   hoverable: false,
   hideBody: false,

@@ -1,7 +1,7 @@
 <template>
-  <section v-bind="$attrs" class="mg-hero">
+  <section v-bind="$attrs" class="mg-hero" :aria-labelledby="titleId">
     <div class="mg-hero-container">
-      <h1 class="mg-hero-title">
+      <h1 :id="titleId" class="mg-hero-title">
         <slot name="title">{{ title }}</slot>
       </h1>
       <p class="mg-hero-description">
@@ -15,12 +15,13 @@
 </template>
 
 <script setup lang="ts">
+import { useId } from 'vue'
+import type { HeroProps } from '../types/props'
+
 defineOptions({ name: 'Hero', inheritAttrs: false })
 
-interface Props {
-  title?: string
-  description?: string
-}
+/** 标题唯一 ID（用于 aria-labelledby 关联） */
+const titleId = useId()
 
-defineProps<Props>()
+defineProps<HeroProps>()
 </script>

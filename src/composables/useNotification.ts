@@ -1,5 +1,5 @@
 // composables/useNotification.ts
-import { ref, watch, onMounted, onUnmounted, toValue, type Ref } from 'vue'
+import { ref, watch, onUnmounted, toValue, type Ref } from 'vue'
 
 /**
  * 通知型组件（Message/Toast）的共享逻辑。
@@ -71,13 +71,6 @@ export function useNotification(
     },
     { immediate: true },
   )
-
-  // 组件挂载时，如果初始为显示状态，启动定时器
-  onMounted(() => {
-    if (modelValue.value) {
-      startTimer()
-    }
-  })
 
   // 组件卸载时清理定时器
   onUnmounted(() => {

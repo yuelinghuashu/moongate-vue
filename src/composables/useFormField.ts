@@ -1,6 +1,18 @@
 // composables/useFormField.ts
 import type { Ref } from 'vue'
 
+/** 表单字段组件（Input/Textarea）的事件映射 */
+export interface FormFieldEvents {
+  /** 输入时触发（原生事件透传） */
+  input: [event: Event]
+  /** 值变化时触发（原生事件透传） */
+  change: [event: Event]
+  /** 获得焦点时触发（原生事件透传） */
+  focus: [event: FocusEvent]
+  /** 失去焦点时触发（原生事件透传） */
+  blur: [event: FocusEvent]
+}
+
 /**
  * 表单字段组件（Input/Textarea）的共享事件处理。
  *
@@ -14,7 +26,7 @@ import type { Ref } from 'vue'
  */
 export function useFormField<El extends HTMLInputElement | HTMLTextAreaElement>(
   modelValue: Ref<string>,
-  emit: (event: string, ...args: any[]) => void,
+  emit: <E extends keyof FormFieldEvents>(event: E, ...args: FormFieldEvents[E]) => void,
 ) {
   /**
    * 处理输入事件

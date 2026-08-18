@@ -40,6 +40,29 @@ import 'moongate-vue/style.css'
 </script>
 ```
 
+## TypeScript 类型
+
+所有组件均导出其 Props 类型，可直接从包入口导入（支持 Tree Shaking 与类型推导）：
+
+```ts
+import type { ButtonProps, TableProps, SelectValue, DropdownOption } from 'moongate-vue'
+
+// 泛型组件类型支持
+function renderTable<T>(props: TableProps<T>) {
+  // ...
+}
+```
+
+**可用的类型列表**：
+
+| 类别       | 类型                                                                                                                                                                                                                                                                                                                                                                               |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 组件 Props | `ButtonProps` `CardProps` `BadgeProps` `DividerProps` `InputProps` `TextareaProps` `CheckboxProps` `RadioProps` `SwitchProps` `SelectProps` `PaginationProps` `ModalProps` `ToastProps` `MessageProps` `TabsProps` `SkeletonProps` `TooltipProps` `PopoverProps` `DrawerProps` `DropdownProps` `ContainerProps` `HeaderProps` `HeroProps` `FormItemProps` `FormProps` `TableProps` |
+| 组件相关   | `SelectValue` `SelectOption` `TabItem` `DropdownOption` `DropdownPlacement`                                                                                                                                                                                                                                                                                                        |
+| Table      | `TableColumn` `SortParams` `CellSlotProps` `ColumnSlotProps`                                                                                                                                                                                                                                                                                                                       |
+| 配置       | `Config` `LocaleTexts`                                                                                                                                                                                                                                                                                                                                                             |
+| Composable | `Rule` `FieldRules` `UseFormOptions` `MenuItemBase`                                                                                                                                                                                                                                                                                                                                |
+
 ## 注意事项
 
 - 需要额外导入样式文件 `moongate-vue/style.css`

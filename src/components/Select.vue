@@ -18,7 +18,7 @@
           <button
             type="button"
             class="mg-select-tag-remove"
-            :aria-label="`移除 ${tag.label}`"
+            :aria-label="removeAriaLabel(tag.label)"
             @click.stop="removeTag(tag.value)"
           >
             &times;
@@ -76,7 +76,7 @@
           <!-- 空状态 -->
           <div v-if="filteredOptions.length === 0" class="mg-select-empty">
             <slot name="empty">
-              <span>{{ emptyText }}</span>
+              <span>{{ emptyTextValue }}</span>
             </slot>
           </div>
 
@@ -132,7 +132,8 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, nextTick, useAttrs, useId } from 'vue'
-import type { Size } from '../types/components'
+import type { SelectProps, SelectValue, SelectOption } from '../types/props'
+import { formatTemplate, useTexts } from '../config'
 
 defineOptions({ name: 'Select', inheritAttrs: false })
 
@@ -186,42 +187,9 @@ const listboxAriaLabel = computed(() => {
   return typeof ariaLabel === 'string' ? ariaLabel : undefined
 })
 
-// ==================== 类型定义 ====================
-
-/** 选项值的类型 */
-export type SelectValue = string | number
-
-/** 选项类型：基本类型值或对象 */
-export type SelectOption = string | number | Record<string, any>
-
-interface Props {
-  /** 选项列表，支持对象数组、字符串数组、数字数组 */
-  options?: SelectOption[]
-  /** 占位文本 */
-  placeholder?: string
-  /** 尺寸 */
-  size?: Size
-  /** 是否禁用 */
-  disabled?: boolean
-  /** 是否显示错误状态（仅边框样式） */
-  error?: boolean
-  /** 自定义显示文本字段名（对象数组时使用） */
-  labelKey?: string
-  /** 自定义选项值字段名（对象数组时使用） */
-  valueKey?: string
-  /** 是否可搜索 */
-  filterable?: boolean
-  /** 搜索无结果时的空状态文案 */
-  emptyText?: string
-  /** 下拉面板最大高度（单位：px） */
-  maxHeight?: number
-  /** 是否多选（仅 filterable 可搜索模式支持） */
-  multiple?: boolean
-}
-
 // ==================== Props 默认值 ====================
 
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<SelectProps>(), {
   options: () => [],
   placeholder: '',
   size: 'md',
@@ -230,10 +198,18 @@ const props = withDefaults(defineProps<Props>(), {
   labelKey: 'label',
   valueKey: 'value',
   filterable: false,
-  emptyText: '暂无数据',
   maxHeight: 240,
   multiple: false,
 })
+
+/** 全局文案（响应式） */
+const texts = useTexts()
+
+/** 空状态文案：prop > 全局配置 */
+const emptyTextValue = computed(() => props.emptyText ?? texts.value.empty)
+
+/** 移除标签 aria-label：prop 模板 > 全局配置模板 */
+const removeAriaLabel = (label: string) => formatTemplate(texts.value.selectRemove, { label })
 
 /**
  * v-model 双向绑定（当前选中的值）

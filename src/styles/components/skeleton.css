@@ -96,6 +96,9 @@
   gap: var(--ui-spacing-md, 12px);
   align-items: center;
 }
+.mg-skeleton-content-flex {
+  flex: 1;
+}
 
 /* 动画 */
 @keyframes mg-skeleton-loading {

@@ -136,4 +136,15 @@ describe('Pagination', () => {
     await allBtns[2].trigger('click')
     expect(wrapper.emitted('update:modelValue')).toBeUndefined()
   })
+
+  it('输入小于 1 的页码被 clamp 到 1', async () => {
+    const wrapper = mount(Pagination, {
+      props: { totalPages: 10, modelValue: 3 },
+    })
+    await wrapper.find('.mg-pagination-current').trigger('click')
+    const input = wrapper.find('.mg-pagination-input')
+    await input.setValue('0')
+    await input.trigger('keyup.enter')
+    expect(wrapper.emitted('update:modelValue')).toEqual([[1]])
+  })
 })

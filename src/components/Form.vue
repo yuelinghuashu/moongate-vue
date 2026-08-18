@@ -6,6 +6,8 @@
 
 <script setup lang="ts" generic="T extends Record<string, any>">
 import { computed, provide } from 'vue'
+import type { FormProps } from '../types/form'
+import { formErrorsKey, formOptionsKey } from '../types/form-injection'
 
 defineOptions({ name: 'Form', inheritAttrs: false })
 
@@ -26,23 +28,11 @@ defineOptions({ name: 'Form', inheritAttrs: false })
  * </Form>
  * ```
  */
-const props = withDefaults(
-  defineProps<{
-    /** useForm 解构出的 errors（响应式，必传） */
-    errors?: Partial<Record<keyof T, string>>
-    /** 布局方向：horizontal（label 左侧）/ vertical（label 上方）/ inline（行内） */
-    layout?: 'horizontal' | 'vertical' | 'inline'
-    /** label 宽度（仅 horizontal 生效，如 '80px'、'120px'） */
-    labelWidth?: string
-    /** useForm 解构出的 validatingFields（各字段校验中状态，供 FormItem 单字段 loading） */
-    validatingFields?: Record<string, boolean>
-  }>(),
-  {
-    layout: 'horizontal',
-    labelWidth: '80px',
-    validatingFields: undefined,
-  },
-)
+const props = withDefaults(defineProps<FormProps<T>>(), {
+  layout: 'horizontal',
+  labelWidth: '80px',
+  validatingFields: undefined,
+})
 
 /** 布局样式：label 宽度通过 CSS 变量下发 */
 const formStyle = computed(
@@ -53,9 +43,16 @@ const formStyle = computed(
 )
 
 // 注入给 FormItem：错误映射 + 布局/校验中状态
-provide('mg-form-errors', props.errors)
-provide('mg-form-options', {
-  layout: props.layout,
-  validatingFields: props.validatingFields,
-})
+// 使用 computed 包装以确保响应性：父组件整体替换 errors/layout 时 FormItem 能同步更新
+provide(
+  formErrorsKey,
+  computed(() => props.errors),
+)
+provide(
+  formOptionsKey,
+  computed(() => ({
+    layout: props.layout,
+    validatingFields: props.validatingFields,
+  })),
+)
 </script>

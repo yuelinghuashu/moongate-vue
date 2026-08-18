@@ -8,6 +8,7 @@
     @mouseleave="hide"
     @focus="show"
     @blur="hide"
+    @keydown.esc="hide"
   >
     <slot name="trigger">
       <slot />
@@ -36,32 +37,27 @@
 import { useId } from 'vue'
 import { useAttrsWithClass } from '../composables/useAttrsWithClass'
 import { useFloating } from '../composables/useFloating'
-import type { Placement } from '../types/components'
+import type { TooltipProps } from '../types/props'
 
 defineOptions({ name: 'Tooltip', inheritAttrs: false })
 
 // 生成 tooltip 的唯一 ID（SSR 安全，用于 aria-describedby 关联）
 const tooltipId = useId()
 
-// ==================== 类型定义 ====================
+defineSlots<{
+  trigger: () => any
+  content: () => any
+  default: () => any
+}>()
 
-interface Props {
-  /** 提示内容 */
-  content?: string
-  /** 提示框位置，默认 top */
-  placement?: Placement
-  /** 显示延迟时间（毫秒），避免鼠标划过时误弹，默认 0 */
-  delay?: number
-  /** 提示框与触发元素的偏移量（像素），默认 8 */
-  offset?: number
-}
+// ==================== 类型定义 ====================
 
 // ==================== Props ====================
 
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<TooltipProps>(), {
   content: '',
   placement: 'top',
-  delay: 0,
+  showDelay: 0,
   offset: 8,
 })
 
@@ -76,6 +72,6 @@ const { triggerRef, floatingRef, visible, currentPlacement, floatStyle, show, hi
   placement: () => props.placement,
   offset: () => props.offset,
   // Tooltip 使用单一延迟；翻转后不进行视口边界修正，隐藏为立即
-  showDelay: () => props.delay,
+  showDelay: () => props.showDelay,
 })
 </script>

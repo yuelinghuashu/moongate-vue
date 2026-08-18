@@ -91,5 +91,6 @@ const users = [
 
 ## 下一步
 
+- 查看[国际化配置](/guide/i18n)了解中英文案切换与自定义
 - 查看[设计令牌](/guide/design-tokens)了解主题定制
 - 浏览[组件列表](/components/button)查看所有组件

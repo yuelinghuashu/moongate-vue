@@ -8,18 +8,18 @@
 
 Moongate Vue 是一个受月亮启发的极简 Vue 3 组件库。设计令牌驱动，CSS 优先，框架无关。
 
-**完整组件库仅 10KB (gzipped)**，比主流组件库轻 10 倍以上。
+**完整组件库（JS + CSS）gzipped 体积保持 25KB 以内**，比主流组件库轻一个数量级以上。实时数据见上方 [Bundlephobia 徽章](https://bundlephobia.com/package/moongate-vue)。
 
 ## 特性
 
 - 🌙 **月亮哲学** — 克制、冷静、秩序感
-- 📦 **极致轻量** — 完整组件库仅 **10KB** (gzipped)
+- 📦 **极致轻量** — 完整组件库（JS + CSS）在 **25KB** (gzipped) 以内
 - 🎨 **设计令牌驱动** — 基于 CSS 变量，主题切换 effortless
 - 🔧 **CSS 优先** — 样式与逻辑解耦，可跨框架复用
 - ✨ **极简 API** — 每个组件 2-8 个 props，易学易用
 - 🚀 **零依赖** — 无需额外配置，开箱即用
 - ⚡ **SSR 就绪** — 完美适配 Nuxt 4 / VitePress 等服务端渲染场景
-- ✅ **测试保障** — Vitest + jsdom 全覆盖，27 个组件 + 3 个公开 composables（`useForm` / `useMessage` / `useToast`）+ SSR/a11y 回归 + Playwright e2e，共 395 个测试（语句覆盖率 95% / 分支覆盖率 86%）
+- ✅ **测试保障** — Vitest + jsdom 全覆盖，28 个组件 + 3 个公开 composables（`useForm` / `useMessage` / `useToast`）+ SSR/a11y 回归 + Playwright e2e，共 449 个测试（语句覆盖率 95% / 分支覆盖率 86%）
 - 🔧 **工程规范** — ESLint + Prettier 统一风格，husky 提交前自动检查
 
 ## 安装
@@ -32,7 +32,7 @@ pnpm add moongate-vue
 
 > 💡 **非侵入式样式**：默认 `style.css` 仅包含组件样式，不会重置你的全局样式。可选引入 `moongate-vue/reset.css` 为所有元素统一 `box-sizing: border-box`。
 >
-> **要求**：Vue `^3.5.0` 或更高版本。浏览器支持与 **VitePress** 基线保持一致（Chrome 111+ / Firefox 113+ / Edge 111+ / Safari 16.2+）。详见[完整安装指南](https://vue.moongate.top/guide/install)。
+> **要求**：Vue `^3.5.0` 或更高版本。浏览器支持与 **VitePress** 基线保持一致（Chrome 111+ / Firefox 113+ / Edge 111+ / Safari 16.2+）。详见[完整安装指南](./docs/guide/install.md)。
 
 ## 快速开始
 
@@ -57,66 +57,38 @@ const message = useMessage()
 
 ## 组件列表
 
-### 基础组件
+| 分类     | 组件                                                                         |
+| -------- | ---------------------------------------------------------------------------- |
+| 基础     | `Button` `Card` `Badge` `Divider`                                            |
+| 表单     | `Form` `FormItem` `Input` `Textarea` `Checkbox` `Radio` `Switch` `Select`    |
+| 数据展示 | `Table` `Pagination` `Tabs`                                                  |
+| 布局     | `Container` `Header` `Main` `Footer` `Hero`                                  |
+| 反馈     | `Modal` `Toast` `Message` `Tooltip` `Popover` `Drawer` `Skeleton` `Dropdown` |
+| 样式工具 | `Link` `Code`                                                                |
 
-| 组件    | 说明   |
-| ------- | ------ |
-| Button  | 按钮   |
-| Card    | 卡片   |
-| Badge   | 徽章   |
-| Divider | 分割线 |
+> **说明**：总计 **28 个组件 + 2 个样式工具**，覆盖日常开发绝大多数场景。
 
-### 表单组件
+## TypeScript 类型
 
-| 组件     | 说明                               |
-| -------- | ---------------------------------- |
-| Form     | 表单容器与校验展示（配合 useForm） |
-| FormItem | 单字段：label / 必填星号 / 错误    |
-| Input    | 输入框                             |
-| Textarea | 多行文本                           |
-| Checkbox | 复选框                             |
-| Radio    | 单选框                             |
-| Switch   | 开关                               |
-| Select   | 下拉选择                           |
+所有组件均导出其 Props 类型，并提供共享工具类型：
 
-### 数据展示组件
+```ts
+import type {
+  ButtonProps,
+  TableProps,
+  SelectValue,
+  SelectOption,
+  TabItem,
+  DropdownOption,
+  FormProps,
+} from 'moongate-vue'
 
-| 组件       | 说明   |
-| ---------- | ------ |
-| Table      | 表格   |
-| Pagination | 分页   |
-| Tabs       | 标签页 |
+function renderTable<T>(props: TableProps<T>) {
+  /* ... */
+}
+```
 
-### 布局组件
-
-| 组件      | 说明       |
-| --------- | ---------- |
-| Container | 容器       |
-| Header    | 头部容器   |
-| Main      | 主内容容器 |
-| Footer    | 底部容器   |
-| Hero      | 英雄区     |
-
-### 反馈组件
-
-| 组件     | 说明     |
-| -------- | -------- |
-| Modal    | 模态框   |
-| Toast    | 通知     |
-| Message  | 消息提示 |
-| Tooltip  | 提示     |
-| Popover  | 弹出层   |
-| Drawer   | 抽屉     |
-| Skeleton | 骨架屏   |
-
-### 样式工具
-
-| 样式 | 类名                                              | 说明     |
-| ---- | ------------------------------------------------- | -------- |
-| Link | `.mg-link` / `.nav-link`                          | 链接样式 |
-| Code | `.mg-code` / `.mg-code-inline` / `.mg-code-block` | 代码样式 |
-
-> **说明**：总计 **27 个组件 + 2 个样式工具**，覆盖日常开发绝大多数场景。
+完整类型列表：每个组件的 `XxxProps`、`TableColumn`/`SortParams`/`CellSlotProps`/`ColumnSlotProps`、`DropdownOption`/`DropdownPlacement`、`SelectValue`/`SelectOption`、`TabItem`、`FormProps`、`Config`/`LocaleTexts`，以及 composable 类型（`Rule`/`FieldRules`/`UseFormOptions`/`MenuItemBase`）。
 
 ## 设计令牌
 
@@ -130,6 +102,24 @@ Moongate Vue 基于完整的设计令牌系统（`colors.css` 和 `layout.css`�
 ```
 
 完整变量参考见[设计令牌指南](https://vue.moongate.top/guide/design-tokens)。
+
+## 全局配置
+
+内置文案默认跟随 `document.documentElement.lang` 自动适配中英文（仅支持中英双语，**非中文 lang 一律视为英文**），也可以通过 `setConfig` 全局覆盖：
+
+```ts
+import { setConfig } from 'moongate-vue'
+
+// 切换为英文内置文案
+setConfig({ locale: 'en-US' })
+
+// 仅覆盖部分文案
+setConfig({ texts: { empty: '没有数据', paginationPrev: '上一页' } })
+```
+
+优先级：**组件 prop > `setConfig` texts > 语言内置文案**。支持 `{current}`/`{total}`/`{label}` 等模板占位符，配置修改后已挂载组件会响应式更新。
+
+覆盖的内置文案包括：Pagination 页码信息/上一页/下一页/首尾页、Select 空状态/移除标签、Table 空状态/全选/行选择/行标签兜底、FormItem 校验中、Modal/Drawer/Message/Toast 关闭按钮、`useForm` 默认校验失败文案。
 
 ## 属性透传
 

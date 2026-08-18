@@ -25,12 +25,17 @@ import Drawer from './components/Drawer.vue'
 import Table from './components/Table.vue'
 import Form from './components/Form.vue'
 import FormItem from './components/FormItem.vue'
+import Dropdown from './components/Dropdown.vue'
 
 import { useToast } from './composables/useToast'
 import { useMessage } from './composables/useMessage'
 import { useForm } from './composables/useForm'
+import { useMenuKeyboard } from './composables/useMenuKeyboard'
 
 import './styles/index.css'
+
+export { setConfig, resetConfig, disposeConfig } from './config'
+export type { Config, LocaleTexts } from './config'
 
 export {
   Button,
@@ -60,12 +65,58 @@ export {
   Hero,
   Popover,
   Drawer,
+  Dropdown,
   useToast,
   useMessage,
   useForm,
+  useMenuKeyboard,
 }
 
 export type { Rule, FieldRules, UseFormOptions } from './composables/useForm'
+export type { MenuItemBase } from './composables/useMenuKeyboard'
 
 // Table 组件类型（泛型组件需要单独导出类型）
-export type { TableColumn, SortParams, CellSlotProps, ColumnSlotProps } from './types/table'
+export type {
+  TableColumn,
+  SortParams,
+  CellSlotProps,
+  ColumnSlotProps,
+  TableProps,
+} from './types/table'
+
+// Form 组件类型（泛型组件需要单独导出类型）
+export type { FormProps } from './types/form'
+
+// Dropdown 组件类型
+export type { DropdownOption, DropdownPlacement } from './types/components'
+
+// ==================== 组件 Props 类型 ====================
+export type {
+  ButtonProps,
+  CardProps,
+  BadgeProps,
+  DividerProps,
+  InputProps,
+  TextareaProps,
+  CheckboxProps,
+  RadioProps,
+  SwitchProps,
+  SelectProps,
+  SelectValue,
+  SelectOption,
+  PaginationProps,
+  ModalProps,
+  ToastProps,
+  MessageProps,
+  TabsProps,
+  TabItem,
+  SkeletonProps,
+  TooltipProps,
+  PopoverProps,
+  DrawerProps,
+  ContainerProps,
+  HeaderProps,
+  HeroProps,
+  DropdownProps,
+  FormItemProps,
+} from './types/props'

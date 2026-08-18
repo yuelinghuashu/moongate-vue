@@ -36,6 +36,11 @@
   cursor: not-allowed;
 }
 
+.mg-tab:focus-visible {
+  outline: var(--ui-physics-focus-ring, 2px) solid var(--ui-primary, #0284c7);
+  outline-offset: calc(-1 * var(--ui-physics-focus-ring, 2px));
+}
+
 /* 尺寸变体 */
 .mg-tabs-sm .mg-tab {
   padding: var(--ui-spacing-xs, 4px) var(--ui-spacing-sm, 8px);
@@ -49,7 +54,7 @@
 
 .mg-tabs-lg .mg-tab {
   padding: var(--ui-spacing-md, 12px) var(--ui-spacing-lg, 16px);
-  font-size: 1.125rem;
+  font-size: var(--ui-typography-size-lg);
 }
 
 /* 卡片风格 */

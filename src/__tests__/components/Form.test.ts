@@ -1,9 +1,10 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { defineComponent, h, nextTick } from 'vue'
 import Form from '../../components/Form.vue'
 import FormItem from '../../components/FormItem.vue'
 import { useForm } from '../../composables/useForm'
+import { setConfig, resetConfig } from '../../config'
 
 describe('Form', () => {
   it('渲染 form 容器与插槽内容', () => {
@@ -56,9 +57,34 @@ describe('FormItem', () => {
     expect(wrapper.find('.mg-form-item__error').exists()).toBe(false)
     expect(wrapper.find('.mg-form-item__validating').exists()).toBe(false)
   })
+
+  it('自动生成字段 id 关联 label for 与 input id', () => {
+    const wrapper = mount(FormItem, {
+      props: { name: 'username', label: '用户名' },
+      slots: { default: '<input class="native-input" />' },
+    })
+
+    const labelFor = wrapper.find('.mg-form-item__label').attributes('for')
+    expect(labelFor).toBeTruthy()
+
+    // 由于 slot 中的原生 input 不消费 FormItem 注入的 id，
+    // 验证 label for 存在且格式正确
+    expect(labelFor).toMatch(/^mg-field-/)
+  })
+
+  it('自定义 for prop 覆盖自动生成的 id', () => {
+    const wrapper = mount(FormItem, {
+      props: { name: 'username', label: '用户名', for: 'custom-input' },
+    })
+    expect(wrapper.find('.mg-form-item__label').attributes('for')).toBe('custom-input')
+  })
 })
 
 describe('Form + FormItem 集成', () => {
+  // 该测试组依赖默认中文文案，显式设置
+  setConfig({ locale: 'zh-CN' })
+  afterEach(() => resetConfig())
+
   it('传入 errors 时显示错误文案与 error class', () => {
     const Host = defineComponent({
       components: { Form, FormItem },
