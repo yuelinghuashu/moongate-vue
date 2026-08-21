@@ -135,17 +135,20 @@ describe('Tooltip', () => {
     expect(document.body.querySelector('.custom-tip')).not.toBeNull()
   })
 
-  it('设置固定位置样式', async () => {
+  it('定位由 CSS inset-area 控制（无 JS 坐标）', async () => {
     const wrapper = mount(Tooltip, {
-      props: { content: '提示', placement: 'top' },
+      props: { content: '提示', placement: 'top', offset: 12 },
       attachTo: document.body,
     })
     await wrapper.find('.mg-tooltip-trigger').trigger('mouseenter')
     await new Promise((r) => setTimeout(r, 0))
 
     const tooltip = document.body.querySelector('.mg-tooltip') as HTMLElement
-    expect(tooltip.style.position).toBe('')
-    expect(tooltip.style.top).toContain('px')
-    expect(tooltip.style.left).toContain('px')
+    // anchor 定位版：位置由 CSS 控制，无内联 top/left 坐标
+    expect(tooltip.style.top).toBe('')
+    expect(tooltip.style.left).toBe('')
+    // placement 类 + offset CSS 变量传递给 CSS
+    expect(tooltip.classList.contains('mg-tooltip-top')).toBe(true)
+    expect(tooltip.style.getPropertyValue('--mg-tooltip-offset')).toBe('12px')
   })
 })

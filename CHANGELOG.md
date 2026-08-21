@@ -6,40 +6,43 @@
 
 ### 🚀 New Features
 
-- **Dropdown 下拉菜单组件**：点击触发的弹出操作菜单，支持键盘导航（↑↓ Home End Enter Escape TypeAhead）、分隔线、危险操作高亮、9 方位定位（含 start/end 对齐）、受控模式（`v-model:open`）、WAI-ARIA `role="menu"` + `role="menuitem"`；新增 `useMenuKeyboard` composable（泛型，可复用于自定义菜单）；新增 `DropdownPlacement`、`DropdownOption` 类型
-- **`setConfig` 全局文案配置**：内置文案自动适配中英文；`setConfig({ locale: 'en-US' })` 切换语言，`setConfig({ texts: {...} })` 部分覆盖；优先级 **组件 prop > setConfig > 内置文案**，已挂载组件响应式更新
-- **组件 Props 类型导出**：所有 28 个组件的 Props 类型（`ButtonProps`、`TableProps` 等）均可从 `'moongate-vue'` 直接导入；泛型组件（Table/Form）的类型定义在独立 `.ts` 文件中（`types/table.ts`、`types/form.ts`），避免 shim 冲突；新增 `MenuItemBase`、`disposeConfig()`、`getDefaultIcon()` 等公共类型/函数
-- **Message/Toast 默认类型图标**：每种通知类型自动显示默认图标（✓ ✗ ⚠ ℹ），可通过 `icon` prop 或 `#icon` 插槽覆盖
-- **FormItem `for` prop**：可选 `for` prop 关联 label 与 input，支持点击聚焦
-- **`disposeConfig()` 导出**：断开 MutationObserver 监听，适用于 SSR 清理和测试 teardown
-- **Tooltip/Popover Escape 键关闭 + click-outside**：两个组件支持 Escape 键关闭；Popover 新增点击外部区域自动关闭
+- **Dropdown component**: Click-triggered popup action menu with keyboard navigation (↑↓ Home End Enter Escape TypeAhead), dividers, danger action highlighting, 9 placement positions (including start/end alignment), controlled mode (`v-model:open`), WAI-ARIA `role="menu"` + `role="menuitem"`; new `useMenuKeyboard` composable (generic, reusable for custom menus); new `DropdownPlacement`, `DropdownOption` types
+- **`setConfig` global text configuration**: Built-in texts auto-adapt to Chinese/English; `setConfig({ locale: 'en-US' })` switches language, `setConfig({ texts: {...} })` partially overrides; priority: **component prop > setConfig > built-in texts**, mounted components update reactively
+- **Component Props type exports**: All 28 components' Props types (`ButtonProps`, `TableProps`, etc.) can be imported directly from `'moongate-vue'`; generic components (Table/Form) type definitions in standalone `.ts` files (`types/table.ts`, `types/form.ts`) to avoid shim conflicts; new `MenuItemBase`, `disposeConfig()`, `getDefaultIcon()` public types/functions
+- **Message/Toast default type icons**: Each notification type auto-displays a default icon (✓ ✗ ⚠ ℹ), overridable via `icon` prop or `#icon` slot
+- **FormItem `for` prop**: Optional `for` prop to associate label with input, supporting click-to-focus
+- **`disposeConfig()` export**: Disconnects MutationObserver listener, suitable for SSR cleanup and test teardown
+- **Tooltip/Popover Escape key close + click-outside**: Both components support Escape key close; Popover adds click-outside-area auto-close
 
 ### 🐛 Bug Fixes
 
-- **Table 半选状态不生效**：`:indeterminate` 是 DOM property 而非 HTML attribute，Vue `:attr` 绑定无法设置；改用模板 ref + watch
-- **Drawer 点击穿透**：遮罩层 click 事件缺少 `.self` 修饰符，导致点击抽屉内容区域意外关闭
-- **Popover 属性双重绑定**：缺少 `inheritAttrs: false`，外部属性被应用两次
+- **Table indeterminate state not working**: `:indeterminate` is a DOM property not an HTML attribute, Vue `:attr` binding can't set it; switched to template ref + watch
+- **Drawer click-through**: Overlay click event lacked `.self` modifier, causing clicks on drawer content area to unexpectedly close it
+- **Popover double attribute binding**: Missing `inheritAttrs: false`, external attributes applied twice
 
 ### 🚀 Quality
 
-- **无障碍**：Switch 添加 `role="switch"` + `aria-checked`；Pagination 输入框添加 `aria-label`；Hero `<section>` 添加 `aria-labelledby`；所有键盘交互组件添加 `:focus-visible` 焦点样式
-- **Form provide 响应式**：`provide()` 值用 `computed()` 包装，`FormItem` 正确反映父组件变化
-- **Tabs 单向 watch**：替换双向 watch 为单向 external→internal + 直接 `modelValue` 同步
-- **useOverlayComponent 动态选项**：`enableEsc`/`enableFocusTrap` 支持 getter，挂载后 prop 变化可响应
-- **useScrollLock trapFocus**：无可聚焦元素时 Tab 键不再逃逸浮层
-- **构建优化**：`package.json` exports 校验脚本（verify-build 新增一致性检查）；移除 `check:size` 脚本简化流程
-- **CSS 改进**：消除 Table `!important`；新增 `--ui-typography-size-lg`（18px）和 `--ui-overlay-scrim`（light/dark）token
-- **测试**：449 个测试（32 文件），新增 Modal ESC 测试、Popover click-outside 测试、Dropdown/useMenuKeyboard 测试；Form/Table 补充 `resetConfig()` 清理
+- **Accessibility**: Switch adds `role="switch"` + `aria-checked`; Pagination input adds `aria-label`; Hero `<section>` adds `aria-labelledby`; all keyboard-interactive components add `:focus-visible` focus styles
+- **Form provide reactivity**: `provide()` values wrapped with `computed()`, `FormItem` correctly reflects parent changes
+- **Tabs unidirectional watch**: Replaced bidirectional watch with unidirectional external→internal + direct `modelValue` sync
+- **useOverlayComponent dynamic options**: `enableEsc`/`enableFocusTrap` support getters, prop changes after mount are reactive
+- **useScrollLock trapFocus**: Tab key no longer escapes overlay when no focusable elements exist
+- **Build optimization**: `package.json` exports verification script (verify-build adds consistency checks); removed `check:size` script to simplify workflow
+- **CSS improvements**: Eliminated Table `!important`; added `--ui-typography-size-lg` (18px) and `--ui-overlay-scrim` (light/dark) tokens
+- **Tests**: 449 tests (32 files), added Modal ESC test, Popover click-outside test, Dropdown/useMenuKeyboard tests; Form/Table add `resetConfig()` cleanup
 
 ### 📝 Documentation
 
-- **文档全面更新**：新增 Dropdown 组件文档（6 个交互示例 + 键盘导航 + API）；`design-tokens.md` 补充新 token；`install.md` 新增 TypeScript 类型章节；7 篇组件文档修正（popover `delay`→`showDelay`、card `as` 类型收窄、tabs 键盘导航、message/toast 默认图标等）
+- **Comprehensive docs update**: New Dropdown component docs (6 interactive examples + keyboard navigation + API); `design-tokens.md` adds new tokens; `install.md` adds TypeScript types section; 7 component docs corrections (popover `delay`→`showDelay`, card `as` type narrowing, tabs keyboard navigation, message/toast default icons, etc.)
 
-## [1.5.0] - 2026-08-06
+---
+
+<details>
+<summary>## [1.5.0] - 2026-08-06</summary>
 
 ### 🐛 Bug Fixes
 
-- **Divider typo**: `hasDefaul` → `hasDefault` (variable/computed/template)
+- **Divider typo**: `hasDefaul` → `hasDefault` (variable/computed/template, three places)
 - **Button empty label rendering**: `label=""` no longer renders an empty `.mg-button-label` container (icon-only button scenarios); covered by new test assertion
 
 ### 🚀 New Features
@@ -54,7 +57,7 @@
 - **Accessibility overhaul (WAI-ARIA Patterns)**: Tooltip adds `aria-describedby` + keyboard focus trigger; Select adds per-option unique `id` + `aria-activedescendant`; Table sort headers expose `aria-sort` with keyboard support; Modal/Drawer add `aria-describedby` linking body content; Tabs add full keyboard navigation (`←`/`→`/Home/End) — all IDs SSR-safe via `useId()`
 - **SSR hardening**: `useScrollLock` exported helpers guard against non-browser environments; `Message`/`Toast` skip timer creation during SSR rendering
 - **Code deduplication**: Extracted `useNotification` (Message/Toast) and `useFormField` (Input/Textarea) composables; Select state-reset logic refactored into shared helpers
-- **Test suite expanded to 395 tests**: Coverage raised from 78.85% to 95%+ (statements `76→90`, branches `65→80`, functions `76→90`, lines `78→92`)
+- **Test suite expanded to 395 tests (29 test files)**: Coverage raised from 78.85% to 95%+ (statements `76→90`, branches `65→80`, functions `76→90`, lines `78→92`)
 - **Playwright e2e smoke suite**: 14 real-browser tests covering all 25 components (rendering + key interactions), using system Google Chrome via `channel: 'chrome'`; new `pnpm test:e2e` / `test:e2e:install` scripts
 - **Table sort icon fix**: Sort indicator classes now use reactive `currentSortKey`/`currentSortOrder` instead of raw props
 - **Docs accuracy fixes**: Tooltip/Table/Select docs updated to reflect new keyboard & accessibility behavior
@@ -64,7 +67,12 @@
 - New `docs/guide/form-validation.md` guide: HTML5-native-first validation philosophy + `useForm` API reference
 - Select docs updated with multiple-selection examples; Table docs updated with row-selection examples
 
-## [1.4.1] - 2026-08-06
+</details>
+
+---
+
+<details>
+<summary>## [1.4.1] - 2026-08-06</summary>
 
 ### 🐛 Bug Fixes
 
@@ -90,8 +98,12 @@
 - **package.json adds `engines` field**: Declares `node >= 20.0.0` and `pnpm >= 9.0.0`
 - **colors.css source comment updated**: Points to the upstream moongate-theme project path
 
+</details>
+
+---
+
 <details>
-<summary>[1.4.0] - 2026-08-05</summary>
+<summary>## [1.4.0] - 2026-08-05</summary>
 
 ### 🐛 Bug Fixes
 
@@ -106,7 +118,7 @@
 
 - **Message / Toast stacking**: Based on `createOverlay` shared container mechanism, changed from "replaces previous" to "stacks multiple"; also removed inner `<Teleport>`, unified container and animation timing via `createOverlay` (⚠️ breaking: callers relying on exclusivity must manually close existing instances)
 - **New `createOverlay` / `closeAllOverlays` / `destroyAllOverlays` composables**: Reusable tools for dynamic overlay mounting, unified `close()` API with SSR safety and synchronous cleanup
-- **Table adds `row-key` prop**: Uses stable key instead of index during sorting
+- **Table adds `row-key` prop**: Uses stable key instead of index during sorting, avoiding DOM reuse issues
 - **On-demand exports (Tree-shaking friendly)**: 25 independent component entries (`moongate-vue/button` etc.), per-component `.mjs` files; main entry `moongate-vue` remains compatible
 - **Modal / Drawer accessibility & focus management**: Focus trap (keyboard Tab cycles within), `aria-labelledby` dynamic title association, customizable `closeAriaLabel`
 - **CI/CD workflow**: Added GitHub Actions running lint, type check, format check, coverage tests and build on Node 20/22
@@ -138,8 +150,10 @@
 
 </details>
 
+---
+
 <details>
-<summary>[1.3.1] - 2026-06-19</summary>
+<summary>## [1.3.1] - 2026-06-19</summary>
 
 ### 🐛 Bug Fixes
 
@@ -148,8 +162,10 @@
 
 </details>
 
+---
+
 <details>
-<summary>[1.3.0] - 2026-06-19</summary>
+<summary>## [1.3.0] - 2026-06-19</summary>
 
 ### 🚀 New Features
 
@@ -173,8 +189,10 @@
 
 </details>
 
+---
+
 <details>
-<summary>[1.2.1] - 2026-06-08</summary>
+<summary>## [1.2.1] - 2026-06-08</summary>
 
 ### 🔧 Build
 
@@ -182,8 +200,10 @@
 
 </details>
 
+---
+
 <details>
-<summary>[1.2.0] - 2026-06-07</summary>
+<summary>## [1.2.0] - 2026-06-07</summary>
 
 ### 🎉 New Features
 
@@ -206,8 +226,10 @@
 
 </details>
 
+---
+
 <details>
-<summary>[1.1.0] - 2026-06-02</summary>
+<summary>## [1.1.0] - 2026-06-02</summary>
 
 ### 🚀 New Features
 
@@ -217,8 +239,10 @@
 
 </details>
 
+---
+
 <details>
-<summary>[1.0.0] - 2026-06-01</summary>
+<summary>## [1.0.0] - 2026-06-01</summary>
 
 ### 🎉 Initial Release
 

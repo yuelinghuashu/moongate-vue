@@ -25,6 +25,7 @@ Moongate Vue 是一个受月亮启发的**极简 Vue 3 组件库**。设计令�
 
 ## 快速上手
 
+- [设计哲学](/guide/philosophy) — 为什么这样设计
 - [安装](/guide/install) — 安装与配置
 - [快速开始](/guide/getting-started) — 第一个组件
 - [国际化配置](/guide/i18n) — 中英文案切换与自定义
@@ -32,6 +33,8 @@ Moongate Vue 是一个受月亮启发的**极简 Vue 3 组件库**。设计令�
 - [表单校验](/guide/form-validation) — useForm 组合式函数
 - [组件列表](/components/) — 全部组件 API
 - [Nuxt 集成](/guide/nuxt-integration) — SSR 环境使用
+- [从 Element Plus 迁移](/guide/migration) — 迁移指南
+- [更新日志](/guide/changelog) — 版本变更记录
 
 ## 贡献
 

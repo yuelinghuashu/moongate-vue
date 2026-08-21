@@ -1,6 +1,6 @@
 # 更新日志
 
-[English](./CHANGELOG.md) | **中文**
+本文档记录 Moongate Vue 的版本变更。遵循 [语义化版本](https://semver.org/lang/zh-CN/) 规范。
 
 ## [1.6.0] - 2026-08-18
 

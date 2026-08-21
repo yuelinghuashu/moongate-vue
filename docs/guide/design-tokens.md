@@ -2,6 +2,47 @@
 
 Moongate Vue 的所有样式都基于 CSS 变量（设计令牌）构建。你可以通过覆盖这些变量来定制主题。
 
+## 快速参考
+
+::: details 常用变量速查（点击展开）
+
+**颜色**
+
+| 变量               | 说明     | 浅色值    | 深色值    |
+| ------------------ | -------- | --------- | --------- |
+| `--ui-primary`     | 主题色   | `#1e40af` | `#3b82f6` |
+| `--ui-text`        | 主要文本 | `#0f172a` | `#e28f0`  |
+| `--ui-bg`          | 页面背景 | `#f9fafb` | `#0f172a` |
+| `--ui-bg-elevated` | 浮层背景 | `#ffffff` | `#131c31` |
+| `--ui-border`      | 默认边框 | `#cbd5e1` | `#2d3748` |
+
+**间距**
+
+| 变量              | 值     | 说明     |
+| ----------------- | ------ | -------- |
+| `--ui-spacing-sm` | `8px`  | 小间距   |
+| `--ui-spacing-md` | `12px` | 中间距   |
+| `--ui-spacing-lg` | `16px` | 大间距   |
+| `--ui-spacing-xl` | `24px` | 超大间距 |
+
+**排版**
+
+| 变量                          | 值                                     | 说明     |
+| ----------------------------- | -------------------------------------- | -------- |
+| `--ui-typography-family-sans` | `Inter, system-ui, sans-serif`         | 正文字体 |
+| `--ui-typography-family-mono` | `JetBrains Mono, Fira Code, monospace` | 代码字体 |
+| `--ui-typography-size-body`   | `15px`                                 | 正文字号 |
+
+**动效**
+
+| 变量                          | 值                              | 说明     |
+| ----------------------------- | ------------------------------- | -------- |
+| `--ui-motion-duration-neural` | `150ms`                         | 快速过渡 |
+| `--ui-motion-duration-fluid`  | `300ms`                         | 流畅过渡 |
+| `--ui-motion-easing-lunar`    | `cubic-bezier(0.25, 1, 0.5, 1)` | 月晕缓动 |
+
+:::
+
 ## 颜色
 
 ### 主题色

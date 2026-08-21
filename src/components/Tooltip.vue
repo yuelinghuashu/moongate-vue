@@ -1,6 +1,5 @@
 <template>
   <div
-    ref="triggerRef"
     v-bind="attrsWithoutClass"
     :class="['mg-tooltip-trigger', mergedClass]"
     :aria-describedby="visible ? tooltipId : undefined"
@@ -17,26 +16,24 @@
     <Teleport to="body">
       <div
         v-if="visible"
-        ref="floatingRef"
         :id="tooltipId"
         class="mg-tooltip"
-        :class="[{ 'mg-tooltip-visible': visible }, `mg-tooltip-${currentPlacement}`]"
-        :style="floatStyle"
+        :class="`mg-tooltip-${placement}`"
+        :style="{ '--mg-tooltip-offset': `${offset}px` }"
         role="tooltip"
       >
         <slot name="content">
           {{ content }}
         </slot>
-        <div class="mg-tooltip-arrow" :class="`mg-tooltip-arrow-${currentPlacement}`" />
+        <div class="mg-tooltip-arrow" />
       </div>
     </Teleport>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useId } from 'vue'
+import { ref, useId } from 'vue'
 import { useAttrsWithClass } from '../composables/useAttrsWithClass'
-import { useFloating } from '../composables/useFloating'
 import type { TooltipProps } from '../types/props'
 
 defineOptions({ name: 'Tooltip', inheritAttrs: false })
@@ -50,10 +47,6 @@ defineSlots<{
   default: () => any
 }>()
 
-// ==================== 类型定义 ====================
-
-// ==================== Props ====================
-
 const props = withDefaults(defineProps<TooltipProps>(), {
   content: '',
   placement: 'top',
@@ -66,12 +59,22 @@ const props = withDefaults(defineProps<TooltipProps>(), {
 // 处理外部属性透传（无内部动态类，仅合并外部 class）
 const { attrsWithoutClass, mergedClass } = useAttrsWithClass(() => ({}))
 
-// ==================== 共享浮层逻辑 ====================
+// ==================== 显隐逻辑（内联，替代 useFloating） ====================
 
-const { triggerRef, floatingRef, visible, currentPlacement, floatStyle, show, hide } = useFloating({
-  placement: () => props.placement,
-  offset: () => props.offset,
-  // Tooltip 使用单一延迟；翻转后不进行视口边界修正，隐藏为立即
-  showDelay: () => props.showDelay,
-})
+const visible = ref(false)
+let showTimer: ReturnType<typeof setTimeout> | null = null
+
+const show = () => {
+  if (showTimer) clearTimeout(showTimer)
+  showTimer = setTimeout(() => {
+    showTimer = null
+    visible.value = true
+  }, props.showDelay)
+}
+
+const hide = () => {
+  if (showTimer) clearTimeout(showTimer)
+  showTimer = null
+  visible.value = false
+}
 </script>
