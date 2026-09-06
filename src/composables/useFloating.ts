@@ -1,6 +1,7 @@
 // composables/useFloating.ts
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import type { Placement } from '../types/components'
+import { isBrowser } from '../utils/env'
 
 /**
  * 悬浮层定位组合式函数（Popover/Tooltip 共享）。
@@ -52,9 +53,6 @@ export function useFloating(options: UseFloatingOptions) {
     boundsCorrection = false,
     awaitNextTick = false,
   } = options
-
-  /** SSR 安全 */
-  const isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined'
 
   /** 悬浮层是否可见 */
   const visible = ref(false)

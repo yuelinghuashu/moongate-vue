@@ -16,7 +16,7 @@ const distDir = new URL('../dist/', import.meta.url).pathname
 /** 匹配 import/export 且路径以 .css 结尾的行 */
 const CSS_IMPORT_RE = /^\s*(?:import|export)[^;]*?['"]\.\/.*?\.css['"];?\s*$/gm
 
-function walk(dir) {
+function walk(dir: string): number {
   const entries = readdirSync(dir, { withFileTypes: true })
   let removed = 0
 

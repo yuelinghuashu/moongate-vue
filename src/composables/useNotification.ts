@@ -1,5 +1,6 @@
 // composables/useNotification.ts
 import { ref, watch, onUnmounted, toValue, type Ref } from 'vue'
+import { isBrowser } from '../utils/env'
 
 /**
  * 通知型组件（Message/Toast）的共享逻辑。
@@ -22,9 +23,6 @@ export function useNotification(
   duration: number | (() => number),
   onClose: () => void,
 ) {
-  /** 是否在浏览器环境（SSR 安全，防止服务端创建未清理的定时器） */
-  const isBrowser = typeof window !== 'undefined'
-
   /** 是否正在退出（触发 CSS 退出动画） */
   const leaving = ref(false)
 

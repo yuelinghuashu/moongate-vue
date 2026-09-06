@@ -46,24 +46,35 @@ type ClassValue = string | any[] | Record<string, boolean>
  * ```
  */
 export function useAttrsWithClass(internalClassFactory: () => ClassValue) {
-  // 获取组件的所有属性（包括外部传入的 class、style、id 等）
+  // useAttrs() 返回共享的响应式代理（当前组件实例的 attrs）。
+  // 注意必须在 setup 作用域同步调用，不能放进 computed ——
+  // 但返回的 proxy 本身是响应式的，在 computed 里读取其属性即可建立依赖。
   const attrs = useAttrs()
 
-  // 从 attrs 中分离出 class，其余属性用于后续透传
-  // 注意：这是 setup 时的快照。在当前使用场景下（组件根元素为 v-if/v-show 切换的 DOM），
-  // 父组件 attrs 变化会触发子组件重新渲染，但 setup 不会重新执行，
-  // 因此 attrsWithoutClass 不会更新。如果需要完全响应式的 attrs 透传，
-  // 应使用 Vue 3.3+ 的 $attrs 自动透传或手动 watch attrs。
-  const { class: externalClass, ...attrsWithoutClass } = attrs
+  // 外部 class（响应式读取）
+  const externalClass = computed(() => attrs.class as ClassValue | undefined)
 
-  // 创建一个计算属性来获得内部类名，该计算属性会在 internalClassFactory 中访问的响应式数据变化时自动重新计算
+  // 除 class 外的其它 attrs：通过 for...in 逐键读取，保持响应式；
+  // （运行时 attrs 是普通对象，但 Vue 的渲染会把 attrs 保持为响应式代理，
+  // 逐键访问会建立依赖追踪，父组件新增/修改属性会触发 computed 重算）
+  const attrsWithoutClass = computed(() => {
+    const result: Record<string, unknown> = {}
+    for (const key in attrs) {
+      if (key === 'class') continue
+      result[key] = attrs[key]
+    }
+    return result
+  })
+
+  // 内部 class（由工厂函数生成，随其依赖响应式变化）
   const internalClass = computed(() => internalClassFactory())
 
   // 合并外部 class 和内部 class
   // 使用 toValue 解包 internalClass（虽然它是 ComputedRef，但为了统一处理直接使用 toValue 也很安全）
-  const mergedClass = computed(() => [externalClass, toValue(internalClass)])
+  const mergedClass = computed(() => [externalClass.value, toValue(internalClass)])
 
   // 返回需要绑定到组件根元素上的属性和合并后的 class
+  // （模板 v-bind="attrsWithoutClass" 会自动解包 ComputedRef）
   return {
     attrsWithoutClass,
     mergedClass,

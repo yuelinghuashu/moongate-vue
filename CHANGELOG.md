@@ -2,6 +2,55 @@
 
 **English** | [中文](./CHANGELOG.zh-CN.md)
 
+## [1.7.0] - 2026-09-06
+
+### 🚀 New Features
+
+- **`SeriesNav` series navigation component**: An ordered content-navigation list for "article series/table of contents" (tutorials, columns, long-running serials). Numbered items, current-part highlight (`aria-current`), single "N more parts..." collapse when exceeding a threshold (fixed: first/last/active, rest collapsed, click to expand); pure presentational — no sorting, no business-data injection, ordering & active state supplied by the caller; 5 props (`items`/`active`/`title`/`numbered`/`visibleCount`), `#item` and `#title` slots, SSR-safe, axe-clean. New `SeriesNavProps`/`SeriesNavItem` types and `'moongate-vue/series-nav'` per-component entry (~+1KB gzip)
+- **Tooltip positioning switched to JS (`useFloating`)**: dropped CSS Anchor Positioning (`anchor()` exceeds the declared browser baseline — mispositioned on Firefox/old Safari); unified JS positioning with viewport flipping and `awaitNextTick` calibration; hovering into the content no longer closes it
+- **Tooltip new `hideDelay` prop** (default 100ms, aligned with Popover)
+- **Select dropdown Teleport**: dropdown moved from `position:absolute` (clipped inside `overflow` containers) to **Teleport to body + fixed positioning** with JS-computed coordinates (anchored below the input + viewport flip, follows scroll/resize), unified with Dropdown/Popover
+- **Select keyboard Home/End**: first/last option shortcuts (WAI-ARIA listbox keyboard convention)
+- **`prefers-reduced-motion` support**: message/toast/skeleton/button keyframe animations disabled when the system requests reduced motion; overlay/panel show-hide transitions (Modal/Drawer/Dropdown/Popover/Tooltip/Select dropdown) reduced to none (hover color transitions preserved)
+- **Basic RTL support**: toast container side, message/toast accent-border side, select (native + filterable) arrow & input padding mirrored under `[dir="rtl"]`
+
+### 🐛 Bug Fixes
+
+- **Tooltip never visible on hover**: floating layer never bound `mg-tooltip-visible`, so `opacity: 0` kept it permanently invisible (present before this version; jsdom unit tests missed the visual); binding added + visibility assertions
+- **Modal/Drawer focus not returned to trigger on close** (WCAG 2.4.3): useScrollLock records the focused element on open and safely restores focus on close (`isConnected`/disabled guards)
+- **`useAttrsWithClass` non-reactive passthrough**: `attrsWithoutClass` was a setup snapshot — later changes to `id`/`data-*`/`style` from the parent never reached the root element; now read reactively on demand
+- **Select `aria-activedescendant` bound to the wrong element**: was on the listbox container instead of the focused input (screen readers miss it); moved to the input and removed the redundant listbox binding
+- **Select Tab couldn't close the dropdown**: stale `mousedownInside=true` made blur be treated as "clicked an option", so the dropdown stayed open; reset on open
+- **CSS variable semantic fixes**: `--ui-overlay-scrim` token was missing (modal/drawer relied on a fallback); tooltip now uses the dedicated `--ui-surface-tooltip`; skeleton highlight uses `--ui-fill-medium`; switch unchecked thumb uses a neutral color; multiple stale fallbacks synced to current token values; hardcoded `white` in button/checkbox/switch replaced with `--ui-white`
+- **smoke e2e strict-mode conflict** (pre-existing `.mg-input` multi-match) fixed
+- **Dropdown trigger ARIA semantics fixed**: the trigger wrapper no longer declares `role="button"`/`aria-expanded` — an un-role'd element carrying these attributes trips axe `aria-allowed-attr`, while a `role="button"` wrapper around a real slot button trips axe `nested-interactive`; menu semantics are now carried by `role="menu"` plus the slot's own trigger element (Button), aligned with Element Plus / Ant Design
+- **Toast/Message missing announcement roles**: Message now renders `role="alert"`; Toast renders `role="status"` (`role="alert"` for `error` type) so screen readers announce notifications
+
+### 🎨 Design Tokens
+
+- **New `--ui-overlay-scrim` token** (light `#00000080` / dark `#000000b3`) via the moongate-theme semantic-layer generator
+- **Typography tiers completed**: `--ui-typography-size-xl` (24px), `-title` (20px), `-display/-display-lg/-display-xl` (40/48/60px); modal/drawer titles, close buttons, message icons, and hero titles migrated from hardcoded sizes to tokens
+- **Semantic layer consumer annotations** added (hoverBg/selectedBg/surfaceFloating/borderFloating/fill family), clarifying workbench vs component-library ownership
+
+### 🧪 Engineering & Tests
+
+- **New `scripts/check-tokens.ts`**: verifies every `var(--ui-*)` reference is defined and fallbacks match tokens (light/dark segments, duration-unit normalization); orphan tokens warn only; wired into `verify:build` (runs on every `pnpm build`)
+- **e2e keyboard/focus coverage**: added `select-keyboard.spec.ts` (activedescendant follows arrows, Home/End, no out-of-range after filtering, Enter/Esc/Tab) and `modal-focus.spec.ts` (focus enters dialog on open, returns to trigger on close); e2e suite now 26 cases, all green
+- **Code de-duplication**: shared `isBrowser` constant extracted (`src/utils/env.ts`) unifying 5 browser-environment checks; `useClickOutside` composable extracted, unifying Popover/Dropdown click-outside listeners (registration/cleanup), ~50 lines of duplication removed
+- **Scripts migrated to TypeScript**: `component-list` / `verify-build` / `clean-dts` / `check-tokens` converted from `.js/.mjs` to `.ts`, executed natively by Node.js 24 type-stripping — zero new dependencies
+- **axe coverage extended to all 29 components**: added Badge/Card/Container/Divider/Footer/Header/Hero/Main/Skeleton/Form/FormItem plus Dropdown (closed + open states); FormItem error state asserts `aria-describedby` actually resolves to the error element
+- Unit tests now **534** (new useClickOutside / useNotification composable suites, Dropdown keyboard-navigation cases, and the full-component a11y matrix)
+
+### 📝 Docs
+
+- New `series-nav.md` component doc (5 interactive examples + API); `components/index.md`, README (EN/ZH), docs sidebar, philosophy/nuxt-integration component counts synced to 29 components
+- `tooltip.md` adds `hideDelay`; `design-tokens.md` adds typography tiers and overlay-scrim token values
+- README/philosophy corrected the "2-8 props per component" claim (complex components like Button/Select have 11, with the tradeoff rationale documented)
+- New `guide/accessibility.md`: WCAG 2.1 AA alignment statement, a 29-component keyboard-interaction reference table, reduced-motion / RTL support matrix, and Dropdown-trigger-semantics / Skeleton usage guidance
+- Guide docs de-duplicated: repeated style-import, native-validation and SSR notes consolidated to single authoritative pages (`install` / `philosophy`) with cross-links, each feature doc keeping only operational content
+
+---
+
 ## [1.6.0] - 2026-08-18
 
 ### 🚀 New Features

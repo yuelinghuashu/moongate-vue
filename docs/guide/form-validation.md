@@ -227,10 +227,4 @@ type Rule = (
 | `setValues(partial)` | `(values) => void`                           | 程序化设置表单值                               |
 | `setErrors(partial)` | `(errors) => void`                           | 程序化设置错误信息（空字符串清除）             |
 
-## 设计理念
-
-为什么 `useForm` 不做内置规则（`required`/`email`/`url`/`min`/`max`/`pattern`）？
-
-这些能力 **HTML5 Constraint Validation API 已原生覆盖**，通过 `required`/`type="email"`/`min`/`max`/`pattern` 属性 + CSS `:invalid` 伪类即可实现，零 JS 成本。组件库用 JS 重复实现属于过度工程。
-
-`useForm` 只做 HTML5 的**补充**：状态管理、异步校验、关联校验、校验编排。这保持了 Moongate 的「零依赖、极致轻量」定位——**让浏览器做它擅长的事，让 JS 做浏览器做不到的事**。
+> 设计理念：为什么 `useForm` 不内置 `required`/`email`/`min`/`max`/`pattern` 等校验器？——这些能力 HTML5 Constraint Validation API 已原生覆盖（见[设计哲学 · 优先原生能力](/guide/philosophy#优先原生能力)）。组件库用 JS 重复实现属于过度工程，`useForm` 只做 HTML5 的**补充**：状态管理、异步校验、关联校验、校验编排。让浏览器做它擅长的事，让 JS 做浏览器做不到的事。

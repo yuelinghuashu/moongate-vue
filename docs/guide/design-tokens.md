@@ -85,9 +85,9 @@ Moongate Vue 的所有样式都基于 CSS 变量（设计令牌）构建。你�
 
 ### 叠加层
 
-| 变量                 | 说明              | 浅色模式          | 深色模式          |
-| -------------------- | ----------------- | ----------------- | ----------------- |
-| `--ui-overlay-scrim` | 模态框/抽屉遮罩色 | `rgba(0,0,0,0.5)` | `rgba(0,0,0,0.7)` |
+| 变量                 | 说明              | 浅色模式    | 深色模式    |
+| -------------------- | ----------------- | ----------- | ----------- |
+| `--ui-overlay-scrim` | 模态框/抽屉遮罩色 | `#00000080` | `#000000b3` |
 
 ### 语法高亮（代码块）
 
@@ -150,12 +150,17 @@ Moongate Vue 的所有样式都基于 CSS 变量（设计令牌）构建。你�
 
 ### 字号
 
-| 变量                         | 值     | 说明                       |
-| ---------------------------- | ------ | -------------------------- |
-| `--ui-typography-size-body`  | `15px` | 正文字号                   |
-| `--ui-typography-size-lg`    | `18px` | 大号文字（标题、大按钮等） |
-| `--ui-typography-size-small` | `12px` | 小字号                     |
-| `--ui-typography-size-code`  | `13px` | 代码字号                   |
+| 变量                              | 值     | 说明                       |
+| --------------------------------- | ------ | -------------------------- |
+| `--ui-typography-size-body`       | `15px` | 正文字号                   |
+| `--ui-typography-size-lg`         | `18px` | 大号文字（标题、大按钮等） |
+| `--ui-typography-size-xl`         | `24px` | 浮层关闭按钮 / 更大强调    |
+| `--ui-typography-size-title`      | `20px` | 浮层标题（Modal/Drawer）   |
+| `--ui-typography-size-display`    | `40px` | 首屏大标题（Hero 基准）    |
+| `--ui-typography-size-display-lg` | `48px` | 首屏大标题（桌面端增强）   |
+| `--ui-typography-size-display-xl` | `60px` | 首屏大标题（宽屏增强）     |
+| `--ui-typography-size-small`      | `12px` | 小字号                     |
+| `--ui-typography-size-code`       | `13px` | 代码字号                   |
 
 ### 行高
 
@@ -230,17 +235,9 @@ Moongate Vue 的所有样式都基于 CSS 变量（设计令牌）构建。你�
 }
 ```
 
-## 样式基线
+## 样式引入
 
-组件库的默认样式是**非侵入式**的：`moongate-vue/style.css` 只包含组件样式，不会重置使用方项目的全局样式（元素默认 margin/padding 保持不变）。
-
-如需统一盒模型基线（所有元素 `box-sizing: border-box`），可额外引入：
-
-```ts
-import 'moongate-vue/reset.css'
-```
-
-> `reset.css` 为可选文件，仅做无害的盒模型统一，不覆盖浏览器的排版默认值。
+组件样式引入方式见[安装](/guide/install)：默认 `moongate-vue/style.css` 非侵入（不重置全局样式），可选 `moongate-vue/reset.css` 统一盒模型。
 
 ## 使用方式
 

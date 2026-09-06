@@ -35,11 +35,14 @@
         :value="displayValue"
         :placeholder="placeholder"
         :disabled="disabled"
+        :aria-activedescendant="focusedIndex >= 0 ? getOptionId(focusedIndex) : undefined"
         @input="handleSearchInput"
         @focus="handleInputFocus"
         @blur="handleInputBlur"
         @keydown.down.prevent="moveFocus(1)"
         @keydown.up.prevent="moveFocus(-1)"
+        @keydown.home.prevent="moveFocusTo(0)"
+        @keydown.end.prevent="moveFocusTo(filteredOptions.length - 1)"
         @keydown.enter.prevent="handleKeyEnter"
         @keydown.esc="handleKeyEsc"
       />
@@ -62,47 +65,48 @@
         </svg>
       </span>
 
-      <!-- 下拉面板 -->
-      <transition name="mg-select-dropdown">
-        <div
-          v-if="isOpen"
-          ref="dropdownRef"
-          class="mg-select-dropdown"
-          role="listbox"
-          :aria-label="listboxAriaLabel"
-          :aria-activedescendant="focusedIndex >= 0 ? getOptionId(focusedIndex) : undefined"
-          :style="{ maxHeight: `${maxHeight}px` }"
-        >
-          <!-- 空状态 -->
-          <div v-if="filteredOptions.length === 0" class="mg-select-empty">
-            <slot name="empty">
-              <span>{{ emptyTextValue }}</span>
-            </slot>
-          </div>
-
-          <!-- 选项列表 -->
+      <!-- 下拉面板（Teleport 到 body，fixed 定位，避免被 overflow 容器裁剪） -->
+      <Teleport to="body">
+        <transition name="mg-select-dropdown">
           <div
-            v-for="(item, index) in filteredOptions"
-            v-else
-            :id="getOptionId(index)"
-            :key="getValue(item)"
-            class="mg-select-option"
-            role="option"
-            :aria-selected="isSelected(item)"
-            :class="{
-              'mg-select-option-selected': isSelected(item),
-              'mg-select-option-focused': focusedIndex === index,
-              'mg-select-option-disabled': isOptionDisabled(item),
-            }"
-            @click="selectOption(item)"
-            @mouseenter="focusedIndex = index"
+            v-if="isOpen"
+            ref="dropdownRef"
+            class="mg-select-dropdown"
+            role="listbox"
+            :aria-label="listboxAriaLabel"
+            :style="dropdownStyle"
           >
-            <slot name="option" :item="item" :label="getLabel(item)">
-              {{ getLabel(item) }}
-            </slot>
+            <!-- 空状态 -->
+            <div v-if="filteredOptions.length === 0" class="mg-select-empty">
+              <slot name="empty">
+                <span>{{ emptyTextValue }}</span>
+              </slot>
+            </div>
+
+            <!-- 选项列表 -->
+            <div
+              v-for="(item, index) in filteredOptions"
+              v-else
+              :id="getOptionId(index)"
+              :key="getValue(item)"
+              class="mg-select-option"
+              role="option"
+              :aria-selected="isSelected(item)"
+              :class="{
+                'mg-select-option-selected': isSelected(item),
+                'mg-select-option-focused': focusedIndex === index,
+                'mg-select-option-disabled': isOptionDisabled(item),
+              }"
+              @click="selectOption(item)"
+              @mouseenter="focusedIndex = index"
+            >
+              <slot name="option" :item="item" :label="getLabel(item)">
+                {{ getLabel(item) }}
+              </slot>
+            </div>
           </div>
-        </div>
-      </transition>
+        </transition>
+      </Teleport>
     </div>
 
     <!-- ==================== 普通模式 ==================== -->
@@ -131,9 +135,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, nextTick, useAttrs, useId } from 'vue'
+import { ref, computed, watch, nextTick, onMounted, onUnmounted, useAttrs, useId } from 'vue'
 import type { SelectProps, SelectValue, SelectOption } from '../types/props'
 import { formatTemplate, useTexts } from '../config'
+import { isBrowser } from '../utils/env'
 
 defineOptions({ name: 'Select', inheritAttrs: false })
 
@@ -343,6 +348,70 @@ const isEditing = ref(false)
 /** 标记 mousedown 是否发生在组件内部（用于优化 blur 关闭逻辑） */
 const mousedownInside = ref(false)
 
+// ==================== Teleport 下拉定位 ====================
+
+/**
+ * 下拉面板 fixed 定位（Teleport 到 body 后，基于输入框 rect 计算）。
+ * 默认贴输入框底部左侧，宽度对齐输入框；超视口底部时上浮。
+ */
+const dropdownPosition = ref({ top: 0, left: 0, width: 0, flipUp: false })
+
+const dropdownStyle = computed(() => ({
+  top: `${
+    dropdownPosition.value.flipUp
+      ? dropdownPosition.value.top - (dropdownRef.value?.offsetHeight ?? 0)
+      : dropdownPosition.value.top
+  }px`,
+  left: `${dropdownPosition.value.left}px`,
+  width: `${dropdownPosition.value.width || 220}px`,
+  maxHeight: `${props.maxHeight}px`,
+}))
+
+/**
+ * 计算下拉位置（基于输入框 rect + 视口翻转）
+ */
+const updateDropdownPosition = () => {
+  if (!isBrowser || !inputRef.value) return
+  const rect = inputRef.value.getBoundingClientRect()
+  const viewportH = window.innerHeight
+  const estHeight = Math.min(dropdownRef.value?.offsetHeight ?? props.maxHeight, props.maxHeight)
+  const flipUp = rect.bottom + estHeight + 4 > viewportH && rect.top > viewportH / 2
+  dropdownPosition.value = {
+    top: flipUp ? rect.top : rect.bottom + 4,
+    left: rect.left,
+    width: rect.width,
+    flipUp,
+  }
+}
+
+/** 滚动/窗口变化时更新位置 */
+const handleDropdownReposition = () => {
+  if (isOpen.value) updateDropdownPosition()
+}
+
+watch(isOpen, (val) => {
+  if (!isBrowser) return
+  if (val) {
+    // 打开后下一帧定位（等 v-if 渲染完成可量度高度）
+    nextTick(() => updateDropdownPosition())
+    window.addEventListener('scroll', handleDropdownReposition, { capture: true, passive: true })
+    window.addEventListener('resize', handleDropdownReposition)
+  } else {
+    window.removeEventListener('scroll', handleDropdownReposition, { capture: true })
+    window.removeEventListener('resize', handleDropdownReposition)
+  }
+})
+
+onMounted(() => {
+  if (isBrowser && isOpen.value) updateDropdownPosition()
+})
+
+onUnmounted(() => {
+  if (!isBrowser) return
+  window.removeEventListener('scroll', handleDropdownReposition, { capture: true })
+  window.removeEventListener('resize', handleDropdownReposition)
+})
+
 /**
  * 输入框显示的值
  * - 用户正在编辑时：显示 searchText（允许空字符串）
@@ -404,6 +473,9 @@ const openDropdown = () => {
   isOpen.value = true
   searchText.value = ''
   focusedIndex.value = -1
+  // 打开是独立的点击/聚焦事件；重置“组件内 mousedown”标记，
+  // 避免上一次打开点击留下的 true 导致后续 blur（如 Tab 键）被误判为“点击选项”而不关闭
+  mousedownInside.value = false
 }
 
 /**
@@ -515,6 +587,17 @@ const moveFocus = (offset: 1 | -1) => {
   const nextIndex = focusedIndex.value + offset
   if (nextIndex >= 0 && nextIndex < filteredOptions.value.length) {
     focusedIndex.value = nextIndex
+    scrollToFocusedOption()
+  }
+}
+
+/**
+ * 键盘 Home/End：跳到首/末选项（WAI-ARIA listbox 键盘约定）
+ * @param index - 目标下标（0 或末项）
+ */
+const moveFocusTo = (index: number) => {
+  if (index >= 0 && index < filteredOptions.value.length) {
+    focusedIndex.value = index
     scrollToFocusedOption()
   }
 }

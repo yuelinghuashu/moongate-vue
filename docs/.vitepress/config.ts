@@ -24,6 +24,7 @@ const sidebar = {
         { text: '安装', link: '/guide/install' },
         { text: '快速开始', link: '/guide/getting-started' },
         { text: '国际化配置', link: '/guide/i18n' },
+        { text: '无障碍', link: '/guide/accessibility' },
         { text: '设计令牌', link: '/guide/design-tokens' },
         { text: '表单校验', link: '/guide/form-validation' },
         { text: 'Nuxt 集成', link: '/guide/nuxt-integration' },
@@ -60,6 +61,7 @@ const sidebar = {
         { text: 'Table 表格', link: '/components/table' },
         { text: 'Pagination 分页', link: '/components/pagination' },
         { text: 'Tabs 标签页', link: '/components/tabs' },
+        { text: 'SeriesNav 系列导航', link: '/components/series-nav' },
       ],
     },
     {

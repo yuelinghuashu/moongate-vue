@@ -193,12 +193,12 @@ describe('Popover', () => {
       attachTo: document.body,
     })
 
-    // 挂载后应注册 mousedown 监听
-    expect(addSpy).toHaveBeenCalledWith('mousedown', expect.any(Function))
+    // 挂载后应注册 mousedown 监听（capture 模式）
+    expect(addSpy).toHaveBeenCalledWith('mousedown', expect.any(Function), true)
 
     // 卸载后应清理
     wrapper.unmount()
-    expect(removeSpy).toHaveBeenCalledWith('mousedown', expect.any(Function))
+    expect(removeSpy).toHaveBeenCalledWith('mousedown', expect.any(Function), true)
 
     addSpy.mockRestore()
     removeSpy.mockRestore()

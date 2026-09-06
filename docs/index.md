@@ -22,7 +22,7 @@ features:
     details: 克制、冷静、秩序感，直角设计，不妥协的美学。
     link: /guide/philosophy
   - title: 📦 极致轻量
-    details: 完整组件库（JS + CSS）仅 25KB (gzipped)，比主流组件库轻一个数量级以上。
+    details: 完整组件库（JS + CSS）仅 25KB (gzipped)。
     link: /guide/design-tokens
   - title: 🎨 设计令牌驱动
     details: 基于 CSS 变量，深色/浅色模式无缝切换。

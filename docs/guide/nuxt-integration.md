@@ -2,11 +2,7 @@
 
 ## SSR 支持（开箱即用）
 
-组件库已内置 SSR 支持，全部 28 个组件在 Nuxt / VitePress 等服务端渲染环境中开箱即用，无需额外配置：
-
-- 所有 DOM 访问均带浏览器环境守卫，`renderToString` 不会崩溃
-- 组件 ID 使用 Vue 3.5 的 `useId()`，服务端与客户端 hydration 一致
-- 样式为纯 CSS 变量，SSR 下无任何运行时开销
+组件库已内置 SSR 支持，全部 29 个组件在 Nuxt / VitePress 等服务端渲染环境中开箱即用，无需额外配置（浏览器环境守卫、`useId()` hydration 一致性等实现机制见[设计哲学 · SSR 安全](/guide/philosophy#ssr-安全)）。
 
 ## Message / Toast：唯一需要注意的点
 

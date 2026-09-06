@@ -37,7 +37,7 @@
   left: 0.125rem;
   width: 0.875rem;
   height: 0.875rem;
-  background-color: var(--ui-text-dim);
+  background-color: var(--ui-text-inactive, #94a3b8);
   border-radius: 50%;
   transition: transform var(--ui-motion-duration-neural) ease;
 }
@@ -55,7 +55,7 @@
 
 .mg-switch-input:checked + .mg-switch-track::after {
   transform: translateX(1.25rem);
-  background-color: white;
+  background-color: var(--ui-white);
 }
 
 /* 聚焦状态 */

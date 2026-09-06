@@ -26,6 +26,7 @@ import Table from './components/Table.vue'
 import Form from './components/Form.vue'
 import FormItem from './components/FormItem.vue'
 import Dropdown from './components/Dropdown.vue'
+import SeriesNav from './components/SeriesNav.vue'
 
 import { useToast } from './composables/useToast'
 import { useMessage } from './composables/useMessage'
@@ -66,6 +67,7 @@ export {
   Popover,
   Drawer,
   Dropdown,
+  SeriesNav,
   useToast,
   useMessage,
   useForm,
@@ -89,6 +91,9 @@ export type { FormProps } from './types/form'
 
 // Dropdown 组件类型
 export type { DropdownOption, DropdownPlacement } from './types/components'
+
+// SeriesNav 组件类型
+export type { SeriesNavItem } from './types/components'
 
 // ==================== 组件 Props 类型 ====================
 export type {
@@ -119,4 +124,5 @@ export type {
   HeroProps,
   DropdownProps,
   FormItemProps,
+  SeriesNavProps,
 } from './types/props'

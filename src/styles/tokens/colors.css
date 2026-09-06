@@ -34,6 +34,7 @@
   --ui-text: #0f172a;
   --ui-text-dim: #475569;
   --ui-text-inactive: #94a3b8;
+  --ui-overlay-scrim: #00000080;
   --ui-border: #cbd5e1;
   --ui-border-hover: #0284c7;
   --ui-border-dim: #94a3b8;
@@ -106,6 +107,7 @@
   --ui-text: #e2e8f0;
   --ui-text-dim: #cbd5e1;
   --ui-text-inactive: #94a3b8;
+  --ui-overlay-scrim: #000000b3;
   --ui-border: #2d3748;
   --ui-border-hover: #3b82f6;
   --ui-border-dim: #475569;

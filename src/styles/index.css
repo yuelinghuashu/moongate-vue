@@ -34,3 +34,106 @@
 @import './components/message.css';
 @import './components/form.css';
 @import './components/dropdown.css';
+@import './components/series-nav.css';
+
+/* ===== 无障碍：尊重系统减弱动效 ===== */
+@media (prefers-reduced-motion: reduce) {
+  /* 关键帧动画 → 禁用 */
+  .mg-message,
+  .mg-message-leave,
+  .mg-toast,
+  .mg-toast-leave,
+  .mg-skeleton-line,
+  .mg-skeleton-avatar,
+  .mg-button-loading-icon {
+    animation: none !important;
+  }
+
+  /* 浮层/面板显隐与位移动效（transition）→ 归零
+     仅覆盖结构性位移（进入/退出、缩放、滑入），hover 颜色过渡保留 */
+  .mg-modal-overlay,
+  .mg-modal,
+  .mg-drawer-overlay,
+  .mg-drawer,
+  .mg-dropdown-menu,
+  .mg-popover,
+  .mg-tooltip,
+  .mg-select-dropdown-enter-active,
+  .mg-select-dropdown-leave-active {
+    transition: none !important;
+  }
+}
+
+/* ===== 无障碍：RTL 基础支持 ===== */
+[dir='rtl'] .mg-toast-container {
+  left: var(--ui-spacing-xl, 24px);
+  right: auto;
+}
+
+[dir='rtl'] .mg-message-success {
+  border-left: none;
+  border-right: 3px solid var(--ui-success, #047857);
+}
+[dir='rtl'] .mg-message-error {
+  border-left: none;
+  border-right: 3px solid var(--ui-error, #b91c1c);
+}
+[dir='rtl'] .mg-message-warning {
+  border-left: none;
+  border-right: 3px solid var(--ui-warning, #b45309);
+}
+[dir='rtl'] .mg-message-info {
+  border-left: none;
+  border-right: 3px solid var(--ui-primary, #1e40af);
+}
+
+[dir='rtl'] .mg-toast-success {
+  border-left: none;
+  border-right: 3px solid var(--ui-success, #047857);
+}
+[dir='rtl'] .mg-toast-error {
+  border-left: none;
+  border-right: 3px solid var(--ui-error, #b91c1c);
+}
+[dir='rtl'] .mg-toast-warning {
+  border-left: none;
+  border-right: 3px solid var(--ui-warning, #b45309);
+}
+[dir='rtl'] .mg-toast-info {
+  border-left: none;
+  border-right: 3px solid var(--ui-primary, #1e40af);
+}
+
+[dir='rtl'] .mg-select-native {
+  background-position: left var(--ui-spacing-sm, 8px) center;
+  padding-right: var(--ui-spacing-sm, 8px);
+  padding-left: var(--ui-spacing-xl, 24px);
+  transform: scaleX(-1);
+}
+
+/* Select filterable：下拉箭头为物理定位（right），不受 direction 影响，需镜像。
+   其余 flex 布局（Pagination、Modal/Drawer header 等）随 direction 自动镜像，无需处理。 */
+[dir='rtl'] .mg-select-arrow {
+  right: auto;
+  left: var(--ui-spacing-sm, 8px);
+}
+[dir='rtl'] .mg-select-sm .mg-select-arrow {
+  right: auto;
+  left: var(--ui-spacing-xs, 4px);
+}
+[dir='rtl'] .mg-select-filterable .mg-select-input {
+  padding-right: var(--ui-spacing-sm, 8px);
+  padding-left: var(--ui-spacing-xl, 24px);
+}
+[dir='rtl'] .mg-select-sm .mg-select-input {
+  padding-right: var(--ui-spacing-xs, 4px);
+  padding-left: var(--ui-spacing-xl, 24px);
+}
+[dir='rtl'] .mg-select-md .mg-select-input {
+  padding-right: var(--ui-spacing-md, 12px);
+  padding-left: var(--ui-spacing-xl, 24px);
+}
+[dir='rtl'] .mg-select-lg .mg-select-input {
+  padding-right: var(--ui-spacing-lg, 16px);
+  padding-left: var(--ui-spacing-2xl, 32px);
+}

@@ -6,6 +6,8 @@ import Input from '../components/Input.vue'
 import Textarea from '../components/Textarea.vue'
 import Modal from '../components/Modal.vue'
 import Checkbox from '../components/Checkbox.vue'
+import Radio from '../components/Radio.vue'
+import Switch from '../components/Switch.vue'
 import Tabs from '../components/Tabs.vue'
 import Select from '../components/Select.vue'
 import Drawer from '../components/Drawer.vue'
@@ -13,6 +15,22 @@ import Table from '../components/Table.vue'
 import Pagination from '../components/Pagination.vue'
 import Tooltip from '../components/Tooltip.vue'
 import Popover from '../components/Popover.vue'
+import Dropdown from '../components/Dropdown.vue'
+import Message from '../components/Message.vue'
+import Toast from '../components/Toast.vue'
+import SeriesNav from '../components/SeriesNav.vue'
+import Form from '../components/Form.vue'
+import FormItem from '../components/FormItem.vue'
+import Skeleton from '../components/Skeleton.vue'
+import Badge from '../components/Badge.vue'
+import Card from '../components/Card.vue'
+import Container from '../components/Container.vue'
+import Divider from '../components/Divider.vue'
+import Footer from '../components/Footer.vue'
+import Header from '../components/Header.vue'
+import Hero from '../components/Hero.vue'
+import Main from '../components/Main.vue'
+import { h } from 'vue'
 import { expectNoViolations } from './helpers/axe'
 
 /** 等待浮层显示（Timer 微任务） */
@@ -179,6 +197,200 @@ describe('可访问性（axe-core）', () => {
     })
     await wrapper.find('.mg-popover-trigger').trigger('mouseenter')
     await waitForOverlay()
+    await nextTick()
+    await expectNoViolations(document.body)
+  })
+
+  it('SeriesNav 折叠时无 a11y 违规', async () => {
+    const items = Array.from({ length: 7 }, (_, i) => ({
+      key: `p-${i + 1}`,
+      label: `Part ${i + 1}`,
+      href: `/p/${i + 1}`,
+    }))
+    const wrapper = mount(SeriesNav, {
+      props: { items, active: 'p-4', visibleCount: 5 },
+      attachTo: document.body,
+    })
+    await nextTick()
+    await expectNoViolations(document.body)
+  })
+
+  it('SeriesNav 展开时无 a11y 违规', async () => {
+    const items = Array.from({ length: 7 }, (_, i) => ({
+      key: `p-${i + 1}`,
+      label: `Part ${i + 1}`,
+      href: `/p/${i + 1}`,
+    }))
+    const wrapper = mount(SeriesNav, {
+      props: { items, active: 'p-4', visibleCount: 5 },
+      attachTo: document.body,
+    })
+    await wrapper.find('.mg-series-nav-toggle').trigger('click')
+    await nextTick()
+    await expectNoViolations(document.body)
+  })
+
+  it('Radio 无 a11y 违规', async () => {
+    const wrapper = mount(Radio, { props: { label: '选项一', value: 'a' } })
+    await nextTick()
+    await expectNoViolations(wrapper.element)
+  })
+
+  it('Switch 无 a11y 违规', async () => {
+    const wrapper = mount(Switch, { props: { label: '开关' } })
+    await nextTick()
+    await expectNoViolations(wrapper.element)
+  })
+
+  it('Message 无 a11y 违规', async () => {
+    const wrapper = mount(Message, {
+      props: { message: '操作成功', type: 'success' },
+      attachTo: document.body,
+    })
+    await nextTick()
+    await expectNoViolations(document.body)
+  })
+
+  it('Toast 无 a11y 违规', async () => {
+    const wrapper = mount(Toast, {
+      props: { message: '通知内容', type: 'info' },
+      attachTo: document.body,
+    })
+    await nextTick()
+    await expectNoViolations(document.body)
+  })
+
+  // ==================== 静态展示组件 ====================
+
+  it('Badge 无 a11y 违规', async () => {
+    const wrapper = mount(Badge, { props: { label: '新' } })
+    await nextTick()
+    await expectNoViolations(wrapper.element)
+  })
+
+  it('Card 无 a11y 违规', async () => {
+    const wrapper = mount(Card, {
+      slots: {
+        header: () => h('h3', '卡片标题'),
+        default: () => '卡片内容',
+      },
+    })
+    await nextTick()
+    await expectNoViolations(wrapper.element)
+  })
+
+  it('Container 无 a11y 违规', async () => {
+    const wrapper = mount(Container, { slots: { default: () => '内容' } })
+    await nextTick()
+    await expectNoViolations(wrapper.element)
+  })
+
+  it('Divider 无 a11y 违规', async () => {
+    const wrapper = mount(Divider, { slots: { default: () => '分隔' } })
+    await nextTick()
+    await expectNoViolations(wrapper.element)
+  })
+
+  it('Footer 无 a11y 违规', async () => {
+    const wrapper = mount(Footer, { slots: { default: () => '页脚' } })
+    await nextTick()
+    await expectNoViolations(wrapper.element)
+  })
+
+  it('Header 无 a11y 违规', async () => {
+    const wrapper = mount(Header, { slots: { default: () => '头部' } })
+    await nextTick()
+    await expectNoViolations(wrapper.element)
+  })
+
+  it('Hero 无 a11y 违规（带标题）', async () => {
+    const wrapper = mount(Hero, {
+      props: { title: 'Moongate Vue', description: '极简组件库' },
+      slots: { actions: () => h(Button, { label: '开始使用' }) },
+    })
+    await nextTick()
+    await expectNoViolations(wrapper.element)
+  })
+
+  it('Main 无 a11y 违规', async () => {
+    const wrapper = mount(Main, { slots: { default: () => '主体' } })
+    await nextTick()
+    await expectNoViolations(wrapper.element)
+  })
+
+  it('Skeleton 无 a11y 违规', async () => {
+    const wrapper = mount(Skeleton, {
+      props: { rows: 3, avatar: true },
+      attrs: { 'aria-hidden': 'true' },
+    })
+    await nextTick()
+    // Skeleton 是装饰性占位，应搭配 aria-hidden 使用
+    await expectNoViolations(wrapper.element)
+  })
+
+  // ==================== 组合组件 ====================
+
+  it('Form + FormItem + Input 无 a11y 违规', async () => {
+    const wrapper = mount({
+      render: () =>
+        h(Form, { errors: { username: '' } }, () => [
+          h(FormItem, { name: 'username', label: '用户名', required: true }, () =>
+            h(Input, { placeholder: '请输入用户名' }),
+          ),
+        ]),
+    })
+    await nextTick()
+    await expectNoViolations(wrapper.element)
+  })
+
+  it('FormItem 错误态无 a11y 违规（aria-describedby 关联）', async () => {
+    const wrapper = mount(
+      {
+        render: () =>
+          h(Form, { errors: { username: '用户名不能为空' } }, () => [
+            h(FormItem, { name: 'username', label: '用户名', required: true }, () =>
+              h(Input, { placeholder: '请输入用户名' }),
+            ),
+          ]),
+      },
+      { attachTo: document.body },
+    )
+    await nextTick()
+    const describedby = wrapper.find('input').attributes('aria-describedby')
+    expect(describedby).toBeDefined()
+    if (describedby) {
+      expect(document.getElementById(describedby)).not.toBeNull()
+    }
+    await expectNoViolations(document.body)
+  })
+
+  it('Dropdown 关闭态无 a11y 违规', async () => {
+    const wrapper = mount(Dropdown, {
+      props: {
+        options: [
+          { key: 'edit', label: '编辑' },
+          { key: 'delete', label: '删除' },
+        ],
+      },
+      slots: { default: () => h(Button, { label: '操作菜单' }) },
+      attachTo: document.body,
+    })
+    await nextTick()
+    await expectNoViolations(document.body)
+  })
+
+  it('Dropdown 打开态无 a11y 违规', async () => {
+    const wrapper = mount(Dropdown, {
+      props: {
+        options: [
+          { key: 'edit', label: '编辑' },
+          { key: 'delete', label: '删除' },
+        ],
+      },
+      slots: { default: () => h(Button, { label: '操作菜单' }) },
+      attachTo: document.body,
+    })
+    await wrapper.find('.mg-dropdown-trigger').trigger('click')
     await nextTick()
     await expectNoViolations(document.body)
   })

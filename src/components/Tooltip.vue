@@ -1,10 +1,11 @@
 <template>
   <div
     v-bind="attrsWithoutClass"
+    ref="triggerRef"
     :class="['mg-tooltip-trigger', mergedClass]"
     :aria-describedby="visible ? tooltipId : undefined"
     @mouseenter="show"
-    @mouseleave="hide"
+    @mouseleave="startHideTimer"
     @focus="show"
     @blur="hide"
     @keydown.esc="hide"
@@ -17,10 +18,13 @@
       <div
         v-if="visible"
         :id="tooltipId"
+        ref="floatingRef"
         class="mg-tooltip"
-        :class="`mg-tooltip-${placement}`"
-        :style="{ '--mg-tooltip-offset': `${offset}px` }"
+        :class="[`mg-tooltip-${currentPlacement}`, { 'mg-tooltip-visible': visible }]"
+        :style="floatStyle"
         role="tooltip"
+        @mouseenter="cancelHideTimer"
+        @mouseleave="startHideTimer"
       >
         <slot name="content">
           {{ content }}
@@ -32,8 +36,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, useId } from 'vue'
+import { useId } from 'vue'
 import { useAttrsWithClass } from '../composables/useAttrsWithClass'
+import { useFloating } from '../composables/useFloating'
 import type { TooltipProps } from '../types/props'
 
 defineOptions({ name: 'Tooltip', inheritAttrs: false })
@@ -51,6 +56,7 @@ const props = withDefaults(defineProps<TooltipProps>(), {
   content: '',
   placement: 'top',
   showDelay: 0,
+  hideDelay: 100,
   offset: 8,
 })
 
@@ -59,22 +65,26 @@ const props = withDefaults(defineProps<TooltipProps>(), {
 // 处理外部属性透传（无内部动态类，仅合并外部 class）
 const { attrsWithoutClass, mergedClass } = useAttrsWithClass(() => ({}))
 
-// ==================== 显隐逻辑（内联，替代 useFloating） ====================
+// ==================== 共享浮层定位逻辑（JS，兼容声明浏览器基线） ====================
 
-const visible = ref(false)
-let showTimer: ReturnType<typeof setTimeout> | null = null
-
-const show = () => {
-  if (showTimer) clearTimeout(showTimer)
-  showTimer = setTimeout(() => {
-    showTimer = null
-    visible.value = true
-  }, props.showDelay)
-}
-
-const hide = () => {
-  if (showTimer) clearTimeout(showTimer)
-  showTimer = null
-  visible.value = false
-}
+const {
+  triggerRef,
+  floatingRef,
+  visible,
+  currentPlacement,
+  floatStyle,
+  show,
+  hide,
+  startHideTimer,
+  cancelHideTimer,
+} = useFloating({
+  placement: () => props.placement,
+  offset: () => props.offset,
+  showDelay: () => props.showDelay,
+  hideDelay: () => props.hideDelay,
+  // Tooltip 跟随触发元素，翻转后不做额外边界修正
+  boundsCorrection: false,
+  // 显示后等一帧再定位（浮层刚经 v-if 挂载，需渲染完成才能拿到尺寸）
+  awaitNextTick: true,
+})
 </script>

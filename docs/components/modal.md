@@ -223,5 +223,6 @@ const open = ref(false)
 - 支持点击遮罩层关闭（可通过 `closeOnOverlay` 禁用）
 - 支持按 ESC 键关闭（可通过 `enableEsc` 禁用）
 - 打开时自动启用焦点陷阱（可通过 `enableFocusTrap` 禁用）
+- 关闭后焦点自动返回打开前的触发元素（WCAG 2.4.3）
 - 关闭按钮可通过 `closable` 属性控制显示/隐藏
 - 包含完整的 ARIA 无障碍属性

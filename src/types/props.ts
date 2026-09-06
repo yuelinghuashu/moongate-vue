@@ -20,6 +20,7 @@ import type {
   NotificationType,
   DropdownPlacement,
   DropdownOption,
+  SeriesNavItem,
 } from './components'
 
 // ==================== 内部依赖类型 ====================
@@ -322,6 +323,8 @@ export interface TooltipProps {
   placement?: 'top' | 'bottom' | 'left' | 'right'
   /** 显示延迟时间（毫秒），避免鼠标划过时误弹，默认 0 */
   showDelay?: number
+  /** 隐藏延迟时间（毫秒），默认 100 */
+  hideDelay?: number
   /** 提示框与触发元素的偏移量（像素），默认 8 */
   offset?: number
 }
@@ -388,4 +391,22 @@ export interface HeroProps {
   title?: string
   /** 描述文字 */
   description?: string
+}
+
+// ==================== 数据展示组件 ====================
+
+export interface SeriesNavProps {
+  /** 有序导航项列表（顺序即展示顺序，不排序） */
+  items?: SeriesNavItem[]
+  /** 当前激活项的 key（高亮显示） */
+  active?: string
+  /** 可选标题（系列名，可通过 #title 插槽覆盖） */
+  title?: string
+  /** 是否显示序号圆点，默认 true */
+  numbered?: boolean
+  /**
+   * 折叠阈值：当 items 超过该数量时，将中间项折叠为 "N more parts..."，
+   * 固定展示首项、末项、激活项及其相邻项。0 表示不折叠。默认 0。
+   */
+  visibleCount?: number
 }

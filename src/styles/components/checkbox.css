@@ -47,7 +47,7 @@
   content: '';
   width: 0.5rem;
   height: 0.5rem;
-  background-color: white;
+  background-color: var(--ui-white);
   border-radius: 0;
 }
 

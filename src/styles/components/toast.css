@@ -40,10 +40,10 @@
 
 /* 类型变体 - 左侧彩色边框 */
 .mg-toast-success {
-  border-left: 3px solid var(--ui-success, #059669);
+  border-left: 3px solid var(--ui-success, #047857);
 }
 .mg-toast-success .mg-toast-icon {
-  color: var(--ui-success, #059669);
+  color: var(--ui-success, #047857);
 }
 
 .mg-toast-error {
@@ -61,10 +61,10 @@
 }
 
 .mg-toast-info {
-  border-left: 3px solid var(--ui-primary, #0284c7);
+  border-left: 3px solid var(--ui-primary, #1e40af);
 }
 .mg-toast-info .mg-toast-icon {
-  color: var(--ui-primary, #0284c7);
+  color: var(--ui-primary, #1e40af);
 }
 
 /* 图标 */
@@ -95,7 +95,7 @@
 }
 
 .mg-toast-close:hover {
-  color: var(--ui-primary, #0284c7);
+  color: var(--ui-primary, #1e40af);
 }
 
 /* 进入动画 */

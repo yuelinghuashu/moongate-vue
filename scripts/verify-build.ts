@@ -14,17 +14,17 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { componentEntries } from './component-list.js'
+import { componentEntries } from './component-list.ts'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const rootDir = join(__dirname, '..')
 const distDir = join(rootDir, 'dist')
 
 /** 收集单个文件中的导出名（提取导出别名而非原始变量名） */
-function getExportNames(filePath) {
+function getExportNames(filePath: string): Set<string> {
   try {
     const content = readFileSync(filePath, 'utf8')
-    const names = new Set()
+    const names = new Set<string>()
     // 匹配 `export { X }` 和 `export { X as Y }`，提取导出后的名字
     const exportBlock = content.match(/export\s*\{([^}]+)\}/g) || []
     for (const block of exportBlock) {
@@ -44,8 +44,8 @@ function getExportNames(filePath) {
   }
 }
 
-const errors = []
-const warnings = []
+const errors: string[] = []
+const warnings: string[] = []
 
 console.log('🔍 验证构建产物完整性...\n')
 

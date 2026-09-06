@@ -1,6 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { mount, enableAutoUnmount } from '@vue/test-utils'
 import Tooltip from '../../components/Tooltip.vue'
+
+/** 自动卸载挂载的 wrapper，清理 useFloating 注册的 window 监听 */
+enableAutoUnmount(afterEach)
 
 /** 模拟触发元素与提示框的 DOMRect */
 const mockRects = () => {
@@ -32,6 +35,28 @@ describe('Tooltip', () => {
     const tooltip = document.body.querySelector('.mg-tooltip') as HTMLElement
     expect(tooltip).not.toBeNull()
     expect(tooltip.textContent).toContain('提示内容')
+    // 可见性：必须带 mg-tooltip-visible（否则 opacity:0 看不到）
+    expect(tooltip.classList.contains('mg-tooltip-visible')).toBe(true)
+  })
+
+  it('显示期间带 mg-tooltip-visible，移出后移除', async () => {
+    const wrapper = mount(Tooltip, {
+      props: { content: '提示' },
+      attachTo: document.body,
+    })
+    const trigger = wrapper.find('.mg-tooltip-trigger')
+
+    // 移入显示 → 可见
+    await trigger.trigger('mouseenter')
+    await new Promise((r) => setTimeout(r, 0))
+    let tooltip = document.body.querySelector('.mg-tooltip') as HTMLElement
+    expect(tooltip.classList.contains('mg-tooltip-visible')).toBe(true)
+
+    // 移出后（默认 hideDelay=100）→ 隐藏并移除可见 class
+    await trigger.trigger('mouseleave')
+    await new Promise((r) => setTimeout(r, 150))
+    tooltip = document.body.querySelector('.mg-tooltip') as HTMLElement
+    expect(tooltip).toBeNull()
   })
 
   it('有 showDelay 时延迟显示', async () => {
@@ -50,10 +75,10 @@ describe('Tooltip', () => {
     vi.useRealTimers()
   })
 
-  it('鼠标移出后隐藏', async () => {
+  it('鼠标移出后延迟隐藏（hideDelay）', async () => {
     vi.useFakeTimers()
     const wrapper = mount(Tooltip, {
-      props: { content: '提示' },
+      props: { content: '提示', hideDelay: 100 },
       attachTo: document.body,
     })
 
@@ -62,7 +87,11 @@ describe('Tooltip', () => {
     await vi.runOnlyPendingTimersAsync()
     expect(document.body.querySelector('.mg-tooltip')).not.toBeNull()
 
+    // 移出后经过 hideDelay 才隐藏
     await wrapper.find('.mg-tooltip-trigger').trigger('mouseleave')
+    expect(document.body.querySelector('.mg-tooltip')).not.toBeNull()
+    vi.advanceTimersByTime(120)
+    await vi.runOnlyPendingTimersAsync()
     expect(document.body.querySelector('.mg-tooltip')).toBeNull()
     vi.useRealTimers()
   })
@@ -135,7 +164,7 @@ describe('Tooltip', () => {
     expect(document.body.querySelector('.custom-tip')).not.toBeNull()
   })
 
-  it('定位由 CSS inset-area 控制（无 JS 坐标）', async () => {
+  it('定位由 useFloating JS 坐标控制', async () => {
     const wrapper = mount(Tooltip, {
       props: { content: '提示', placement: 'top', offset: 12 },
       attachTo: document.body,
@@ -143,12 +172,11 @@ describe('Tooltip', () => {
     await wrapper.find('.mg-tooltip-trigger').trigger('mouseenter')
     await new Promise((r) => setTimeout(r, 0))
 
+    // JS 定位版：浮层带内联 top/left 坐标（useFloating 计算）
     const tooltip = document.body.querySelector('.mg-tooltip') as HTMLElement
-    // anchor 定位版：位置由 CSS 控制，无内联 top/left 坐标
-    expect(tooltip.style.top).toBe('')
-    expect(tooltip.style.left).toBe('')
-    // placement 类 + offset CSS 变量传递给 CSS
+    expect(tooltip.style.top).not.toBe('')
+    expect(tooltip.style.left).not.toBe('')
+    // placement 类用于箭头方向
     expect(tooltip.classList.contains('mg-tooltip-top')).toBe(true)
-    expect(tooltip.style.getPropertyValue('--mg-tooltip-offset')).toBe('12px')
   })
 })

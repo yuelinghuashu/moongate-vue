@@ -4,6 +4,7 @@
     v-bind="attrsWithoutClass"
     class="mg-toast"
     :class="[`mg-toast-${type}`, { 'mg-toast-leave': leaving }, mergedClass]"
+    :role="type === 'error' ? 'alert' : 'status'"
   >
     <span class="mg-toast-icon">
       <slot name="icon">

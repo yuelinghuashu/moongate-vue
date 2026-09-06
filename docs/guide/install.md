@@ -63,8 +63,4 @@ function renderTable<T>(props: TableProps<T>) {
 | 配置       | `Config` `LocaleTexts`                                                                                                                                                                                                                                                                                                                                                             |
 | Composable | `Rule` `FieldRules` `UseFormOptions` `MenuItemBase`                                                                                                                                                                                                                                                                                                                                |
 
-## 注意事项
-
-- 需要额外导入样式文件 `moongate-vue/style.css`
-- `moongate-vue/reset.css` 为可选重置（仅统一 `border-box`），默认不引入
-- 组件库支持 Tree Shaking，未使用的组件不会打包
+> 样式引入方式见上文[样式引入](#样式引入)。

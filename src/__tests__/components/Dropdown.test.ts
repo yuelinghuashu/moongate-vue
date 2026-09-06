@@ -124,14 +124,17 @@ describe('Dropdown', () => {
     expect(menu?.getAttribute('role')).toBe('menu')
   })
 
-  it('触发区具备 aria-haspopup="menu" 和 aria-expanded', async () => {
+  it('触发容器不声明交互 ARIA（避免与插槽内按钮嵌套违规）', async () => {
     const wrapper = mountDropdown()
     const trigger = wrapper.find('.mg-dropdown-trigger')
-    expect(trigger.attributes('aria-haspopup')).toBe('menu')
-    expect(trigger.attributes('aria-expanded')).toBe('false')
+    // wrapper 无 role / aria-haspopup / aria-expanded，插槽内的真实按钮承担触发语义
+    expect(trigger.attributes('role')).toBeUndefined()
+    expect(trigger.attributes('aria-haspopup')).toBeUndefined()
+    expect(trigger.attributes('aria-expanded')).toBeUndefined()
 
     await openDropdown(wrapper)
-    expect(trigger.attributes('aria-expanded')).toBe('true')
+    // 菜单自身仍是 role="menu"
+    expect(document.body.querySelector('.mg-dropdown-menu')?.getAttribute('role')).toBe('menu')
   })
 
   it('Escape 键关闭菜单', async () => {
@@ -157,5 +160,99 @@ describe('Dropdown', () => {
     await openDropdown(wrapper)
 
     expect(document.body.querySelector('.mg-dropdown-menu')).toBeNull()
+  })
+
+  // ==================== 键盘导航 ====================
+
+  it('ArrowDown 高亮下一项', async () => {
+    const wrapper = mountDropdown()
+    await openDropdown(wrapper)
+
+    // 打开后 resetActive 已高亮第一项，ArrowDown 移到第二项
+    const trigger = wrapper.find('.mg-dropdown-trigger')
+    await trigger.trigger('keydown', { key: 'ArrowDown' })
+    await nextTick()
+
+    const items = document.body.querySelectorAll('.mg-dropdown-item')
+    expect(items[1].classList.contains('mg-dropdown-item-active')).toBe(true)
+  })
+
+  it('ArrowUp 高亮上一项', async () => {
+    const wrapper = mountDropdown()
+    await openDropdown(wrapper)
+
+    const trigger = wrapper.find('.mg-dropdown-trigger')
+    // 打开后高亮第一项，ArrowDown 到第二项
+    await trigger.trigger('keydown', { key: 'ArrowDown' })
+    await nextTick()
+
+    // ArrowUp 回到第一项
+    await trigger.trigger('keydown', { key: 'ArrowUp' })
+    await nextTick()
+
+    const items = document.body.querySelectorAll('.mg-dropdown-item')
+    expect(items[0].classList.contains('mg-dropdown-item-active')).toBe(true)
+  })
+
+  it('Home 键跳到第一项', async () => {
+    const wrapper = mountDropdown()
+    await openDropdown(wrapper)
+
+    const trigger = wrapper.find('.mg-dropdown-trigger')
+    // 先移到第二项
+    await trigger.trigger('keydown', { key: 'ArrowDown' })
+    await nextTick()
+
+    // Home 回到第一项
+    await trigger.trigger('keydown', { key: 'Home' })
+    await nextTick()
+
+    const items = document.body.querySelectorAll('.mg-dropdown-item')
+    expect(items[0].classList.contains('mg-dropdown-item-active')).toBe(true)
+  })
+
+  it('End 键跳到最后一项', async () => {
+    const wrapper = mountDropdown()
+    await openDropdown(wrapper)
+
+    const trigger = wrapper.find('.mg-dropdown-trigger')
+    await trigger.trigger('keydown', { key: 'End' })
+    await nextTick()
+
+    const items = document.body.querySelectorAll('.mg-dropdown-item')
+    expect(items[items.length - 1].classList.contains('mg-dropdown-item-active')).toBe(true)
+  })
+
+  it('Enter 键选中高亮项', async () => {
+    const wrapper = mountDropdown()
+    await openDropdown(wrapper)
+
+    // 打开后 resetActive 高亮第一项（edit），直接 Enter 选中
+    const trigger = wrapper.find('.mg-dropdown-trigger')
+    await trigger.trigger('keydown', { key: 'Enter' })
+    await nextTick()
+
+    expect(wrapper.emitted('select')).toHaveLength(1)
+    expect(wrapper.emitted('select')![0][0]).toBe('edit')
+  })
+
+  it('键盘导航跳过 disabled 项', async () => {
+    const wrapper = mountDropdown({
+      options: [
+        { key: 'a', label: 'A' },
+        { key: 'b', label: 'B', disabled: true },
+        { key: 'c', label: 'C' },
+      ],
+    })
+    await openDropdown(wrapper)
+
+    // 打开后高亮 A（index 0），ArrowDown 应跳过 disabled B 到 C（index 2）
+    const trigger = wrapper.find('.mg-dropdown-trigger')
+    await trigger.trigger('keydown', { key: 'ArrowDown' })
+    await nextTick()
+
+    const items = document.body.querySelectorAll('.mg-dropdown-item')
+    expect(items[2].classList.contains('mg-dropdown-item-active')).toBe(true)
+    expect(items[1].classList.contains('mg-dropdown-item-active')).toBe(false)
   })
 })

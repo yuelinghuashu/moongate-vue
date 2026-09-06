@@ -59,3 +59,15 @@ export interface DropdownOption {
   /** 是否为分隔线（其他字段忽略） */
   separator?: boolean
 }
+
+/** 有序导航项 — SeriesNav */
+export interface SeriesNavItem {
+  /** 唯一标识（active 匹配用） */
+  key: string
+  /** 行文本 */
+  label: string
+  /** 链接地址（存在且未禁用则渲染为 <a>） */
+  href?: string
+  /** 是否禁用 */
+  disabled?: boolean
+}

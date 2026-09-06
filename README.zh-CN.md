@@ -8,7 +8,7 @@
 
 Moongate Vue 是一个受月亮启发的极简 Vue 3 组件库。设计令牌驱动，CSS 优先，框架无关。
 
-**完整组件库（JS + CSS）gzipped 体积保持 25KB 以内**，比主流组件库轻一个数量级以上。实时数据见上方 [Bundlephobia 徽章](https://bundlephobia.com/package/moongate-vue)。
+**完整组件库（JS + CSS）gzipped 体积保持 25KB 以内**。实时数据见上方 [Bundlephobia 徽章](https://bundlephobia.com/package/moongate-vue)。
 
 ## 特性
 
@@ -16,10 +16,10 @@ Moongate Vue 是一个受月亮启发的极简 Vue 3 组件库。设计令牌驱
 - 📦 **极致轻量** — 完整组件库（JS + CSS）在 **25KB** (gzipped) 以内
 - 🎨 **设计令牌驱动** — 基于 CSS 变量，主题切换 effortless
 - 🔧 **CSS 优先** — 样式与逻辑解耦，可跨框架复用
-- ✨ **极简 API** — 每个组件 2-8 个 props，易学易用
+- ✨ **极简 API** — 绝大多数组件 2-8 个 props（少数复杂组件如 Button/Select 略多），易学易用
 - 🚀 **零依赖** — 无需额外配置，开箱即用
 - ⚡ **SSR 就绪** — 完美适配 Nuxt 4 / VitePress 等服务端渲染场景
-- ✅ **测试保障** — Vitest + jsdom 全覆盖，28 个组件 + 3 个公开 composables（`useForm` / `useMessage` / `useToast`）+ SSR/a11y 回归 + Playwright e2e，共 449 个测试（语句覆盖率 95% / 分支覆盖率 86%）
+- ✅ **测试保障** — Vitest + jsdom 全覆盖，29 个组件 + 3 个公开 composables（`useForm` / `useMessage` / `useToast`）+ SSR/a11y 回归 + Playwright e2e（26 用例），共 497 个测试（语句覆盖率 95% / 分支覆盖率 86%）
 - 🔧 **工程规范** — ESLint + Prettier 统一风格，husky 提交前自动检查
 
 ## 安装
@@ -61,12 +61,12 @@ const message = useMessage()
 | -------- | ---------------------------------------------------------------------------- |
 | 基础     | `Button` `Card` `Badge` `Divider`                                            |
 | 表单     | `Form` `FormItem` `Input` `Textarea` `Checkbox` `Radio` `Switch` `Select`    |
-| 数据展示 | `Table` `Pagination` `Tabs`                                                  |
+| 数据展示 | `Table` `Pagination` `Tabs` `SeriesNav`                                      |
 | 布局     | `Container` `Header` `Main` `Footer` `Hero`                                  |
 | 反馈     | `Modal` `Toast` `Message` `Tooltip` `Popover` `Drawer` `Skeleton` `Dropdown` |
 | 样式工具 | `Link` `Code`                                                                |
 
-> **说明**：总计 **28 个组件 + 2 个样式工具**，覆盖日常开发绝大多数场景。
+> **说明**：总计 **29 个组件 + 2 个样式工具**，覆盖日常开发绝大多数场景。
 
 ## TypeScript 类型
 

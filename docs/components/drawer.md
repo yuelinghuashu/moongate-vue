@@ -189,4 +189,5 @@ const open = ref(false)
 - 抽屉打开时会自动锁定 body 滚动，关闭时恢复。
 - 支持按 ESC 键关闭（可通过 `enableEsc` 禁用）。
 - 打开时自动启用焦点陷阱（可通过 `enableFocusTrap` 禁用）。
+- 关闭后焦点自动返回打开前的触发元素（WCAG 2.4.3）。
 - 包含完整的 ARIA 无障碍属性。

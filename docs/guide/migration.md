@@ -4,14 +4,14 @@
 
 ## 设计理念差异
 
-| 维度       | Element Plus                            | Moongate Vue                               |
-| ---------- | --------------------------------------- | ------------------------------------------ |
-| 依赖       | 有运行时依赖（@popperjs 等）            | 零依赖                                     |
-| 样式       | CSS-in-JS + SCSS                        | CSS 变量（设计令牌）                       |
-| Props 数量 | 每个组件 10-30+                         | 每个组件 2-8                               |
-| 表单校验   | 内置校验器（required/email/min/max...） | 优先原生 HTML5，`useForm` 只做原生做不到的 |
-| 主题       | 通过 SCSS 变量或 ConfigProvider         | 通过 CSS 变量覆盖                          |
-| 图标       | 内置图标组件                            | 不提供，使用插槽或第三方图标库             |
+| 维度       | Element Plus                            | Moongate Vue                                    |
+| ---------- | --------------------------------------- | ----------------------------------------------- |
+| 依赖       | 有运行时依赖（@popperjs 等）            | 零依赖                                          |
+| 样式       | CSS-in-JS + SCSS                        | CSS 变量（设计令牌）                            |
+| Props 数量 | 每个组件 10-30+                         | 大多数组件 2-8（复杂组件如 Button/Select 略多） |
+| 表单校验   | 内置校验器（required/email/min/max...） | 优先原生 HTML5，`useForm` 只做原生做不到的      |
+| 主题       | 通过 SCSS 变量或 ConfigProvider         | 通过 CSS 变量覆盖                               |
+| 图标       | 内置图标组件                            | 不提供，使用插槽或第三方图标库                  |
 
 ## 安装
 
@@ -201,4 +201,4 @@ Moongate 遵循"原生优先"理念。`clearable` 可以通过在输入框旁放
 
 ### 为什么 Message 需要在 setup 中调用？
 
-Element Plus 的 `ElMessage` 是全局单例，依赖全局注册。Moongate 的 `useMessage()` 是组合式函数，不依赖全局状态，更适合 SSR 和测试。
+Element Plus 的 `ElMessage` 是全局单例，依赖全局注册。Moongate 的 `useMessage()` 是组合式函数，不依赖全局状态——两种设计各有适用场景，组合式函数在组件内调用时无需全局注册。

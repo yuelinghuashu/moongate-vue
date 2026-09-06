@@ -19,7 +19,7 @@ test.describe('组件渲染冒烟', () => {
   test('表单组件正常渲染', async ({ page }) => {
     await page.goto('/')
 
-    await expect(page.locator('.mg-input')).toBeVisible()
+    await expect(page.locator('.mg-input').first()).toBeVisible()
     await expect(page.locator('.mg-textarea')).toBeVisible()
     await expect(page.locator('.mg-checkbox')).toBeVisible()
     await expect(page.locator('.mg-radio')).toBeVisible()

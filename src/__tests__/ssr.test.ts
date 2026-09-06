@@ -26,6 +26,7 @@ import Tabs from '../components/Tabs.vue'
 import Textarea from '../components/Textarea.vue'
 import Toast from '../components/Toast.vue'
 import Tooltip from '../components/Tooltip.vue'
+import SeriesNav from '../components/SeriesNav.vue'
 
 const renderSSR = async (
   component: any,
@@ -93,6 +94,21 @@ describe('SSR 兼容性（renderToString 不崩溃）', () => {
         },
       ),
     ).toContain('mg-tabs')
+  })
+
+  it('SeriesNav 可 SSR 渲染并保持折叠状态', async () => {
+    const items = Array.from({ length: 7 }, (_, i) => ({
+      key: `p-${i + 1}`,
+      label: `Part ${i + 1}`,
+      href: `/p/${i + 1}`,
+    }))
+    const html = await renderSSR(SeriesNav, {
+      items,
+      active: 'p-4',
+      visibleCount: 5,
+    })
+    expect(html).toContain('mg-series-nav')
+    expect(html).toContain('mg-series-nav-toggle')
   })
 
   it('悬浮层组件可 SSR 渲染且默认隐藏', async () => {

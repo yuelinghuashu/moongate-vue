@@ -11,7 +11,7 @@ const Host = defineComponent({
       'internal-class': true,
       'dynamic-class': attrs.active === 'true',
     }))
-    return () => h('div', { ...attrsWithoutClass, class: mergedClass.value }, [])
+    return () => h('div', { ...attrsWithoutClass.value, class: mergedClass.value }, [])
   },
 })
 
@@ -37,7 +37,7 @@ describe('useAttrsWithClass', () => {
       inheritAttrs: false,
       setup() {
         const { attrsWithoutClass, mergedClass } = useAttrsWithClass(() => ['base', { cond: true }])
-        return () => h('div', { ...attrsWithoutClass, class: mergedClass.value }, [])
+        return () => h('div', { ...attrsWithoutClass.value, class: mergedClass.value }, [])
       },
     })
     const wrapper = mount(HostArray)
@@ -55,7 +55,7 @@ describe('useAttrsWithClass', () => {
           'internal-class': true,
           'dynamic-class': props.dynamic,
         }))
-        return () => h('div', { ...attrsWithoutClass, class: mergedClass.value }, [])
+        return () => h('div', { ...attrsWithoutClass.value, class: mergedClass.value }, [])
       },
     })
 

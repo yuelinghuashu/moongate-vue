@@ -202,4 +202,76 @@ describe('Form + FormItem + useForm 端到端', () => {
     expect(wrapper.find('.mg-form-item__error').exists()).toBe(false)
     expect(wrapper.find('.mg-form-item').classes()).not.toContain('mg-form-item--error')
   })
+
+  it('submit 时 validate() 校验全部字段并返回结果', async () => {
+    const submitResult = { valid: false, values: null as any }
+
+    const Host = defineComponent({
+      components: { Form, FormItem },
+      setup() {
+        const { values, errors, validatingFields, validate } = useForm({
+          initialValues: { username: '', email: '' },
+          rules: {
+            username: (v: string) => (v.length >= 3 ? true : '用户名至少 3 个字符'),
+            email: (v: string) => (v.includes('@') ? true : '邮箱格式不正确'),
+          },
+        })
+
+        const handleSubmit = async () => {
+          const ok = await validate()
+          submitResult.valid = ok
+          submitResult.values = { ...values }
+        }
+
+        return () =>
+          h(Form, { errors, validatingFields, onSubmit: handleSubmit }, () => [
+            h(FormItem, { name: 'username', label: '用户名' }, () =>
+              h('input', {
+                class: 'inp-username',
+                value: values.username,
+                onInput: (e: Event) => {
+                  values.username = (e.target as HTMLInputElement).value
+                },
+              }),
+            ),
+            h(FormItem, { name: 'email', label: '邮箱' }, () =>
+              h('input', {
+                class: 'inp-email',
+                value: values.email,
+                onInput: (e: Event) => {
+                  values.email = (e.target as HTMLInputElement).value
+                },
+              }),
+            ),
+            h('button', { type: 'submit', class: 'submit-btn' }, '提交'),
+          ])
+      },
+    })
+
+    const wrapper = mount(Host)
+
+    // 空表单提交：两个字段都不通过
+    await wrapper.find('.submit-btn').trigger('submit')
+    await nextTick()
+    await nextTick()
+    expect(submitResult.valid).toBe(false)
+    expect(wrapper.findAll('.mg-form-item__error')).toHaveLength(2)
+
+    // 填写 username 但 email 不合法
+    await wrapper.find('.inp-username').setValue('alice')
+    await wrapper.find('.submit-btn').trigger('submit')
+    await nextTick()
+    await nextTick()
+    expect(submitResult.valid).toBe(false)
+    expect(wrapper.findAll('.mg-form-item__error')).toHaveLength(1)
+
+    // 全部填写正确
+    await wrapper.find('.inp-email').setValue('alice@example.com')
+    await wrapper.find('.submit-btn').trigger('submit')
+    await nextTick()
+    await nextTick()
+    expect(submitResult.valid).toBe(true)
+    expect(wrapper.findAll('.mg-form-item__error')).toHaveLength(0)
+    expect(submitResult.values).toEqual({ username: 'alice', email: 'alice@example.com' })
+  })
 })

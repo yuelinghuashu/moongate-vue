@@ -37,10 +37,10 @@
 
 /* ========== 类型变体 - 左侧彩色边框 ========== */
 .mg-message-success {
-  border-left: 3px solid var(--ui-success, #059669);
+  border-left: 3px solid var(--ui-success, #047857);
 }
 .mg-message-success .mg-message-icon {
-  color: var(--ui-success, #059669);
+  color: var(--ui-success, #047857);
 }
 
 .mg-message-error {
@@ -58,10 +58,10 @@
 }
 
 .mg-message-info {
-  border-left: 3px solid var(--ui-primary, #0284c7);
+  border-left: 3px solid var(--ui-primary, #1e40af);
 }
 .mg-message-info .mg-message-icon {
-  color: var(--ui-primary, #0284c7);
+  color: var(--ui-primary, #1e40af);
 }
 
 /* ========== 图标 ========== */
@@ -71,7 +71,7 @@
   justify-content: center;
   flex-shrink: 0;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: var(--ui-typography-size-body);
 }
 
 /* ========== 消息内容 ========== */
@@ -94,7 +94,7 @@
 }
 
 .mg-message-close:hover {
-  color: var(--ui-primary, #0284c7);
+  color: var(--ui-primary, #1e40af);
 }
 
 /* ========== 动画 ========== */

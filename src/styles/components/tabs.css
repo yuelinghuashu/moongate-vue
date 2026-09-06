@@ -23,12 +23,12 @@
 }
 
 .mg-tab:hover {
-  color: var(--ui-primary, #0284c7);
+  color: var(--ui-primary, #1e40af);
 }
 
 .mg-tab-active {
-  color: var(--ui-primary, #0284c7);
-  border-bottom-color: var(--ui-primary, #0284c7);
+  color: var(--ui-primary, #1e40af);
+  border-bottom-color: var(--ui-primary, #1e40af);
 }
 
 .mg-tab:disabled {
@@ -37,7 +37,7 @@
 }
 
 .mg-tab:focus-visible {
-  outline: var(--ui-physics-focus-ring, 2px) solid var(--ui-primary, #0284c7);
+  outline: var(--ui-physics-focus-ring, 2px) solid var(--ui-primary, #1e40af);
   outline-offset: calc(-1 * var(--ui-physics-focus-ring, 2px));
 }
 
@@ -74,7 +74,7 @@
 .mg-tabs-card .mg-tab-active {
   background-color: var(--ui-bg-elevated, #ffffff);
   border-bottom-color: var(--ui-bg-elevated, #ffffff);
-  color: var(--ui-primary, #0284c7);
+  color: var(--ui-primary, #1e40af);
 }
 
 /* 内容面板 */

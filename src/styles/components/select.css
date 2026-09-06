@@ -231,12 +231,9 @@
   height: 18px;
 }
 
-/* 下拉面板 */
+/* 下拉面板（Teleport 到 body，fixed 定位，坐标由 Select 计算） */
 .mg-select-dropdown {
-  position: absolute;
-  top: calc(100% + var(--ui-spacing-xs));
-  left: 0;
-  right: 0;
+  position: fixed;
   max-height: 240px;
   overflow-y: auto;
   background-color: var(--ui-bg-elevated);

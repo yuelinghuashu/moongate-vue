@@ -1,19 +1,16 @@
-/* ===== Tooltip（CSS Anchor Positioning 实验版） ===== */
+/* ===== Tooltip（JS 定位：useFloating 提供 top/left） ===== */
 
 .mg-tooltip-trigger {
   display: inline-block;
   cursor: pointer;
-  /* 声明触发元素为锚点 */
-  anchor-name: --mg-tooltip-trigger;
 }
 
 .mg-tooltip {
   position: fixed;
-  position-anchor: --mg-tooltip-trigger;
   z-index: var(--ui-z-index-tooltip, 1500);
   padding: var(--ui-spacing-xs, 4px) var(--ui-spacing-sm, 8px);
-  background-color: var(--ui-bg-elevated, #1e293b);
-  color: var(--ui-text, #e2e8f0);
+  background-color: var(--ui-surface-tooltip, #e2e8f0);
+  color: var(--ui-text, #0f172a);
   font-size: var(--ui-typography-size-small, 12px);
   border-radius: var(--ui-radius-sm, 2px);
   white-space: nowrap;
@@ -21,43 +18,13 @@
   pointer-events: none;
   opacity: 0;
   transition: opacity var(--ui-motion-duration-neural, 150ms) ease;
-
-  /* 视口边缘自动翻转（CSS 原生，替代 JS 翻转检测） */
-  position-try-fallbacks: flip-block, flip-inline;
 }
 
 .mg-tooltip-visible {
   opacity: 1;
 }
 
-/* ===== 四方向定位（anchor() 函数显式定位） ===== */
-
-.mg-tooltip-top {
-  bottom: calc(anchor(top) + var(--mg-tooltip-offset, 8px));
-  left: anchor(center);
-  translate: -50% 0;
-}
-
-.mg-tooltip-bottom {
-  top: calc(anchor(bottom) + var(--mg-tooltip-offset, 8px));
-  left: anchor(center);
-  translate: -50% 0;
-}
-
-.mg-tooltip-left {
-  right: calc(anchor(left) + var(--mg-tooltip-offset, 8px));
-  top: anchor(center);
-  translate: 0 -50%;
-}
-
-.mg-tooltip-right {
-  left: calc(anchor(right) + var(--mg-tooltip-offset, 8px));
-  top: anchor(center);
-  translate: 0 -50%;
-}
-
-/* ===== 箭头（anchor() 函数定位，始终指向锚点中心） ===== */
-
+/* 箭头（纯装饰，相对浮层盒定位，不参与浮层定位计算） */
 .mg-tooltip-arrow {
   position: absolute;
   width: 8px;
@@ -66,30 +33,26 @@
   transform: rotate(45deg);
 }
 
-/* top：浮层在锚点上方，箭头水平居中于锚点、贴浮层底缘 */
 .mg-tooltip-top .mg-tooltip-arrow {
   bottom: -4px;
-  left: anchor(center);
+  left: 50%;
   translate: -50% 0;
 }
 
-/* bottom：箭头水平居中于锚点、贴浮层顶缘 */
 .mg-tooltip-bottom .mg-tooltip-arrow {
   top: -4px;
-  left: anchor(center);
+  left: 50%;
   translate: -50% 0;
 }
 
-/* left：箭头垂直居中于锚点、贴浮层右缘 */
 .mg-tooltip-left .mg-tooltip-arrow {
   right: -4px;
-  top: anchor(center);
+  top: 50%;
   translate: 0 -50%;
 }
 
-/* right：箭头垂直居中于锚点、贴浮层左缘 */
 .mg-tooltip-right .mg-tooltip-arrow {
   left: -4px;
-  top: anchor(center);
+  top: 50%;
   translate: 0 -50%;
 }

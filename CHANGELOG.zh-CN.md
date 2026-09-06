@@ -2,6 +2,55 @@
 
 [English](./CHANGELOG.md) | **中文**
 
+## [1.7.0] - 2026-09-06
+
+### 🚀 新特性
+
+- **`SeriesNav` 系列导航组件**：有序内容导航列表，用于展示"文章系列/目录"（教程、专栏、长篇连载）。按序编号、当前篇高亮（`aria-current`）、超过阈值时折叠为单一 "N more parts..." 收缩占位（固定展示首/末/激活项，其余折叠，点击展开）；纯展示组件，不排序、不注入业务数据，顺序与激活态由调用方给定；5 个 props（`items`/`active`/`title`/`numbered`/`visibleCount`）、`#item` 与 `#title` 插槽、SSR 安全、axe 零违规。新增 `SeriesNavProps`/`SeriesNavItem` 类型与 `'moongate-vue/series-nav'` 按需入口（gzip 约 +1KB）
+- **Tooltip 定位改为 JS（useFloating）**：弃用 CSS Anchor Positioning（`anchor()` 超出声明浏览器基线，Firefox/旧 Safari 下浮层错位），统一为 JS 定位与视口翻转、`awaitNextTick` 定位校准；支持移入内容区不误关
+- **Tooltip 新增 `hideDelay` prop**（默认 100ms，与 Popover 行为对齐）
+- **Select 下拉 Teleport 化**：下拉面板从 `position:absolute`（wrapper 内，overflow 容器被裁剪）改为 **Teleport 到 body + fixed 定位**，坐标由 JS 计算（贴输入框底部 + 视口翻转、滚动/窗口变化跟随），与 Dropdown/Popover 定位策略统一
+- **Select 键盘 Home/End**：新增首/末项快捷跳转（WAI-ARIA listbox 键盘约定）
+- **`prefers-reduced-motion` 支持**：系统减弱动效时禁用 message/toast/skeleton/button 关键帧动画，并将 Modal/Drawer/Dropdown/Popover/Tooltip/Select 下拉等浮层的显隐位移过渡归零（transition 型，hover 颜色过渡保留）
+- **RTL 基础支持**：toast 容器方位、message/toast 彩色边方向、select（原生 + 可搜索模式）箭头与输入内边距镜像随 `[dir="rtl"]` 翻转
+
+### 🐛 Bug 修复
+
+- **Tooltip 悬浮不显示**：浮层从未绑定 `mg-tooltip-visible`，`opacity: 0` 恒不可见（修改前版本即存在，jsdom 单测未覆盖视觉）；已补绑定 + 可见性断言
+- **Modal/Drawer 关闭后焦点不返回触发元素**（违反 WCAG 2.4.3）：useScrollLock 打开时记录焦点元素，关闭时安全归还（isConnected/disabled 守卫）
+- **`useAttrsWithClass` 透传非响应式**：`attrsWithoutClass` 是 setup 快照，父组件动态改 `id`/`data-*`/`style` 不透传到根元素；改为按需响应式读取
+- **Select `aria-activedescendant` 绑定位置错误**：此前绑在 listbox 容器而非获得焦点的 input（屏幕阅读器读不到）；已移到 input 并移除 listbox 冗余绑定
+- **Select Tab 键无法关闭下拉**：`mousedownInside` 残留 `true` 导致 blur 被误判为"点击选项"，下拉不关闭；打开时重置
+- **CSS 变量语义修复**：`--ui-overlay-scrim` token 此前缺失（modal/drawer 引用仅靠 fallback）；tooltip 改用专用 `--ui-surface-tooltip`；skeleton 高光改为 `--ui-fill-medium`；switch 未选中滑块改用中性色；多处陈旧 fallback 同步为当前 token 值；按钮/复选框/开关硬编码 `white` 改用 `--ui-white`
+- **smoke e2e 严格模式冲突**（`.mg-input` 匹配多元素既有问题）修复
+- **Dropdown 触发容器 ARIA 语义修复**：触发容器不再声明 `role="button"`/`aria-expanded`——无 role 元素挂载这些属性触发 axe `aria-allowed-attr`，而 `role="button"` 容器包裹插槽内真实按钮又会触发 axe `nested-interactive`；菜单语义交由 `role="menu"` 与插槽自身的触发元素（Button）承担（与 Element Plus / Ant Design 一致）
+- **Toast/Message 缺失播报语义**：Message 补 `role="alert"`；Toast 补 `role="status"`（`error` 类型提升为 `role="alert"`），屏幕阅读器可感知通知的出现与类型
+
+### 🎨 设计令牌
+
+- **新增 `--ui-overlay-scrim` token**（浅 `#00000080` / 深 `#000000b3`），走 moongate-theme 语义层生成链
+- **补全字号档**：`--ui-typography-size-xl`（24px）、`-title`（20px）、`-display/-display-lg/-display-xl`（40/48/60px）；modal/drawer 标题、关闭按钮、message 图标、hero 标题从硬编码字号改用 token
+- **语义层补充消费者注释**（hoverBg/selectedBg/surfaceFloating/borderFloating/fill 系），明确 workbench 与组件库消费归属
+
+### 🧪 工程与测试
+
+- **新增 `scripts/check-tokens.ts`**：校验所有 `var(--ui-*)` 引用有定义、fallback 与 token 一致（分浅/深段、时长单位归一），孤儿 token 仅警告；已接入 `verify:build`（`pnpm build` 自动执行）
+- **e2e 键盘/焦点覆盖**：新增 `select-keyboard.spec.ts`（activedescendant 跟随、Home/End、过滤不越界、Enter/Esc/Tab）与 `modal-focus.spec.ts`（打开焦点入弹层、关闭焦点回触发按钮）；e2e 总计 26 用例全绿
+- **代码去重**：抽取 `isBrowser` 共享常量（`src/utils/env.ts`）统一 5 处浏览器环境检测；抽取 `useClickOutside` composable 统一 Popover/Dropdown 的点击外部关闭逻辑（监听注册/清理），净减约 50 行重复
+- **scripts 迁移 TypeScript**：`component-list` / `verify-build` / `clean-dts` / `check-tokens` 由 `.js/.mjs` 改为 `.ts`，Node.js 24 原生 type-stripping 直接运行，零新增依赖
+- **axe 可访问性覆盖扩展至全部 29 个组件**：补齐 Badge/Card/Container/Divider/Footer/Header/Hero/Main/Skeleton/Form/FormItem 与 Dropdown（关闭/打开两态）用例；FormItem 错误态验证 `aria-describedby` 实际指向错误元素
+- 单测总数 **534**（新增 useClickOutside / useNotification composable 用例、Dropdown 键盘导航用例与全组件 a11y 矩阵）
+
+### 📝 文档
+
+- 新增 `series-nav.md` 组件文档（5 个交互示例 + API）；`components/index.md`、README（中英）、docs 侧边栏、philosophy/nuxt-integration 的组件计数同步更新至 29 个组件
+- `tooltip.md` 补充 `hideDelay`；`design-tokens.md` 补充字号档与 overlay-scrim token 值
+- README/philosophy 修正「每个组件 2-8 props」宣传口径（Button/Select 等复杂组件 11 个，注明取舍边界）
+- 新增 `accessibility.md` 无障碍指南：WCAG 2.1 AA 对齐声明、29 组件键盘交互对照表、reduced-motion / RTL 支持矩阵、Dropdown 触发语义与 Skeleton 用法建议
+- Guide 文档去重收敛：样式引入、原生校验理念、SSR 机制等重复段落统一指向权威页（`install` / `philosophy`），各功能文档保留操作内容与交叉链接
+
+---
+
 ## [1.6.0] - 2026-08-18
 
 ### 🚀 新特性

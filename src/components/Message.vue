@@ -4,6 +4,7 @@
     v-bind="attrsWithoutClass"
     class="mg-message"
     :class="[`mg-message-${type}`, { 'mg-message-leave': leaving }, mergedClass]"
+    role="alert"
   >
     <span class="mg-message-icon">
       <slot name="icon">

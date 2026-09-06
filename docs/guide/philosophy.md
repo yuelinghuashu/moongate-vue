@@ -17,9 +17,7 @@ Moongate Vue 的 `dependencies` 为空。没有 Popper、没有 Lodash、没有 
 }
 ```
 
-对比 Maz-UI：11 个运行时依赖（chart.js、dayjs、valibot、libphonenumber-js 等），仅 `libphonenumber-js` 一个就 150KB+。
-
-**不这样做会怎样：** 用户安装一个按钮组件，被迫引入一整条依赖链。每个依赖都可能有安全漏洞、版本冲突、或意外的行为变更。组件库应该对自己的行为负全责，而不是把责任转嫁给第三方。
+对比带较多运行时依赖的库（例如自带图表、日期处理等功能的库），用户安装一个按钮组件，可能被迫引入一整条依赖链。每个依赖都可能有安全漏洞、版本冲突、或意外的行为变更。组件库应该对自己的行为负全责，而不是把责任转嫁给第三方。
 
 ## CSS 优先
 
@@ -54,19 +52,21 @@ Moongate Vue 的 `dependencies` 为空。没有 Popper、没有 Lodash、没有 
 
 > 每多一个 prop，就多一个决策负担给用户。
 
-Moongate 的每个组件控制在 2-8 个 props：
+Moongate 的**大多数**组件控制在 2-8 个 props；少数复杂组件（Button、Select 等）会略多，但每个 prop 都经过「是否真的需要让用户控制」的取舍：
 
-| 组件   | Props 数 | 关键 Props                                                   |
-| ------ | -------- | ------------------------------------------------------------ |
-| Button | 7        | `label` `variant` `color` `size` `type` `disabled` `loading` |
-| Input  | 5        | `type` `placeholder` `disabled` `readonly` `size`            |
-| Modal  | 5        | `title` `size` `closable` `escClosable` `overlayClosable`    |
+| 组件   | Props 数 | 关键 Props                                                                                                                       |
+| ------ | -------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Input  | 6        | `type` `placeholder` `disabled` `readonly` `size` `error`                                                                        |
+| Modal  | 7        | `title` `size` `closable` `escClosable` `overlayClosable` `closeAriaLabel` `enableEsc`                                           |
+| Button | 11       | 基础 `label` `variant` `color` `size` `type` `disabled`；加载态 `loading` `loadingLabel` `showLabelWhileLoading`；`icon` `block` |
+
+> 说明：Button/Select 的 props 数超过 8 是**功能所需**——加载态、图标、多选等复杂交互没有合理默认值可省略。极简的边界不是「硬卡 8 个」，而是**每个 prop 都答得出「用户真的需要控制这个吗？」**。
 
 这不是功能缺失，是刻意取舍。每个 prop 都要问：**用户真的需要控制这个吗？还是有合理的默认值？**
 
 例如 Button 的 `type` 默认 `'button'` 而不是 `'submit'` — 因为放在 `<form>` 外的按钮触发提交是最常见的意外 bug。
 
-**不这样做会怎样：** 某些库的 Button 有 20+ props（shape、ghost、block、loading、icon、href、target、htmlType...），新用户打开文档就被淹没。极简 API 的目标是：**看一眼 props 就知道怎么用，不需要读文档。**
+**不这样做会怎样：** 一个按钮如果堆上 shape、ghost、block、loading、icon、href、target、htmlType 等十几个开关，新用户打开文档就被淹没。极简 API 的目标是：**看一眼 props 就知道怎么用，不需要读文档。**
 
 ## 优先原生能力
 
@@ -94,7 +94,7 @@ const { values, errors, validate } = useForm({
 </script>
 ```
 
-**不这样做会怎样：** Element Plus 的 Form 组件有完整的内置校验器（required、email、url、type、pattern、min、max、len、enum、whitespace、transform、asyncValidator...），这些本质上是用 JS 重新实现了浏览器原生的 Constraint Validation API。用户学了一套组件库专属的校验 DSL，离开这个库就用不上了。
+**不这样做会怎样：** 一些组件库的 Form 组件提供完整的内置校验器（required、email、url、type、pattern、min、max、asyncValidator...），它们本质上是把浏览器已有的 Constraint Validation API 用 JS 再实现一遍。用户需要学一套组件库专属的校验 DSL，离开这个库就用不上了。
 
 ## 非侵入式
 
@@ -122,7 +122,7 @@ const { values, errors, validate } = useForm({
 <Button data-testid="submit" aria-label="提交表单" class="custom-class" />
 ```
 
-**不这样做会怎样：** Tailwind CSS 的 Preflight 会重置所有元素的默认样式（`h1` 到 `h6` 全部变成 `font-size: inherit`），在引入组件库的页面中可能导致意外的样式覆盖。非侵入式设计让用户完全控制自己的全局样式。
+**不这样做会怎样：** 带有全局重置的样式方案（例如 CSS Preflight）会改写元素默认样式（如 `h1` 到 `h6` 变为 `font-size: inherit`），引入组件库后可能与页面既有样式互相覆盖。非侵入式设计让用户完全控制自己的全局样式。
 
 ## SSR 安全
 
@@ -150,4 +150,4 @@ if (validateOnMount) {
 const titleId = useId() // 服务端和客户端生成相同的 ID
 ```
 
-**不这样做会怎样：** 在 Nuxt 或 VitePress 中使用时，服务端渲染阶段访问 `document` 会直接崩溃。28 个组件全部通过了 `renderToString` 的 SSR 兼容性测试。
+**不这样做会怎样：** 在 Nuxt 或 VitePress 中使用时，服务端渲染阶段访问 `document` 会直接崩溃。29 个组件全部通过了 `renderToString` 的 SSR 兼容性测试。

@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { resolve, dirname } from 'path'
 import { fileURLToPath } from 'url'
-import { componentNames } from './scripts/component-list.js'
+import { componentNames } from './scripts/component-list.ts'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 

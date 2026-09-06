@@ -132,6 +132,7 @@ import { Tooltip, Button } from 'moongate-vue'
 | `content`   | `string`                                 | `''`    | 提示内容                   |
 | `placement` | `'top' \| 'bottom' \| 'left' \| 'right'` | `'top'` | 提示位置                   |
 | `showDelay` | `number`                                 | `0`     | 显示延迟（毫秒）           |
+| `hideDelay` | `number`                                 | `100`   | 隐藏延迟（毫秒）           |
 | `offset`    | `number`                                 | `8`     | 与触发元素的偏移量（像素） |
 
 ### Slots

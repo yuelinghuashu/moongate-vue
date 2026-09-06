@@ -38,8 +38,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, useId, onMounted, onUnmounted } from 'vue'
+import { computed, useId } from 'vue'
 import { useFloating } from '../composables/useFloating'
+import { useClickOutside } from '../composables/useClickOutside'
 import type { PopoverProps } from '../types/props'
 
 defineOptions({ name: 'Popover', inheritAttrs: false })
@@ -92,31 +93,7 @@ const {
 
 // ==================== 点击外部关闭 ====================
 
-/** SSR 安全 */
-const isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined'
-
-const handleClickOutside = (event: MouseEvent) => {
-  if (!visible.value) return
-  const target = event.target as Node
-  // 点击触发区或弹出层内部不关闭
-  if (
-    (triggerRef.value && triggerRef.value.contains(target)) ||
-    (floatingRef.value && floatingRef.value.contains(target))
-  ) {
-    return
-  }
-  hide()
-}
-
-onMounted(() => {
-  if (isBrowser) {
-    document.addEventListener('mousedown', handleClickOutside)
-  }
-})
-
-onUnmounted(() => {
-  if (isBrowser) {
-    document.removeEventListener('mousedown', handleClickOutside)
-  }
+useClickOutside([triggerRef, floatingRef], () => {
+  if (visible.value) hide()
 })
 </script>

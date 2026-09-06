@@ -1,6 +1,6 @@
 {
   "name": "moongate-vue",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "keywords": [
     "vue",
     "vue3",
@@ -140,6 +140,11 @@
       "import": "./dist/select.js",
       "default": "./dist/select.js"
     },
+    "./series-nav": {
+      "types": "./dist/exports/SeriesNav.d.ts",
+      "import": "./dist/series-nav.js",
+      "default": "./dist/series-nav.js"
+    },
     "./skeleton": {
       "types": "./dist/exports/Skeleton.d.ts",
       "import": "./dist/skeleton.js",
@@ -185,7 +190,7 @@
     "clean": "rm -rf dist",
     "build": "pnpm run clean && vite build && pnpm run build:types && pnpm run clean:dts && pnpm run copy:reset && pnpm run verify:build",
     "copy:reset": "mkdir -p dist && cp src/styles/reset.css dist/reset.css",
-    "verify:build": "node scripts/verify-build.js",
+    "verify:build": "node scripts/verify-build.ts && node scripts/check-tokens.ts",
     "build:types": "vue-tsc -p tsconfig.build.json --emitDeclarationOnly --declaration --declarationDir ./dist --skipLibCheck",
     "prepublishOnly": "pnpm build && pnpm test",
     "docs:dev": "pnpm run register:components && vitepress dev docs",
@@ -199,7 +204,7 @@
     "format": "prettier --write .",
     "prepare": "husky",
     "docs:preview": "vitepress preview docs",
-    "clean:dts": "node scripts/clean-dts.js",
+    "clean:dts": "node scripts/clean-dts.ts",
     "publish": "npm publish --access public"
   },
   "peerDependencies": {

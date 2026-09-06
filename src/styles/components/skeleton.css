@@ -12,7 +12,7 @@
   background: linear-gradient(
     90deg,
     var(--ui-bg-muted, #f1f5f9) 25%,
-    var(--ui-bg-hover, #e2e8f0) 50%,
+    var(--ui-fill-medium, #e2e8f0) 50%,
     var(--ui-bg-muted, #f1f5f9) 75%
   );
   background-size: 200% 100%;
@@ -45,7 +45,7 @@
   background: linear-gradient(
     90deg,
     var(--ui-bg-muted, #f1f5f9) 25%,
-    var(--ui-bg-hover, #e2e8f0) 50%,
+    var(--ui-fill-medium, #e2e8f0) 50%,
     var(--ui-bg-muted, #f1f5f9) 75%
   );
   background-size: 200% 100%;
@@ -116,7 +116,7 @@
   background: linear-gradient(
     90deg,
     var(--ui-bg-muted, #1e293b) 25%,
-    var(--ui-bg-hover, #334155) 50%,
+    var(--ui-fill-medium, #252e40) 50%,
     var(--ui-bg-muted, #1e293b) 75%
   );
 }

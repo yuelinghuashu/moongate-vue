@@ -2,6 +2,20 @@ import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import Select, { type SelectValue } from '../../components/Select.vue'
 
+/**
+ * 挂载 Select：stub Teleport，让下拉留在组件内（jsdom 下 wrapper.find 才能查询到）。
+ * 注意：Teleport stub 仅影响测试查询，不影响组件逻辑（定位/fixed 由 JS 计算）。
+ */
+const mountSelect = (opts: any = {}, extraProps: any = {}) =>
+  mount(Select, {
+    ...opts,
+    props: { ...(opts.props ?? {}), ...extraProps },
+    global: {
+      ...(opts.global ?? {}),
+      stubs: { Teleport: true },
+    },
+  })
+
 const options = [
   { label: '苹果', value: 'apple' },
   { label: '香蕉', value: 'banana' },
@@ -10,14 +24,14 @@ const options = [
 
 describe('Select', () => {
   it('原生模式：渲染 options', () => {
-    const wrapper = mount(Select, { props: { options } })
+    const wrapper = mountSelect({ props: { options } })
     expect(wrapper.find('select').exists()).toBe(true)
     expect(wrapper.findAll('option')).toHaveLength(3)
     expect(wrapper.text()).toContain('苹果')
   })
 
   it('原生模式：placeholder 显示为 disabled option', () => {
-    const wrapper = mount(Select, { props: { options, placeholder: '请选择' } })
+    const wrapper = mountSelect({ props: { options, placeholder: '请选择' } })
     const placeholder = wrapper.find('option[value=""]')
     expect(placeholder.exists()).toBe(true)
     expect(placeholder.attributes('disabled')).toBeDefined()
@@ -25,7 +39,7 @@ describe('Select', () => {
   })
 
   it('原生模式：change 事件更新 modelValue', async () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: {
         options,
         'onUpdate:modelValue': (v: any) => wrapper.setProps({ modelValue: v }),
@@ -38,7 +52,7 @@ describe('Select', () => {
 
   it('原生模式：数字类型回溯', async () => {
     const numOptions = [1, 2, 3]
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: {
         options: numOptions,
         'onUpdate:modelValue': (v: any) => wrapper.setProps({ modelValue: v }),
@@ -49,18 +63,18 @@ describe('Select', () => {
   })
 
   it('原生模式：size/error class', () => {
-    const wrapper = mount(Select, { props: { options, size: 'lg', error: true } })
+    const wrapper = mountSelect({ props: { options, size: 'lg', error: true } })
     expect(wrapper.find('select').classes()).toContain('mg-select-lg')
     expect(wrapper.find('.mg-select-wrapper').classes()).toContain('mg-select-error')
   })
 
   it('原生模式：disabled', () => {
-    const wrapper = mount(Select, { props: { options, disabled: true } })
+    const wrapper = mountSelect({ props: { options, disabled: true } })
     expect(wrapper.find('select').attributes('disabled')).toBeDefined()
   })
 
   it('可搜索模式：聚焦打开下拉', async () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: { options, filterable: true },
       attachTo: document.body,
     })
@@ -71,7 +85,7 @@ describe('Select', () => {
   })
 
   it('可搜索模式：选项具备 role="option" 与 aria-selected', async () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: { options, filterable: true, modelValue: 'banana' },
       attachTo: document.body,
     })
@@ -87,7 +101,7 @@ describe('Select', () => {
   })
 
   it('可搜索模式：选中选项更新 modelValue', async () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: {
         options,
         filterable: true,
@@ -101,7 +115,7 @@ describe('Select', () => {
   })
 
   it('可搜索模式：搜索过滤选项', async () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: { options, filterable: true },
       attachTo: document.body,
     })
@@ -112,7 +126,7 @@ describe('Select', () => {
   })
 
   it('可搜索模式：空状态显示 emptyText', async () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: { options, filterable: true, emptyText: '无匹配选项' },
       attachTo: document.body,
     })
@@ -123,7 +137,7 @@ describe('Select', () => {
   })
 
   it('可搜索模式：搜索事件', async () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: { options, filterable: true },
       attachTo: document.body,
     })
@@ -135,30 +149,32 @@ describe('Select', () => {
   // ==================== 补充：ARIA 可访问性 ====================
 
   it('可搜索模式：键盘导航时 aria-activedescendant 指向高亮选项', async () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: { options, filterable: true },
       attachTo: document.body,
     })
     await wrapper.find('.mg-select-input').trigger('focus')
 
+    const input = wrapper.find('.mg-select-input')
     const dropdown = wrapper.find('.mg-select-dropdown')
-    // 初始无高亮时 aria-activedescendant 未设置
+    // aria-activedescendant 规范应位于获得焦点的 input 上（指向 listbox 内 option）
+    expect(input.attributes('aria-activedescendant')).toBeUndefined()
     expect(dropdown.attributes('aria-activedescendant')).toBeUndefined()
 
     // ArrowDown 高亮第一个选项
     await wrapper.find('.mg-select-input').trigger('keydown.down')
     const option0 = wrapper.findAll('.mg-select-option')[0]
     expect(option0.attributes('id')).toBeDefined()
-    expect(dropdown.attributes('aria-activedescendant')).toBe(option0.attributes('id'))
+    expect(input.attributes('aria-activedescendant')).toBe(option0.attributes('id'))
 
     // ArrowDown 高亮第二个选项
     await wrapper.find('.mg-select-input').trigger('keydown.down')
     const option1 = wrapper.findAll('.mg-select-option')[1]
-    expect(dropdown.attributes('aria-activedescendant')).toBe(option1.attributes('id'))
+    expect(input.attributes('aria-activedescendant')).toBe(option1.attributes('id'))
   })
 
   it('可搜索模式：每个选项具有唯一 id', async () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: { options, filterable: true },
       attachTo: document.body,
     })
@@ -176,7 +192,7 @@ describe('Select', () => {
   // ==================== 补充：键盘导航 ====================
 
   it('可搜索模式：ArrowDown 高亮下一个选项，ArrowUp 高亮上一个', async () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: { options, filterable: true },
       attachTo: document.body,
     })
@@ -193,7 +209,7 @@ describe('Select', () => {
   })
 
   it('可搜索模式：ArrowDown 到边界不再继续', async () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: { options, filterable: true },
       attachTo: document.body,
     })
@@ -208,7 +224,7 @@ describe('Select', () => {
   })
 
   it('可搜索模式：Enter 选中高亮选项', async () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: {
         options,
         filterable: true,
@@ -226,7 +242,7 @@ describe('Select', () => {
   })
 
   it('可搜索模式：没有任何高亮时 Enter 不触发选中', async () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: { options, filterable: true },
       attachTo: document.body,
     })
@@ -236,7 +252,7 @@ describe('Select', () => {
   })
 
   it('可搜索模式：Esc 关闭下拉并清空搜索', async () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: { options, filterable: true },
       attachTo: document.body,
     })
@@ -251,7 +267,7 @@ describe('Select', () => {
   // ==================== 补充：下拉切换与失焦 ====================
 
   it('可搜索模式：点击箭头切换下拉开关', async () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: { options, filterable: true },
       attachTo: document.body,
     })
@@ -268,7 +284,7 @@ describe('Select', () => {
   })
 
   it('可搜索模式：disabled 时点击箭头不打开', async () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: { options, filterable: true, disabled: true },
       attachTo: document.body,
     })
@@ -277,7 +293,7 @@ describe('Select', () => {
   })
 
   it('可搜索模式：点击选项时 blur 不关闭下拉（mousedownInside 流程）', async () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: {
         options,
         filterable: true,
@@ -300,7 +316,7 @@ describe('Select', () => {
   })
 
   it('可搜索模式：点击外部 blur 后关闭下拉', async () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: { options, filterable: true },
       attachTo: document.body,
     })
@@ -318,7 +334,7 @@ describe('Select', () => {
       { name: '北京', code: 'beijing' },
       { name: '上海', code: 'shanghai' },
     ]
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: { options: customOptions, labelKey: 'name', valueKey: 'code' },
     })
     expect(wrapper.text()).toContain('北京')
@@ -331,13 +347,13 @@ describe('Select', () => {
       { label: '可用', value: 'a' },
       { label: '禁用', value: 'b', disabled: true },
     ]
-    const wrapper = mount(Select, { props: { options: customOptions } })
+    const wrapper = mountSelect({ props: { options: customOptions } })
     const options = wrapper.findAll('option')
     expect(options[1].attributes('disabled')).toBeDefined()
   })
 
   it('原生模式：对象选项 change 类型回溯', async () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: {
         options,
         'onUpdate:modelValue': (v: any) => wrapper.setProps({ modelValue: v }),
@@ -348,7 +364,7 @@ describe('Select', () => {
   })
 
   it('原生模式：找不到匹配项时回退字符串值', async () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: {
         options: [1, 2, 3],
         'onUpdate:modelValue': (v: any) => wrapper.setProps({ modelValue: v }),
@@ -364,7 +380,7 @@ describe('Select', () => {
       { label: '正常', value: 'ok' },
       { label: '禁用', value: 'no', disabled: true },
     ]
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: {
         options: customOptions,
         filterable: true,
@@ -385,7 +401,7 @@ describe('Select', () => {
   })
 
   it('可搜索模式：选中后显示选中项标签', async () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: { options, filterable: true, modelValue: 'banana' },
       attachTo: document.body,
     })
@@ -394,7 +410,7 @@ describe('Select', () => {
   })
 
   it('可搜索模式：外部 modelValue 变化清空搜索文本', async () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: { options, filterable: true, modelValue: '' },
       attachTo: document.body,
     })
@@ -410,7 +426,7 @@ describe('Select', () => {
   })
 
   it('可搜索模式：搜索文本清空后下拉保持打开', async () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: { options, filterable: true },
       attachTo: document.body,
     })
@@ -428,7 +444,7 @@ describe('Select', () => {
   // ==================== 补充：属性透传 ====================
 
   it('透传 aria-label / name / id 到原生 input', () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: { options, filterable: true },
       attrs: { 'aria-label': '水果选择', name: 'fruit', id: 'fruit-select' },
       attachTo: document.body,
@@ -440,7 +456,7 @@ describe('Select', () => {
   })
 
   it('listbox 使用透传的 aria-label', async () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: { options, filterable: true },
       attrs: { 'aria-label': '水果选择' },
       attachTo: document.body,
@@ -451,7 +467,7 @@ describe('Select', () => {
   })
 
   it('非表单属性保留在外层 wrapper', () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: { options },
       attrs: { 'data-test': 'wrapper-test', class: 'custom-class' },
     })
@@ -460,7 +476,7 @@ describe('Select', () => {
   })
 
   it('select 元素透传 name/id', () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: { options },
       attrs: { name: 'fruit-native', id: 'native-select' },
     })
@@ -472,7 +488,7 @@ describe('Select', () => {
   // ==================== 多选模式（multiple + filterable） ====================
 
   it('多选模式：渲染已选标签', () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: {
         options,
         filterable: true,
@@ -488,7 +504,7 @@ describe('Select', () => {
   })
 
   it('多选模式：点击选项切换选中/取消，下拉保持打开', async () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: {
         options,
         filterable: true,
@@ -519,7 +535,7 @@ describe('Select', () => {
   })
 
   it('多选模式：选项 aria-selected 正确反映选中状态', async () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: {
         options,
         filterable: true,
@@ -535,7 +551,7 @@ describe('Select', () => {
   })
 
   it('多选模式：Tag 删除按钮移除对应值', async () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: {
         options,
         filterable: true,
@@ -554,7 +570,7 @@ describe('Select', () => {
   })
 
   it('多选模式：键盘 Enter 选中后保持下拉打开', async () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: {
         options,
         filterable: true,
@@ -581,7 +597,7 @@ describe('Select', () => {
   })
 
   it('多选模式：多选时输入框只显示搜索文本，不显示选中标签', async () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: {
         options,
         filterable: true,
@@ -604,7 +620,7 @@ describe('Select', () => {
       { label: '正常', value: 'ok' },
       { label: '禁用', value: 'no', disabled: true },
     ]
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: {
         options: customOptions,
         filterable: true,
@@ -625,7 +641,7 @@ describe('Select', () => {
   })
 
   it('多选模式：手动 blur 关闭下拉', async () => {
-    const wrapper = mount(Select, {
+    const wrapper = mountSelect({
       props: {
         options,
         filterable: true,

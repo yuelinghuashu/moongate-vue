@@ -9,7 +9,7 @@
 
 Moongate Vue is a moon-inspired, minimal Vue 3 component library. Design-token driven, CSS-first, framework-agnostic.
 
-**The complete library stays under 25KB (JS + CSS gzipped combined)** — an order of magnitude lighter than mainstream component libraries. See the live [bundle size badge](https://bundlephobia.com/package/moongate-vue) above.
+**The complete library stays under 25KB (JS + CSS gzipped combined)**. See the live [bundle size badge](https://bundlephobia.com/package/moongate-vue) above.
 
 ## Features
 
@@ -17,10 +17,10 @@ Moongate Vue is a moon-inspired, minimal Vue 3 component library. Design-token d
 - 📦 **Ultra Lightweight** — Complete library (JS + CSS) under **25KB** (gzipped)
 - 🎨 **Design-Token Driven** — CSS variables based, effortless theme switching
 - 🔧 **CSS-First** — Styles decoupled from logic, reusable across frameworks
-- ✨ **Minimal API** — 2-8 props per component, easy to learn and use
+- ✨ **Minimal API** — 2-8 props for most components (a few complex ones like Button/Select have more), easy to learn and use
 - 🚀 **Zero Dependencies** — No extra configuration, works out of the box
 - ⚡ **SSR Ready** — Perfect for Nuxt 4 / VitePress and other server-side rendering scenarios
-- ✅ **Tested** — Vitest + jsdom full coverage: 28 components + 3 public composables (`useForm` / `useMessage` / `useToast`) + SSR/a11y regression + Playwright e2e, 449 tests total (95% statements / 86% branches)
+- ✅ **Tested** — Vitest + jsdom full coverage: 29 components + 3 public composables (`useForm` / `useMessage` / `useToast`) + SSR/a11y regression + Playwright e2e (26 cases), 497 tests total (95% statements / 86% branches)
 - 🔧 **Engineering Standards** — ESLint + Prettier unified style, husky pre-commit checks
 
 ## Installation
@@ -62,12 +62,12 @@ Visit the [**Moongate Vue Official Documentation**](https://vue.moongate.top) fo
 | --------------- | ---------------------------------------------------------------------------- |
 | Basic           | `Button` `Card` `Badge` `Divider`                                            |
 | Form            | `Form` `FormItem` `Input` `Textarea` `Checkbox` `Radio` `Switch` `Select`    |
-| Data Display    | `Table` `Pagination` `Tabs`                                                  |
+| Data Display    | `Table` `Pagination` `Tabs` `SeriesNav`                                      |
 | Layout          | `Container` `Header` `Main` `Footer` `Hero`                                  |
 | Feedback        | `Modal` `Toast` `Message` `Tooltip` `Popover` `Drawer` `Skeleton` `Dropdown` |
 | Style Utilities | `Link` `Code`                                                                |
 
-> **Note**: **28 components + 2 style utilities** in total, covering most daily development scenarios.
+> **Note**: **29 components + 2 style utilities** in total, covering most daily development scenarios.
 
 ## TypeScript Types
 

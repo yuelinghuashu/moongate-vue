@@ -1,11 +1,15 @@
 <template>
+  <!--
+    触发容器：不声明交互角色/ARIA。
+    触发语义由插槽内的实际触发元素（通常是 Button）承担——
+    若 wrapper 声明 role="button" 会与插槽内真实按钮产生嵌套交互违规（axe nested-interactive），
+    与 Element Plus / Ant Design 的处理方式一致。
+    需要完整菜单按钮语义时，可在触发元素上手动添加 aria-haspopup / aria-expanded。
+  -->
   <div
     ref="triggerRef"
     class="mg-dropdown-trigger"
     :class="{ 'mg-dropdown-disabled': disabled }"
-    :aria-expanded="open"
-    :aria-controls="menuId"
-    aria-haspopup="menu"
     @click="toggle"
     @keydown="handleKeydown"
   >
@@ -60,9 +64,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onUnmounted, nextTick, useId } from 'vue'
+import { ref, computed, watch, nextTick, useId } from 'vue'
 import { useFloating } from '../composables/useFloating'
 import { useMenuKeyboard } from '../composables/useMenuKeyboard'
+import { useClickOutside } from '../composables/useClickOutside'
 import type { DropdownProps } from '../types/props'
 import type { DropdownOption } from '../types/components'
 
@@ -241,33 +246,13 @@ function toggle() {
 
 // ==================== 点击外部关闭 ====================
 
-/** SSR 安全 */
-const isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined'
-
-const handleClickOutside = (event: MouseEvent) => {
-  if (!open.value) return
-  const target = event.target as Node
-  if (
-    triggerRef.value &&
-    !triggerRef.value.contains(target) &&
-    floatingRef.value &&
-    !floatingRef.value.contains(target)
-  ) {
-    closeMenu()
-  }
-}
-
-onMounted(() => {
-  if (isBrowser) {
-    document.addEventListener('click', handleClickOutside, true)
-  }
-})
-
-onUnmounted(() => {
-  if (isBrowser) {
-    document.removeEventListener('click', handleClickOutside, true)
-  }
-})
+useClickOutside(
+  [triggerRef, floatingRef],
+  () => {
+    if (open.value) closeMenu()
+  },
+  'click',
+)
 
 // ==================== 选中处理 ====================
 

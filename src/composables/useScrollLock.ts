@@ -117,12 +117,21 @@ export function useOverlayBehavior(
     }
   }
 
+  /** 打开浮层前记录触发元素，关闭后焦点返回它（WCAG 2.4.3） */
+  let returnFocusEl: HTMLElement | null = null
+
   watch(
     () => isOpen.value,
     (val) => {
       if (!isBrowser) return
 
       if (val) {
+        // 记录打开前的焦点（一般是触发按钮）
+        const active = document.activeElement as HTMLElement | null
+        // 仅记录 body 内可见元素，避免把焦点锁在不明元素上
+        if (active && active !== document.body) {
+          returnFocusEl = active
+        }
         lockBodyScroll()
         document.addEventListener('keydown', handleKeydown)
         // 等过渡/渲染完成后聚焦容器内的第一个可聚焦元素
@@ -140,6 +149,18 @@ export function useOverlayBehavior(
       } else {
         unlockBodyScroll()
         document.removeEventListener('keydown', handleKeydown)
+        // 焦点返回打开前的触发元素（若它仍挂载在文档中）
+        if (returnFocusEl) {
+          const target = returnFocusEl
+          returnFocusEl = null
+          if (
+            target.isConnected &&
+            typeof target.focus === 'function' &&
+            !target.hasAttribute('disabled')
+          ) {
+            target.focus({ preventScroll: true })
+          }
+        }
       }
     },
     { immediate: true },
