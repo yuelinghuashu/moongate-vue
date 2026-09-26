@@ -1,5 +1,20 @@
 /* --------------------------------------------
    Button 按钮组件
+
+   尺寸契约（sm/md/lg 三档取值必须互不相同）：
+   - 基础档 = md 档（Button 的 size prop 默认值即 'md'，与全库其余组件默认档一致）
+   - 实测高度（Chromium，字号 + 各自内边距 + 下方 line-height）：sm 约 25px、md 约 37px、lg 约 49px
+   - 其中 md 与同库默认尺寸的 Input(33px)/Badge(35px) 同量级，sm 与 .mg-input-sm(24px)/.mg-badge-sm(25px) 对齐
+   - 默认档（md）与 lg 档均超过 WCAG 2.5.8 (AA) 24px 最小触控目标，lg 约 49px 达到 44px 建议值；
+     sm 档约 25px 贴近下限，仅用于表格行内等紧凑场景
+
+   档位值取自既有令牌，未新增令牌：
+   - padding：xs+sm / sm+md / md+lg
+   - font-size：size-small(12px) / size-body(15px) / size-lg(18px)
+
+   line-height 显式声明为 1.4（与 select/form 内联控件一致），不再继承宿主：
+   宿主若设置 body line-height（如 VitePress 的 24px），按钮高度会被整体抬高约 7px，
+   档位虽仍单调，但「默认档高度」的视觉承诺会随宿主漂移。
 --------------------------------------------- */
 .mg-button {
   display: inline-flex;
@@ -7,27 +22,30 @@
   justify-content: center;
   gap: var(--ui-spacing-sm);
   font-weight: 500;
+  /* 显式行高：避免宿主 body line-height 决定按钮高度 */
+  line-height: 1.4;
   transition: all var(--ui-motion-duration-neural) ease;
   cursor: pointer;
   border-radius: var(--ui-radius-none);
   border: none;
   background: transparent;
   white-space: nowrap;
+  /* 默认档 = md（与 .mg-button-md 保持一致；Button 的 size prop 默认值即 'md'） */
   padding: var(--ui-spacing-sm) var(--ui-spacing-md);
   font-size: var(--ui-typography-size-body);
 }
 
 /* 尺寸变体 */
 .mg-button-sm {
-  padding: var(--ui-spacing-sm) var(--ui-spacing-md);
-  font-size: var(--ui-typography-size-code);
+  padding: var(--ui-spacing-xs) var(--ui-spacing-sm);
+  font-size: var(--ui-typography-size-small);
 }
 .mg-button-md {
-  padding: var(--ui-spacing-md) var(--ui-spacing-lg);
+  padding: var(--ui-spacing-sm) var(--ui-spacing-md);
   font-size: var(--ui-typography-size-body);
 }
 .mg-button-lg {
-  padding: var(--ui-spacing-lg) var(--ui-spacing-xl);
+  padding: var(--ui-spacing-md) var(--ui-spacing-lg);
   font-size: var(--ui-typography-size-lg);
 }
 
@@ -42,10 +60,10 @@
   width: 100%;
 }
 
-/* 加载图标动画 */
+/* 加载图标动画（1em：随按钮尺寸档位缩放） */
 .mg-button-loading-icon {
-  width: 1rem;
-  height: 1rem;
+  width: 1em;
+  height: 1em;
   border: 2px solid currentColor;
   border-top-color: transparent;
   border-radius: 50%;

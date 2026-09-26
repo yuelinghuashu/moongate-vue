@@ -1,19 +1,32 @@
+/* --------------------------------------------
+   Badge 徽章
+
+   尺寸契约：
+   - sm/md 两档取值互不相同；基础规则不含尺寸，档位由 .mg-badge-sm/-md 提供
+   - md 档字号统一取 --ui-typography-size-body（与 Input/Select/Textarea/Tabs 同档一致），
+     sm 档取 --ui-typography-size-small
+   - 显式声明 line-height：徽章高度由库决定，不随宿主 body 行高漂移
+     （未声明时文档站继承宿主 24px 行高 → 40px，比默认按钮 37px 还高）
+   - 实测高度（Chromium，line-height: 1.4）：sm 25px、md 37px
+   - 基础规则保持无尺寸：只有 .mg-badge-sm/-md 两个档位类，BadgeProps.size 亦仅这两档
+--------------------------------------------- */
 .mg-badge {
   display: inline-flex;
   align-items: center;
   font-weight: 500;
+  line-height: 1.4;
   border-radius: var(--ui-radius-sm);
   white-space: nowrap;
 }
 
-/* Badge 尺寸 */
+/* Badge 尺寸（两档，取值互不相同） */
 .mg-badge-sm {
   padding: var(--ui-spacing-xs) var(--ui-spacing-sm);
   font-size: var(--ui-typography-size-small);
 }
 .mg-badge-md {
   padding: var(--ui-spacing-sm) var(--ui-spacing-md);
-  font-size: var(--ui-typography-size-code);
+  font-size: var(--ui-typography-size-body);
 }
 
 /* Badge 变体 */

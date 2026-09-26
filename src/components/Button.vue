@@ -3,11 +3,7 @@
     v-bind="$attrs"
     :type="type"
     class="mg-button"
-    :class="[
-      `mg-button-${variant}-${color}`,
-      `mg-button-${size}`,
-      { 'mg-button-block': block, 'mg-button-loading': loading },
-    ]"
+    :class="[`mg-button-${variant}-${color}`, `mg-button-${size}`, { 'mg-button-block': block }]"
     :disabled="disabled || loading"
     @click="handleClick"
   >
@@ -45,7 +41,7 @@ const props = withDefaults(defineProps<ButtonProps>(), {
   label: '',
   variant: 'filled',
   color: 'primary',
-  size: 'sm',
+  size: 'md',
   type: 'button',
   disabled: false,
   loading: false,

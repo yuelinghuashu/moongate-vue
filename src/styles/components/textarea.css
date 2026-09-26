@@ -1,9 +1,25 @@
-.mg-textarea {
+/* --------------------------------------------
+   Textarea 多行输入
+
+   尺寸契约（sm/md/lg 三档取值必须互不相同）：
+   - 基础档 = md 档（Textarea 的 size prop 默认值即 'md'）
+   - 显式声明 font-size 与 line-height：控件高度由库决定，不随宿主 body 行高漂移
+   - 实测高度（Chromium，rows=1、line-height: 1.4）：sm 约 25px、md 约 37px、lg 约 49px
+--------------------------------------------- */
+.mg-textarea,
+.mg-textarea-sm,
+.mg-textarea-md,
+.mg-textarea-lg {
   background-color: var(--ui-bg-muted);
   border: var(--ui-physics-border-crease) solid var(--ui-border);
   border-radius: var(--ui-radius-none);
   color: var(--ui-text);
-  padding: var(--ui-spacing-sm);
+  /* 默认档 = md（与 .mg-textarea-md 保持一致）。
+     三档都显式声明 line-height：否则宿主 `textarea { line-height: inherit }`
+     会把控件高度抬到宿主行高 */
+  padding: var(--ui-spacing-sm) var(--ui-spacing-md);
+  font-size: var(--ui-typography-size-body);
+  line-height: 1.4;
   transition: border-color var(--ui-motion-duration-neural) ease;
   width: 100%;
   font-family: inherit;

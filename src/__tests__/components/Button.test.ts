@@ -7,8 +7,15 @@ describe('Button', () => {
     const wrapper = mount(Button, { props: { label: '点击' } })
     expect(wrapper.classes()).toContain('mg-button')
     expect(wrapper.classes()).toContain('mg-button-filled-primary')
-    expect(wrapper.classes()).toContain('mg-button-sm')
+    expect(wrapper.classes()).toContain('mg-button-md')
     expect(wrapper.text()).toContain('点击')
+  })
+
+  it('默认尺寸档为 md（不叠加 sm/lg 档）', () => {
+    const wrapper = mount(Button, { props: { label: '默认' } })
+    expect(wrapper.classes()).toContain('mg-button-md')
+    expect(wrapper.classes()).not.toContain('mg-button-sm')
+    expect(wrapper.classes()).not.toContain('mg-button-lg')
   })
 
   it('渲染 variant/color/size 变体 class', () => {

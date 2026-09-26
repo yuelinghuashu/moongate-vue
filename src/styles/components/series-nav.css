@@ -95,17 +95,17 @@
 
 /* 禁用项 */
 .mg-series-nav .mg-series-nav-item-disabled {
-  color: var(--ui-text-inactive, #94a3b8);
+  color: var(--ui-text-inactive, #7a8c9e);
   cursor: not-allowed;
 }
 
 .mg-series-nav .mg-series-nav-item-disabled .mg-series-nav-index {
   background-color: var(--ui-bg-muted, #f1f5f9);
-  color: var(--ui-text-inactive, #94a3b8);
+  color: var(--ui-text-inactive, #7a8c9e);
 }
 
 .mg-series-nav .mg-series-nav-item-disabled .mg-series-nav-link {
-  color: var(--ui-text-inactive, #94a3b8);
+  color: var(--ui-text-inactive, #7a8c9e);
   cursor: not-allowed;
   text-decoration: none;
 }

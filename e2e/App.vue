@@ -72,6 +72,7 @@ const tableData = [
       <h2>基础组件</h2>
       <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center">
         <Button label="按钮" data-testid="btn" />
+        <Button size="lg" label="大号按钮" data-testid="btn-lg" />
         <Button variant="outline" color="success" label="成功" />
         <Badge label="徽章" />
         <Divider style="width: 100%" />

@@ -14,18 +14,20 @@ import 'moongate-vue/style.css'
 </script>
 
 <template>
-  <form @submit.prevent>
-    <!-- 必填 + 邮箱格式：浏览器原生校验 -->
-    <Input required type="email" label="邮箱" placeholder="name@example.com" />
+  <form @submit.prevent style="display: flex; flex-direction: column; gap: 12px">
+    <!-- 必填 + 邮箱格式：浏览器原生校验（Input 无 label prop，可见标签用 <label for> 或 FormItem） -->
+    <label for="email">邮箱</label>
+    <Input id="email" required type="email" placeholder="name@example.com" />
 
     <!-- 必填 + 最小长度 -->
-    <Input required minlength="6" label="密码" type="password" placeholder="至少 6 位" />
+    <label for="password">密码</label>
+    <Input id="password" required minlength="6" type="password" placeholder="至少 6 位" />
 
     <!-- 数字范围 -->
-    <Input type="number" min="1" max="100" label="数量" />
+    <Input type="number" min="1" max="100" placeholder="数量" />
 
     <!-- 正则模式 -->
-    <Input required pattern="[0-9]{11}" label="手机号" placeholder="11 位数字" />
+    <Input required pattern="[0-9]{11}" placeholder="11 位数字（手机号）" />
 
     <button type="submit">提交</button>
   </form>
@@ -35,13 +37,11 @@ import 'moongate-vue/style.css'
 配合 CSS 自定义错误样式：
 
 ```css
-/* 未通过原生校验时 */
-input:invalid {
+/* 未通过原生校验时（限定 .mg-input，避免命中页面上其它原生 input） */
+.mg-input:invalid {
   border-color: var(--ui-error);
 }
 ```
-
-> `Input`/`Textarea`/`Select` 组件会将原生属性（`required`/`min`/`max`/`pattern`/`minlength` 等）透传到实际表单元素，原生校验开箱即用。
 
 ## 二、useForm：HTML5 覆盖不到的校验
 

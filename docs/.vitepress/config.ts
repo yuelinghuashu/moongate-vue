@@ -29,7 +29,7 @@ const sidebar = {
         { text: '表单校验', link: '/guide/form-validation' },
         { text: 'Nuxt 集成', link: '/guide/nuxt-integration' },
         { text: '从 Element Plus 迁移', link: '/guide/migration' },
-        { text: '更新日志', link: '/guide/changelog' },
+        { text: '更新日志（仓库）', link: '/guide/changelog' },
       ],
     },
   ],

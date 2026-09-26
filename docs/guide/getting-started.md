@@ -13,15 +13,13 @@ const message = useMessage()
 </script>
 
 <template>
-  <div class="flex gap-2">
+  <div style="display: flex; gap: 8px">
     <Button variant="filled" color="primary" @click="message.success('操作成功')">主要按钮</Button>
 
     <Button variant="outline" color="error" @click="message.error('操作失败')">危险操作</Button>
   </div>
 </template>
 ```
-
-> 💡 **非侵入式样式**：`style.css` 只含组件样式，不重置全局样式；可选 `reset.css` 统一盒模型。详见[安装指南](/guide/install#样式引入)。
 
 ## 更多示例
 

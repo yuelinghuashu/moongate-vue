@@ -80,8 +80,8 @@ Moongate 的**大多数**组件控制在 2-8 个 props；少数复杂组件（Bu
 4. **校验编排** — 提交时校验全部、单字段校验、一键重置
 
 ```vue
-<!-- 原生校验：够用就不需要 useForm -->
-<Input required type="email" label="邮箱" />
+<!-- 原生校验：够用就不需要 useForm（label 用 FormItem 或原生 <label>，Input 本身没有 label prop） -->
+<Input required type="email" placeholder="邮箱" />
 
 <!-- 需要异步/关联校验时才引入 useForm -->
 <script setup>
@@ -108,21 +108,21 @@ const { values, errors, validate } = useForm({
   padding: 0;
 }
 
-/* ✅ Moongate：组件样式只作用于 .mg-* 类 */
+/* ✅ Moongate：样式只作用于 .mg-* 类（唯一例外是 <code> / <pre> 自动着色） */
 .mg-button { ... }
 .mg-card { ... }
 ```
 
-默认引入的 `style.css` 只包含组件样式，不重置全局。如果需要统一盒模型，可选引入 `reset.css`。
+**不这样做会怎样：** 带有全局重置的样式方案（例如 CSS Preflight）会改写元素默认样式（如 `h1` 到 `h6` 变为 `font-size: inherit`），引入组件库后可能与页面既有样式互相覆盖。非侵入式设计让用户完全控制自己的全局样式。
 
-属性透传也遵循这个原则 — 所有原生属性通过 `v-bind="$attrs"` 直通到根元素，不覆盖已声明的 props：
+同一原则延伸到组件边界：属性由用户决定，组件只负责透传——所有原生属性通过 `v-bind="$attrs"` 直通到根元素，不覆盖已声明的 props：
 
 ```vue
 <!-- 这些属性会透传到 <button> 元素 -->
 <Button data-testid="submit" aria-label="提交表单" class="custom-class" />
 ```
 
-**不这样做会怎样：** 带有全局重置的样式方案（例如 CSS Preflight）会改写元素默认样式（如 `h1` 到 `h6` 变为 `font-size: inherit`），引入组件库后可能与页面既有样式互相覆盖。非侵入式设计让用户完全控制自己的全局样式。
+唯一的全局例外是 `<code>` / `<pre>` 自动着色，引入方式见[安装 · 样式引入](/guide/install#样式引入)。
 
 ## SSR 安全
 
@@ -150,4 +150,4 @@ if (validateOnMount) {
 const titleId = useId() // 服务端和客户端生成相同的 ID
 ```
 
-**不这样做会怎样：** 在 Nuxt 或 VitePress 中使用时，服务端渲染阶段访问 `document` 会直接崩溃。29 个组件全部通过了 `renderToString` 的 SSR 兼容性测试。
+**不这样做会怎样：** 在 Nuxt 或 VitePress 中使用时，服务端渲染阶段访问 `document` 会直接崩溃。25 个带渲染逻辑的组件（Button/Badge/Card/Divider/Checkbox、布局 5 个、表单 5 个、数据展示 4 个、SeriesNav、悬浮层 5 个）全部通过 `renderToString` 的 SSR 兼容性测试；`Form` / `FormItem` / `Dropdown` 为纯插槽包装，无自身 DOM 访问，未单独纳入该用例。

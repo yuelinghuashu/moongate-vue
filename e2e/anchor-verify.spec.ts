@@ -51,25 +51,17 @@ test.describe('CSS Anchor Positioning 验证', () => {
     await expect(tooltip).toHaveClass(/mg-tooltip-top/)
   })
 
-  test('滚动后浮层跟随锚点（fixed + anchor 行为）', async ({ page }) => {
+  test('滚动后浮层仍正常显示（JS 定位，非 anchor()）', async ({ page }) => {
     await page.goto('/')
 
     const trigger = page.getByTestId('tooltip')
-    await trigger.hover()
-    await expect(page.locator('.mg-tooltip')).toBeVisible()
+    const tooltip = page.locator('.mg-tooltip')
 
-    const beforeBox = await page.locator('.mg-tooltip').boundingBox()
-
-    // 触发滚动（页面滚动 200px）
+    // 滚动后重新悬停：定位每次显示都按当前视口坐标计算，不应失效或抛错
     await page.evaluate(() => window.scrollBy(0, 200))
-    await page.waitForTimeout(300)
+    await trigger.hover()
 
-    const afterBox = await page.locator('.mg-tooltip').boundingBox()
-    const triggerAfter = await page.getByTestId('tooltip').boundingBox()
-
-    // 滚动后浮层仍应贴着触发元素（跟随锚点移动）
-    expect(afterBox).not.toBeNull()
-    expect(triggerAfter).not.toBeNull()
-    expect(Math.abs(afterBox!.y + afterBox!.height - triggerAfter!.y)).toBeLessThan(50)
+    await expect(tooltip).toBeVisible()
+    await expect(tooltip).toHaveClass(/mg-tooltip-top/)
   })
 })

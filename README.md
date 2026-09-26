@@ -9,8 +9,6 @@
 
 Moongate Vue is a moon-inspired, minimal Vue 3 component library. Design-token driven, CSS-first, framework-agnostic.
 
-**The complete library stays under 25KB (JS + CSS gzipped combined)**. See the live [bundle size badge](https://bundlephobia.com/package/moongate-vue) above.
-
 ## Features
 
 - 🌙 **Moon Philosophy** — Restrained, calm, orderly
@@ -20,7 +18,7 @@ Moongate Vue is a moon-inspired, minimal Vue 3 component library. Design-token d
 - ✨ **Minimal API** — 2-8 props for most components (a few complex ones like Button/Select have more), easy to learn and use
 - 🚀 **Zero Dependencies** — No extra configuration, works out of the box
 - ⚡ **SSR Ready** — Perfect for Nuxt 4 / VitePress and other server-side rendering scenarios
-- ✅ **Tested** — Vitest + jsdom full coverage: 29 components + 3 public composables (`useForm` / `useMessage` / `useToast`) + SSR/a11y regression + Playwright e2e (26 cases), 497 tests total (95% statements / 86% branches)
+- ✅ **Tested** — Vitest + jsdom: 29 components + 4 public composables (`useForm` / `useMessage` / `useToast` / `useMenuKeyboard`) + SSR/a11y regression + Playwright e2e (29 cases), 600 tests total (94% statements / 85% branches)
 - 🔧 **Engineering Standards** — ESLint + Prettier unified style, husky pre-commit checks
 
 ## Installation
@@ -31,7 +29,7 @@ npm install moongate-vue
 pnpm add moongate-vue
 ```
 
-> 💡 **Non-invasive styles**: The default `style.css` contains only component styles — it won't reset your global styles. Optionally import `moongate-vue/reset.css` to unify `box-sizing: border-box` across all elements.
+> 💡 **Non-invasive styles**: `style.css` doesn't reset global styles — the only global rules are automatic styling for `<code>` / `<pre>`. Optionally import `moongate-vue/reset.css` for `box-sizing: border-box`.
 >
 > **Requirements**: Vue `^3.5.0` or higher. Browser support aligns with **VitePress** baseline (Chrome 111+ / Firefox 113+ / Edge 111+ / Safari 16.2+). See the [full install guide](./docs/guide/install.md) for details.
 
@@ -106,31 +104,16 @@ See the [design tokens guide](https://vue.moongate.top/guide/design-tokens) for 
 
 ## Global Config
 
-Built-in texts automatically adapt between Chinese and English based on `document.documentElement.lang` (binary detection: **non-Chinese `lang` defaults to English**). Override them globally via `setConfig`:
+Built-in texts adapt to Chinese/English based on `document.documentElement.lang` (non-Chinese `lang` defaults to English), and can be overridden globally:
 
 ```ts
 import { setConfig } from 'moongate-vue'
 
-// Switch to English built-in texts
 setConfig({ locale: 'en-US' })
-
-// Override individual texts
-setConfig({ texts: { empty: 'No data', paginationPrev: 'Prev' } })
+setConfig({ texts: { empty: 'No data' } })
 ```
 
-Priority: **component prop > `setConfig` texts > built-in locale texts**. Template placeholders like `{current}`, `{total}`, and `{label}` are supported. Mounted components update reactively when config changes.
-
-Covered display texts include: Pagination page info / prev-next / first-last, Select empty state / remove tag, Table empty state / select-all / row-select / row label fallback, FormItem validating, Modal / Drawer / Message / Toast close buttons, and `useForm` default validation message.
-
-## Attribute Inheritance
-
-All components pass through native attributes to the root element via `v-bind="$attrs"`:
-
-- Input/Textarea pass through to the native input element
-- Checkbox/Radio/Switch pass through to the hidden `<input>` (accessibility)
-- Button passes through to the `<button>` element
-
-> Inherited attributes will not override props already declared in the component; use the corresponding props (e.g., `disabled`, `size`) to override built-in behavior.
+Priority: **component prop > `setConfig` texts > built-in locale texts**. See the [i18n guide](https://vue.moongate.top/guide/i18n) for the full text list and placeholders.
 
 ## License
 
@@ -138,10 +121,8 @@ All components pass through native attributes to the root element via `v-bind="$
 
 ## Related Links
 
-- [Design Philosophy](https://moongate.top/docs/design-tokens-vs-atomic-css)
-- [Implementation Details](https://moongate.top/docs/css-first-component-library)
-- [Bundlephobia Analysis](https://bundlephobia.com/package/moongate-vue)
 - [Online Documentation](https://vue.moongate.top)
+- [Bundlephobia Analysis](https://bundlephobia.com/package/moongate-vue)
 
 ## ☕ Support
 

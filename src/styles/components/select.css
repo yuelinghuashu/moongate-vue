@@ -12,12 +12,18 @@
 }
 
 /* ========== 原生 select ========== */
+/* 尺寸契约：基础档 = md（Select 的 size prop 默认值即 'md'）。
+   必须显式声明 font-size 与 line-height：否则浏览器对 select 用 UA 字号，
+   且宿主 `select { line-height: inherit }`（如 VitePress）会把高度抬到宿主行高。
+   档位由 .mg-select-sm/-md/-lg 提供（覆盖 padding / font-size / background-size）。 */
 .mg-select-native {
   background-color: var(--ui-bg-muted);
   border: var(--ui-physics-border-crease) solid var(--ui-border);
   border-radius: var(--ui-radius-none);
   color: var(--ui-text);
-  padding: var(--ui-spacing-sm);
+  padding: var(--ui-spacing-sm) var(--ui-spacing-xl) var(--ui-spacing-sm) var(--ui-spacing-md);
+  font-size: var(--ui-typography-size-body);
+  line-height: 1.4;
   transition: border-color var(--ui-motion-duration-neural) ease;
   width: 100%;
   cursor: pointer;
@@ -25,7 +31,6 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right var(--ui-spacing-sm) center;
-  padding-right: var(--ui-spacing-xl);
 }
 
 .mg-select-native:focus {
@@ -40,24 +45,21 @@
   cursor: not-allowed;
 }
 
-/* 尺寸变体 - 原生 */
+/* 尺寸变体 - 原生（md 与基础档取值一致，仍显式声明以便逐档阅读） */
 .mg-select-sm {
-  padding: var(--ui-spacing-xs) var(--ui-spacing-sm);
-  padding-right: var(--ui-spacing-lg);
+  padding: var(--ui-spacing-xs) var(--ui-spacing-lg) var(--ui-spacing-xs) var(--ui-spacing-sm);
   font-size: var(--ui-typography-size-small);
   background-size: 12px;
 }
 
 .mg-select-md {
-  padding: var(--ui-spacing-sm) var(--ui-spacing-md);
-  padding-right: var(--ui-spacing-xl);
+  padding: var(--ui-spacing-sm) var(--ui-spacing-xl) var(--ui-spacing-sm) var(--ui-spacing-md);
   font-size: var(--ui-typography-size-body);
   background-size: 14px;
 }
 
 .mg-select-lg {
-  padding: var(--ui-spacing-md) var(--ui-spacing-lg);
-  padding-right: var(--ui-spacing-2xl);
+  padding: var(--ui-spacing-md) var(--ui-spacing-2xl) var(--ui-spacing-md) var(--ui-spacing-lg);
   font-size: var(--ui-typography-size-lg);
   background-size: 16px;
 }

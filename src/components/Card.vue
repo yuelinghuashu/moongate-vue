@@ -10,8 +10,13 @@
       <slot />
     </div>
 
-    <!-- footer 区域：添加 hideFooter 控制，且只有存在 footer 插槽时才显示 -->
-    <div v-if="!hideFooter && hasFooter" class="mg-card-footer">
+    <!-- footer 区域：添加 hideFooter 控制，且只有存在 footer 插槽时才显示。
+         hideBody 时页脚不再与正文相邻，去掉顶边（与 header 的 hideBody 处理对称） -->
+    <div
+      v-if="!hideFooter && hasFooter"
+      class="mg-card-footer"
+      :class="{ 'mg-card-footer--no-border': hideBody }"
+    >
       <slot name="footer" />
     </div>
   </component>
@@ -39,6 +44,5 @@ const props = withDefaults(defineProps<CardProps>(), {
 const { attrsWithoutClass, mergedClass } = useAttrsWithClass(() => ({
   'mg-card': true,
   'mg-card-hoverable': props.hoverable,
-  'mg-card--body-hidden': props.hideBody,
 }))
 </script>

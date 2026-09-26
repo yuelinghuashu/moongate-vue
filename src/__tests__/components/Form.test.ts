@@ -85,7 +85,7 @@ describe('Form + FormItem 集成', () => {
   setConfig({ locale: 'zh-CN' })
   afterEach(() => resetConfig())
 
-  it('传入 errors 时显示错误文案与 error class', () => {
+  it('传入 errors 时显示错误文案（role=alert）', () => {
     const Host = defineComponent({
       components: { Form, FormItem },
       setup() {
@@ -97,8 +97,9 @@ describe('Form + FormItem 集成', () => {
     })
     const wrapper = mount(Host)
     const item = wrapper.find('.mg-form-item')
-    expect(item.classes()).toContain('mg-form-item--error')
+    // 错误状态由文案节点承载（旧的无样式状态类 mg-form-item--error 已移除）
     expect(item.find('.mg-form-item__error').text()).toBe('用户名不能为空')
+    expect(item.find('.mg-form-item__error').attributes('role')).toBe('alert')
   })
 
   it('无 errors 时不渲染错误文案', () => {
@@ -124,8 +125,9 @@ describe('Form + FormItem 集成', () => {
       },
     })
     const wrapper = mount(Host)
-    expect(wrapper.find('.mg-form-item').classes()).toContain('mg-form-item--validating')
+    // 校验中状态由文案节点承载（旧的无样式状态类 mg-form-item--validating 已移除）
     expect(wrapper.find('.mg-form-item__validating').text()).toBe('校验中…')
+    expect(wrapper.find('.mg-form-item__validating').attributes('aria-live')).toBe('polite')
   })
 
   it('validatingFields 其他字段为 true 时本校不显示校验中', () => {
@@ -194,13 +196,11 @@ describe('Form + FormItem + useForm 端到端', () => {
     await input.trigger('blur')
     await nextTick()
     expect(wrapper.find('.mg-form-item__error').text()).toBe('用户名至少 3 个字符')
-    expect(wrapper.find('.mg-form-item').classes()).toContain('mg-form-item--error')
 
     await input.setValue('abc')
     await input.trigger('blur')
     await nextTick()
     expect(wrapper.find('.mg-form-item__error').exists()).toBe(false)
-    expect(wrapper.find('.mg-form-item').classes()).not.toContain('mg-form-item--error')
   })
 
   it('submit 时 validate() 校验全部字段并返回结果', async () => {

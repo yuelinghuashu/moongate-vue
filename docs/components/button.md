@@ -110,13 +110,15 @@ import { Button } from 'moongate-vue'
 
 ## 尺寸
 
+三档尺寸取自同一套令牌，实测高度约为 `md` 37px（默认）/ `sm` 25px / `lg` 49px；与同库默认尺寸的 `Input` 39px、`Badge` 37px 同量级（`Input` 多 2px 是其 1px 上下边框）。控件已显式声明行高，高度不随宿主 `body` 行高漂移。默认档与 `lg` 档均满足 WCAG 2.5.8（AA）24px 最小触控目标；`sm` 档贴近该下限，建议仅用于表格行内等紧凑场景。
+
 :::demo
 
 ```vue
 <template>
   <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
     <Button size="sm" label="小号" />
-    <Button size="md" label="中号" />
+    <Button size="md" label="中号（默认）" />
     <Button size="lg" label="大号" />
   </div>
 </template>
@@ -197,7 +199,7 @@ import { Button } from 'moongate-vue'
 | `label`                 | `string`                                         | `''`        | 按钮文字                                     |
 | `variant`               | `'filled' \| 'outline'`                          | `'filled'`  | 视觉变体                                     |
 | `color`                 | `'primary' \| 'success' \| 'warning' \| 'error'` | `'primary'` | 主题色                                       |
-| `size`                  | `'sm' \| 'md' \| 'lg'`                           | `'sm'`      | 按钮尺寸（默认小号）                         |
+| `size`                  | `'sm' \| 'md' \| 'lg'`                           | `'md'`      | 按钮尺寸                                     |
 | `type`                  | `'button' \| 'submit' \| 'reset'`                | `'button'`  | 原生按钮类型（默认 button 防止表单意外提交） |
 | `disabled`              | `boolean`                                        | `false`     | 是否禁用                                     |
 | `loading`               | `boolean`                                        | `false`     | 是否加载中                                   |
@@ -232,3 +234,5 @@ import { Button } from 'moongate-vue'
   - 如需在加载时保留文字，可设置 `showLabelWhileLoading` 为 `true`
   - 如需自定义加载时的文字，可设置 `loadingLabel`（例如 `"提交中..."`）
 - `icon` prop 支持传入 Vue 组件（如 `:icon="IconHome"`）或字符串（如 `icon="✓"`）
+- 尺寸与触控目标：默认 `md` 档约 37px 高，满足 WCAG 2.5.8（AA，最小 24px）；`lg` 档约 49px 达到 44px 建议值，`sm` 档约 25px 贴近 24px 下限，仅建议用于表格行内等紧凑场景
+- 按钮高度不依赖宿主页面的 `body` 行高：`.mg-button` 显式声明 `line-height: 1.4`，因此接入任何项目（含像 VitePress 那样设置全局行高的站点）三档高度都保持一致

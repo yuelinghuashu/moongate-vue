@@ -2,16 +2,42 @@
 
 [English](./CHANGELOG.md) | **中文**
 
-## [1.7.0] - 2026-09-06
+## [1.7.1] - 2026-09-26
+
+### 🐛 缺陷修复
+
+- **Button 的 `sm` 档不存在，且默认档正式定为 `md`**：`.mg-button` 基础样式写死了 md 档，而 `.mg-button-sm` 与 `.mg-button-md` 取值逐字相同，`size="sm"` 传了没有视觉效果。现将三档明确分离（`padding` xs+sm / sm+md / md+lg；`font-size` `size-small`/`size-body`/`size-lg`，全部为既有令牌），基础档与 prop 默认档 `md` 对齐，与全库一致。实测高度（Chromium）：sm 25px / md 37px / lg 49px。**未显式传 `size` 的消费方无感**；`size="sm"`/`"md"`/`"lg"`（原先 35/45/57px）现在与名称吻合
+- **控件高度曾由宿主页面行高决定**（Button / Input / Textarea / Badge / Select / Tabs / Pagination）：这些叶子规则都没声明 `line-height`（`Input`/`Textarea`/`Select` 连 `font-size` 也没声明），VitePress 下输入框高 42px、徽章高 40px，**比 37px 的默认按钮还高**。现在每个交互叶子规则都显式声明 `line-height: 1.4` 与 `font-size`；两种宿主下三档都落在 37–39px 同一高度带（输入类因 1px 边框高 2px）
+- **各控件档位对齐**：`Input`/`Textarea` 基础规则是 `padding: var(--ui-spacing-sm)` 且未声明 `font-size`，默认渲染 33px 与自身 `size="md"` 的 35px 不一致 —— 现两者统一为 `md` 档；`Badge` 的 md 档误用 `--ui-typography-size-code`(13px) 而非其他组件统一的 `size-body`(15px)；`Dropdown` 的 md 档只设了 `min-width`，菜单项靠「基础规则恰好等于 md 档」的隐含契约命中
+- **清理无样式的死类名**：`Card` 渲染的 `mg-card--body-hidden` 全库无 CSS，而定义好的 `.mg-card-footer--no-border` 从未被挂上 —— 现 `hideBody` 会真正去掉页脚顶边；`FormItem` 的 `mg-form-item--error` / `--validating` 与 `Button` 的 `mg-button-loading` 同样没有任何 CSS，均已移除
+
+### 🧪 工程与测试
+
+- **新增 CSS 契约测试套件**（`control-size-contract.test.ts`，配套共用解析工具 `src/__tests__/helpers/cssRules.ts`）：每个交互叶子规则必须声明 `line-height`；声明了 `padding` 的规则必须同时声明 `font-size`；基础档 == 默认档；Dropdown 三档都必须覆写菜单项
+- **Button 尺寸阶梯断言**（`button-size-ladder.test.ts`、`Button.test.ts`），外加一条 Playwright 断言：在同一容器内渲染 Button / Input / Textarea / Select / Badge 的 md 档，要求最大最小高度差 ≤ 4px
+
+### 📝 文档
+
+- **`<Input label="…" />` 示例是错的**：`Input` 没有 `label` prop，该属性会被透传到 `<input>`，页面上不会出现任何标签文字；示例改用 `<label for>`
+
+### 🎨 设计令牌（同步自 moongate-theme 2.7.1）
+
+- `src/styles/tokens/colors.css` 随主题语义层刷新：浅色文本层级去塌陷 —— `comment` → `#55647c`、`textMuted`/`operator` → `#64748b`、`textInactive` → `#7a8c9e`；浅色 ANSI 白/亮白改为可读墨色灰（≥3:1，白族 ≥4.5:1）
+- 新增导出语义角色：`--ui-primary-solid`、`--ui-selection-foreground`、`--ui-code-dim`（主题 2.7.1 深色交互对比度修复）
+- 组件 fallback 对齐（`series-nav.css`/`switch.css` 的 `--ui-text-inactive` → `#7a8c9e`）；`docs/guide/design-tokens.md` 数值表已更新
+- `check-tokens.ts` 与完整构建通过；`dist/style.css` 已重建（深色视觉基本不变）
+
+<details>
+<summary>## [1.7.0] - 2026-09-06</summary>
 
 ### 🚀 新特性
 
-- **`SeriesNav` 系列导航组件**：有序内容导航列表，用于展示"文章系列/目录"（教程、专栏、长篇连载）。按序编号、当前篇高亮（`aria-current`）、超过阈值时折叠为单一 "N more parts..." 收缩占位（固定展示首/末/激活项，其余折叠，点击展开）；纯展示组件，不排序、不注入业务数据，顺序与激活态由调用方给定；5 个 props（`items`/`active`/`title`/`numbered`/`visibleCount`）、`#item` 与 `#title` 插槽、SSR 安全、axe 零违规。新增 `SeriesNavProps`/`SeriesNavItem` 类型与 `'moongate-vue/series-nav'` 按需入口（gzip 约 +1KB）
-- **Tooltip 定位改为 JS（useFloating）**：弃用 CSS Anchor Positioning（`anchor()` 超出声明浏览器基线，Firefox/旧 Safari 下浮层错位），统一为 JS 定位与视口翻转、`awaitNextTick` 定位校准；支持移入内容区不误关
+- **`SeriesNav` 系列导航组件**：面向"文章系列 / 目录"的有序列表 —— 按序编号、当前篇高亮（`aria-current`）、超过阈值折叠为单个 "N more parts…" 占位（始终保留首/末/激活项）。纯展示组件（不排序、不注入数据）；5 个 props、`#item`/`#title` 插槽、SSR 安全、axe 零违规，并附带类型与 `'moongate-vue/series-nav'` 按需入口
+- **Tooltip 定位改为 JS（useFloating）**：弃用 CSS Anchor Positioning（`anchor()` 超出声明浏览器基线，Firefox/旧 Safari 下错位），改为 JS 定位并补上视口翻转与 `awaitNextTick` 校准
 - **Tooltip 新增 `hideDelay` prop**（默认 100ms，与 Popover 行为对齐）
-- **Select 下拉 Teleport 化**：下拉面板从 `position:absolute`（wrapper 内，overflow 容器被裁剪）改为 **Teleport 到 body + fixed 定位**，坐标由 JS 计算（贴输入框底部 + 视口翻转、滚动/窗口变化跟随），与 Dropdown/Popover 定位策略统一
+- **Select 下拉 Teleport 化**：从 `position:absolute`（被 overflow 祖先裁剪）改为 Teleport 到 body + fixed 定位，坐标由 JS 计算并跟随滚动/窗口变化 —— 与 Dropdown/Popover 同一套策略
 - **Select 键盘 Home/End**：新增首/末项快捷跳转（WAI-ARIA listbox 键盘约定）
-- **`prefers-reduced-motion` 支持**：系统减弱动效时禁用 message/toast/skeleton/button 关键帧动画，并将 Modal/Drawer/Dropdown/Popover/Tooltip/Select 下拉等浮层的显隐位移过渡归零（transition 型，hover 颜色过渡保留）
+- **`prefers-reduced-motion` 支持**：系统减弱动效时禁用 message/toast/skeleton/button 关键帧动画，并把 Modal/Drawer/Dropdown/Popover/Tooltip/Select 浮层的显隐过渡归零，hover 颜色过渡保留
 - **RTL 基础支持**：toast 容器方位、message/toast 彩色边方向、select（原生 + 可搜索模式）箭头与输入内边距镜像随 `[dir="rtl"]` 翻转
 
 ### 🐛 Bug 修复
@@ -21,9 +47,8 @@
 - **`useAttrsWithClass` 透传非响应式**：`attrsWithoutClass` 是 setup 快照，父组件动态改 `id`/`data-*`/`style` 不透传到根元素；改为按需响应式读取
 - **Select `aria-activedescendant` 绑定位置错误**：此前绑在 listbox 容器而非获得焦点的 input（屏幕阅读器读不到）；已移到 input 并移除 listbox 冗余绑定
 - **Select Tab 键无法关闭下拉**：`mousedownInside` 残留 `true` 导致 blur 被误判为"点击选项"，下拉不关闭；打开时重置
-- **CSS 变量语义修复**：`--ui-overlay-scrim` token 此前缺失（modal/drawer 引用仅靠 fallback）；tooltip 改用专用 `--ui-surface-tooltip`；skeleton 高光改为 `--ui-fill-medium`；switch 未选中滑块改用中性色；多处陈旧 fallback 同步为当前 token 值；按钮/复选框/开关硬编码 `white` 改用 `--ui-white`
-- **smoke e2e 严格模式冲突**（`.mg-input` 匹配多元素既有问题）修复
-- **Dropdown 触发容器 ARIA 语义修复**：触发容器不再声明 `role="button"`/`aria-expanded`——无 role 元素挂载这些属性触发 axe `aria-allowed-attr`，而 `role="button"` 容器包裹插槽内真实按钮又会触发 axe `nested-interactive`；菜单语义交由 `role="menu"` 与插槽自身的触发元素（Button）承担（与 Element Plus / Ant Design 一致）
+- **CSS 语义 token 收敛**：tooltip 改用专用 `--ui-surface-tooltip`；skeleton 高光改为 `--ui-fill-medium`；switch 未选中滑块改用中性色；多处陈旧 fallback 同步为当前 token 值；按钮/复选框/开关硬编码 `white` 改用 `--ui-white`
+- **Dropdown 触发容器 ARIA 语义修复**：容器不再声明 `role="button"`/`aria-expanded`（无 role 挂这些属性触发 axe `aria-allowed-attr`，加了 role 包裹真实按钮又触发 `nested-interactive`）；菜单语义改由 `role="menu"` 与插槽自身的触发元素承担
 - **Toast/Message 缺失播报语义**：Message 补 `role="alert"`；Toast 补 `role="status"`（`error` 类型提升为 `role="alert"`），屏幕阅读器可感知通知的出现与类型
 
 ### 🎨 设计令牌
@@ -34,30 +59,30 @@
 
 ### 🧪 工程与测试
 
-- **新增 `scripts/check-tokens.ts`**：校验所有 `var(--ui-*)` 引用有定义、fallback 与 token 一致（分浅/深段、时长单位归一），孤儿 token 仅警告；已接入 `verify:build`（`pnpm build` 自动执行）
-- **e2e 键盘/焦点覆盖**：新增 `select-keyboard.spec.ts`（activedescendant 跟随、Home/End、过滤不越界、Enter/Esc/Tab）与 `modal-focus.spec.ts`（打开焦点入弹层、关闭焦点回触发按钮）；e2e 总计 26 用例全绿
-- **代码去重**：抽取 `isBrowser` 共享常量（`src/utils/env.ts`）统一 5 处浏览器环境检测；抽取 `useClickOutside` composable 统一 Popover/Dropdown 的点击外部关闭逻辑（监听注册/清理），净减约 50 行重复
-- **scripts 迁移 TypeScript**：`component-list` / `verify-build` / `clean-dts` / `check-tokens` 由 `.js/.mjs` 改为 `.ts`，Node.js 24 原生 type-stripping 直接运行，零新增依赖
-- **axe 可访问性覆盖扩展至全部 29 个组件**：补齐 Badge/Card/Container/Divider/Footer/Header/Hero/Main/Skeleton/Form/FormItem 与 Dropdown（关闭/打开两态）用例；FormItem 错误态验证 `aria-describedby` 实际指向错误元素
-- 单测总数 **534**（新增 useClickOutside / useNotification composable 用例、Dropdown 键盘导航用例与全组件 a11y 矩阵）
+- **新增 `scripts/check-tokens.ts`**：校验所有 `var(--ui-*)` 引用有定义、fallback 与 token 一致（浅/深段分开、时长单位归一），孤儿 token 仅警告；经 `verify:build` 在每次 `pnpm build` 执行
+- **e2e 键盘/焦点覆盖**：新增 `select-keyboard.spec.ts`（activedescendant 跟随、Home/End、过滤不越界、Enter/Esc/Tab）与 `modal-focus.spec.ts`（打开焦点入弹层、关闭焦点回触发按钮）
+- **代码去重**：抽取 `isBrowser` 共享常量（`src/utils/env.ts`）统一 5 处环境检测，抽取 `useClickOutside` composable 统一 Popover/Dropdown 的点击外部关闭（约减 50 行重复）
+- **scripts 迁移 TypeScript**：`component-list` / `verify-build` / `clean-dts` / `check-tokens` 改为 `.ts`，由 Node.js 24 原生 type-stripping 运行，零新增依赖
+- **axe 覆盖补全**：补齐 Badge/Card/Container/Divider/Footer/Header/Hero/Main/Skeleton/Form/FormItem 与 Dropdown（关闭/打开两态），至此全部组件均纳入扫描；FormItem 错误态验证 `aria-describedby` 实际指向错误元素
 
 ### 📝 文档
 
-- 新增 `series-nav.md` 组件文档（5 个交互示例 + API）；`components/index.md`、README（中英）、docs 侧边栏、philosophy/nuxt-integration 的组件计数同步更新至 29 个组件
-- `tooltip.md` 补充 `hideDelay`；`design-tokens.md` 补充字号档与 overlay-scrim token 值
-- README/philosophy 修正「每个组件 2-8 props」宣传口径（Button/Select 等复杂组件 11 个，注明取舍边界）
-- 新增 `accessibility.md` 无障碍指南：WCAG 2.1 AA 对齐声明、29 组件键盘交互对照表、reduced-motion / RTL 支持矩阵、Dropdown 触发语义与 Skeleton 用法建议
-- Guide 文档去重收敛：样式引入、原生校验理念、SSR 机制等重复段落统一指向权威页（`install` / `philosophy`），各功能文档保留操作内容与交叉链接
+- 新增 `series-nav.md` 与 `accessibility.md`（WCAG 2.1 AA 声明、键盘交互对照表、reduced-motion / RTL 矩阵、Dropdown 触发语义与 Skeleton 建议）
+- `tooltip.md` 补充 `hideDelay`；`design-tokens.md` 补充新 token 值；修正「每个组件 2-8 props」宣传口径（Button/Select 为 11 个，注明取舍边界）
+- 重复的样式引入、原生校验理念、SSR 机制段落统一收敛到 `install` / `philosophy`，各功能文档只保留操作内容
+
+</details>
 
 ---
 
-## [1.6.0] - 2026-08-18
+<details>
+<summary>## [1.6.0] - 2026-08-18</summary>
 
 ### 🚀 新特性
 
-- **Dropdown 下拉菜单组件**：点击触发的弹出操作菜单，支持键盘导航（↑↓ Home End Enter Escape TypeAhead）、分隔线、危险操作高亮、9 方位定位（含 start/end 对齐）、受控模式（`v-model:open`）、WAI-ARIA `role="menu"` + `role="menuitem"`；新增 `useMenuKeyboard` composable（泛型，可复用于自定义菜单）；新增 `DropdownPlacement`、`DropdownOption` 类型
+- **Dropdown 下拉菜单组件**：点击触发的操作菜单，支持键盘导航（↑↓ Home End Enter Escape TypeAhead）、分隔线、危险操作高亮、9 方位定位、`v-model:open` 受控与 `role="menu"`/`role="menuitem"` 语义 —— 并附带可复用的 `useMenuKeyboard` composable 与 `DropdownPlacement`/`DropdownOption` 类型
 - **`setConfig` 全局文案配置**：内置文案自动适配中英文；`setConfig({ locale: 'en-US' })` 切换语言，`setConfig({ texts: {...} })` 部分覆盖；优先级 **组件 prop > setConfig > 内置文案**，已挂载组件响应式更新
-- **组件 Props 类型导出**：所有 28 个组件的 Props 类型（`ButtonProps`、`TableProps` 等）均可从 `'moongate-vue'` 直接导入；泛型组件（Table/Form）的类型定义在独立 `.ts` 文件中（`types/table.ts`、`types/form.ts`），避免 shim 冲突；新增 `MenuItemBase`、`disposeConfig()`、`getDefaultIcon()` 等公共类型/函数
+- **组件 Props 类型导出**：所有组件的 Props 类型（`ButtonProps`、`TableProps` 等）均可从 `'moongate-vue'` 导入；泛型组件（Table/Form）类型独立放在 `.ts` 文件以规避 shim 冲突；新增 `MenuItemBase`、`disposeConfig()`、`getDefaultIcon()`
 - **Message/Toast 默认类型图标**：每种通知类型自动显示默认图标（✓ ✗ ⚠ ℹ），可通过 `icon` prop 或 `#icon` 插槽覆盖
 - **FormItem `for` prop**：可选 `for` prop 关联 label 与 input，支持点击聚焦
 - **`disposeConfig()` 导出**：断开 MutationObserver 监听，适用于 SSR 清理和测试 teardown
@@ -77,12 +102,14 @@
 - **useOverlayComponent 动态选项**：`enableEsc`/`enableFocusTrap` 支持 getter，挂载后 prop 变化可响应
 - **useScrollLock trapFocus**：无可聚焦元素时 Tab 键不再逃逸浮层
 - **构建优化**：`package.json` exports 校验脚本（verify-build 新增一致性检查）；移除 `check:size` 脚本简化流程
-- **CSS 改进**：消除 Table `!important`；新增 `--ui-typography-size-lg`（18px）和 `--ui-overlay-scrim`（light/dark）token
-- **测试**：449 个测试（32 文件），新增 Modal ESC 测试、Popover click-outside 测试、Dropdown/useMenuKeyboard 测试；Form/Table 补充 `resetConfig()` 清理
+- **CSS 改进**：消除 Table `!important`；新增 `--ui-typography-size-lg`（18px）
+- **测试**：新增 Modal ESC、Popover click-outside 与 Dropdown/useMenuKeyboard 用例；Form/Table 补充 `resetConfig()` 清理
 
 ### 📝 文档
 
-- **文档全面更新**：新增 Dropdown 组件文档（6 个交互示例 + 键盘导航 + API）；`design-tokens.md` 补充新 token；`install.md` 新增 TypeScript 类型章节；7 篇组件文档修正（popover `delay`→`showDelay`、card `as` 类型收窄、tabs 键盘导航、message/toast 默认图标等）
+- 新增 Dropdown 文档（6 个交互示例 + 键盘导航 + API）；`design-tokens.md` 补充新 token；`install.md` 新增 TypeScript 类型章节；7 篇组件文档修正（popover `delay`→`showDelay`、card `as` 收窄、tabs 键盘导航、message/toast 默认图标等）
+
+</details>
 
 ---
 
@@ -96,25 +123,20 @@
 
 ### 🚀 新特性
 
-- **`useForm` 表单校验组合式函数**：复用 HTML5 Constraint Validation（`required`/`email`/`min`/`pattern` 等原生已有能力），只补 4 个原生做不到的场景——状态集中管理（`values`/`errors`/`valid`）、异步校验（远程唯一性）、关联字段校验（确认密码）、校验编排（`validate`/`validateField`/`reset`），零依赖，19 个单元测试
-- **Select 多选**：新增 `multiple` prop（需配 `filterable`），标签 chip 展示 + 删除按钮、连续多选（选中后下拉保持打开）、键盘友好（Enter 选中不关闭/Esc 关闭）、多选时 `change` 始终 emit 数组，8 个单元测试
-- **Table 行选择**：新增 `selectable` prop + `v-model:selected-rows`，表头全选/半选（indeterminate）、`row-selectable` 禁用行、`row-key` 稳定选中，9 个单元测试
-- **`Form` / `FormItem` 表单视图组件**：布局容器 + 单字段 label/必填星号/错误/校验中展示，完全由 `useForm` 驱动（不重复校验逻辑）；两者合计约 1KB gzip。14 个单元测试
+- **`useForm` 表单校验组合式函数**：复用 HTML5 Constraint Validation（`required`/`email`/`min`/`pattern` 等原生已有能力），只补 4 个原生做不到的场景——状态集中管理（`values`/`errors`/`valid`）、异步校验（远程唯一性）、关联字段校验（确认密码）、校验编排（`validate`/`validateField`/`reset`），零依赖
+- **Select 多选**：新增 `multiple` prop（需配 `filterable`），标签 chip 展示 + 删除按钮、连续多选（选中后下拉保持打开）、键盘友好（Enter 选中不关闭/Esc 关闭）、多选时 `change` 始终 emit 数组
+- **Table 行选择**：新增 `selectable` prop + `v-model:selected-rows`，表头全选/半选（indeterminate）、`row-selectable` 禁用行、`row-key` 稳定选中
+- **`Form` / `FormItem` 表单视图组件**：布局容器 + 单字段 label/必填星号/错误/校验中展示，完全由 `useForm` 驱动（不重复校验逻辑）；两者合计约 1KB gzip
 
 ### 🚀 质量提升
 
 - **可访问性全面升级（WAI-ARIA Patterns）**：Tooltip 新增 `aria-describedby` + 键盘 focus 触发；Select 新增选项唯一 `id` + `aria-activedescendant`；Table 排序表头暴露 `aria-sort` 并支持键盘排序；Modal/Drawer 新增 `aria-describedby` 关联正文；Tabs 新增完整键盘导航（`←`/`→`/Home/End）——所有 ID 均通过 SSR 安全的 `useId()` 生成
 - **SSR 健壮性加固**：`useScrollLock` 导出函数增加非浏览器环境守卫；`Message`/`Toast` 在 SSR 渲染期间跳过创建定时器
 - **代码去重**：抽取 `useNotification`（Message/Toast）与 `useFormField`（Input/Textarea）composable；Select 状态重置逻辑重构为共享方法
-- **测试扩展至 395 个（29 个测试文件）**：覆盖率从 78.85% 提升至 95%+（statements `76→90`、branches `65→80`、functions `76→90`、lines `78→92`）
-- **Playwright 端到端冒烟测试**：14 个真实浏览器用例覆盖全部 25 个组件（渲染 + 关键交互），使用系统 Google Chrome（`channel: 'chrome'`）；新增 `pnpm test:e2e` / `test:e2e:install` 脚本
+- **测试体系扩充**：语句覆盖率由 78.85% 提升至 95%+（分支/函数/行同步提升约 15 个百分点）
+- **引入 Playwright 端到端冒烟测试**：真实浏览器覆盖全部组件的渲染与关键交互，使用系统 Google Chrome（`channel: 'chrome'`）；新增 `pnpm test:e2e` / `test:e2e:install` 脚本
 - **Table 排序图标修复**：排序图标 class 改用响应式 `currentSortKey`/`currentSortOrder` 而非原始 props
-- **文档准确性修正**：Tooltip/Table/Select 文档更新至与键盘/无障碍行为一致
-
-### 📝 文档更新
-
-- 新增 `docs/guide/form-validation.md` 表单校验指南：原生优先校验理念 + `useForm` API 参考
-- Select 文档更新多选示例；Table 文档更新行选择示例
+- **文档**：新增 `guide/form-validation.md`（原生优先校验理念 + `useForm` API）；Select/Table 文档补充多选与行选择示例；Tooltip/Table/Select 文档同步新的键盘行为
 
 </details>
 
@@ -159,7 +181,6 @@
 - **Input `change` 事件丢失**：组件声明了 `change` emit 但模板漏绑 `@change`，导致事件被"吞掉"——由新增的单元测试发现并修复
 - **createOverlay 共享容器孤儿引用**：模块级 `Map` 缓存未检查 `isConnected`，可能返回已脱离 DOM 的孤儿节点
 - **Modal / Drawer 滚动锁冲突**：多实例同时打开时关闭任意一个都会恢复 body 滚动；抽取 `useScrollLock` composable 共享锁逻辑，仅最后一个关闭时恢复
-- **Button 缺少默认 `type="button"`**：表单内使用会默认为 `submit` 导致意外提交，现默认 `type="button"` 并支持显式指定
 - **Modal 缺少 ESC 键关闭**：体验与 Drawer 不一致，现统一通过 `useOverlayBehavior` 支持
 - **Select 类型安全**：`options`、`getLabel` 等使用 `any` 导致类型不安全；改用 `SelectOption`/`SelectValue` 联合类型，`labelKey`/`valueKey` 类型安全
 
@@ -176,16 +197,13 @@
 
 - **SSR 兼容性增强**：Modal/Drawer 改用 `useId()`（Vue 3.5+ SSR 安全 ID）替换 `Math.random()`；新增对全部 25 个组件的 `renderToString` 回归测试
 - **Popover / Tooltip 性能优化**：全局 `MutationObserver` → `ResizeObserver`，仅可见时监听自身尺寸变化
-- **代码规范与工程化**：引入 ESLint + Prettier 统一风格、husky + lint-staged 提交前检查、Button/Toast/Modal/Drawer 增加 `defineSlots` 插槽类型
-- **测试体系建立**：Vitest + jsdom，覆盖全部 25 个组件、5 个 composables 与 SSR 回归测试，共 212 个测试用例，覆盖率约 78.85%
+- **测试与代码规范体系建立**：Vitest + jsdom 覆盖全部组件、composables 与 SSR 回归；引入 ESLint + Prettier 统一风格与 husky/lint-staged 提交前检查；Button/Toast/Modal/Drawer 增加 `defineSlots` 插槽类型
 - **样式清理**：移除 `index.css` 中 `table.css` 重复导入；`.gitignore` 忽略 `coverage/` 与 `assets/` 支付图片
 
 ### ⚠️ 破坏性变更
 
 - **最低 Vue 版本**：从 `^3.3.0` 提升至 **`^3.5.0`**（`useId` 需 Vue 3.5+，实现 SSR 安全 ID）；Vue 3.0 - 3.4 用户请使用 `moongate-vue@1.2.x`
-- **Button type 行为变化**：默认 `type` 从 submit 改为 `button`；如需在表单中提交请显式传入 `type="submit"`
-- **Message / Toast 行为变化**：见上方新特性说明
-- **按需导出路径**：新增子路径导出，主入口保持兼容（见上方新特性说明）
+- **Button 默认 `type`**：由 `submit` 改为 `button`（表单内使用不再误触发提交）；需要提交请显式传 `type="submit"`
 
 ### 📝 文档更新
 
@@ -206,8 +224,7 @@
 
 ### 🐛 Bug 修复
 
-- **SSR 兼容性**：修复 Modal、Drawer、Popover、Tooltip 等组件在服务端渲染时访问 `document`/`window` 导致的错误
-- **Toast / Message**：命令式调用在 SSR 环境下静默失败，不再抛出错误
+- **SSR 兼容性**：Modal / Drawer / Popover / Tooltip 在服务端渲染时访问 `document`/`window` 会抛错；命令式 `Toast`/`Message` 调用改为静默失败而非抛错（1.4.0 起改为真实环境守卫）
 
 </details>
 

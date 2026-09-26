@@ -8,8 +8,6 @@
 
 Moongate Vue 是一个受月亮启发的极简 Vue 3 组件库。设计令牌驱动，CSS 优先，框架无关。
 
-**完整组件库（JS + CSS）gzipped 体积保持 25KB 以内**。实时数据见上方 [Bundlephobia 徽章](https://bundlephobia.com/package/moongate-vue)。
-
 ## 特性
 
 - 🌙 **月亮哲学** — 克制、冷静、秩序感
@@ -19,7 +17,7 @@ Moongate Vue 是一个受月亮启发的极简 Vue 3 组件库。设计令牌驱
 - ✨ **极简 API** — 绝大多数组件 2-8 个 props（少数复杂组件如 Button/Select 略多），易学易用
 - 🚀 **零依赖** — 无需额外配置，开箱即用
 - ⚡ **SSR 就绪** — 完美适配 Nuxt 4 / VitePress 等服务端渲染场景
-- ✅ **测试保障** — Vitest + jsdom 全覆盖，29 个组件 + 3 个公开 composables（`useForm` / `useMessage` / `useToast`）+ SSR/a11y 回归 + Playwright e2e（26 用例），共 497 个测试（语句覆盖率 95% / 分支覆盖率 86%）
+- ✅ **测试保障** — Vitest + jsdom：29 个组件 + 4 个公开 composables（`useForm` / `useMessage` / `useToast` / `useMenuKeyboard`）+ SSR/a11y 回归 + Playwright e2e（29 用例），共 600 个测试（语句覆盖率 94% / 分支覆盖率 85%）
 - 🔧 **工程规范** — ESLint + Prettier 统一风格，husky 提交前自动检查
 
 ## 安装
@@ -30,7 +28,7 @@ npm install moongate-vue
 pnpm add moongate-vue
 ```
 
-> 💡 **非侵入式样式**：默认 `style.css` 仅包含组件样式，不会重置你的全局样式。可选引入 `moongate-vue/reset.css` 为所有元素统一 `box-sizing: border-box`。
+> 💡 **非侵入式样式**：`style.css` 不重置全局样式，唯一例外是 `<code>` / `<pre>` 会被自动着色；可选引入 `moongate-vue/reset.css` 统一 `box-sizing: border-box`。
 >
 > **要求**：Vue `^3.5.0` 或更高版本。浏览器支持与 **VitePress** 基线保持一致（Chrome 111+ / Firefox 113+ / Edge 111+ / Safari 16.2+）。详见[完整安装指南](./docs/guide/install.md)。
 
@@ -105,31 +103,16 @@ Moongate Vue 基于完整的设计令牌系统（`colors.css` 和 `layout.css`�
 
 ## 全局配置
 
-内置文案默认跟随 `document.documentElement.lang` 自动适配中英文（仅支持中英双语，**非中文 lang 一律视为英文**），也可以通过 `setConfig` 全局覆盖：
+内置文案默认跟随 `document.documentElement.lang` 适配中英文（非中文 `lang` 一律视为英文），也可用 `setConfig` 全局覆盖：
 
 ```ts
 import { setConfig } from 'moongate-vue'
 
-// 切换为英文内置文案
 setConfig({ locale: 'en-US' })
-
-// 仅覆盖部分文案
-setConfig({ texts: { empty: '没有数据', paginationPrev: '上一页' } })
+setConfig({ texts: { empty: '没有数据' } })
 ```
 
-优先级：**组件 prop > `setConfig` texts > 语言内置文案**。支持 `{current}`/`{total}`/`{label}` 等模板占位符，配置修改后已挂载组件会响应式更新。
-
-覆盖的内置文案包括：Pagination 页码信息/上一页/下一页/首尾页、Select 空状态/移除标签、Table 空状态/全选/行选择/行标签兜底、FormItem 校验中、Modal/Drawer/Message/Toast 关闭按钮、`useForm` 默认校验失败文案。
-
-## 属性透传
-
-所有组件都支持通过 `v-bind="$attrs"` 透传原生属性到根元素：
-
-- Input/Textarea 透传到原生输入元素
-- Checkbox/Radio/Switch 透传到隐藏的 `<input>`（无障碍）
-- Button 透传到 `<button>` 元素
-
-> 透传属性不会覆盖组件 Props 中已声明的属性；如需覆盖组件内置行为，请使用对应的 Props（如 `disabled`、`size` 等）。
+优先级：**组件 prop > `setConfig` texts > 语言内置文案**。完整文案列表与占位符见[国际化配置](https://vue.moongate.top/guide/i18n)。
 
 ## 许可证
 
@@ -137,10 +120,8 @@ setConfig({ texts: { empty: '没有数据', paginationPrev: '上一页' } })
 
 ## 相关链接
 
-- [设计理念](https://moongate.top/docs/design-tokens-vs-atomic-css)
-- [实现细节](https://moongate.top/docs/css-first-component-library)
-- [Bundlephobia 分析](https://bundlephobia.com/package/moongate-vue)
 - [在线文档](https://vue.moongate.top)
+- [Bundlephobia 体积分析](https://bundlephobia.com/package/moongate-vue)
 
 ## ☕ 赞助支持
 

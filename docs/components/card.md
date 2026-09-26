@@ -232,5 +232,6 @@ import { Card, Badge } from 'moongate-vue'
 - 悬停效果仅当 `hoverable` 为 `true` 时生效
 - 头部和底部插槽为可选，不传则对应区域不会渲染
 - 使用 `hideBody` 或 `hideFooter` 时，对应的 DOM 元素完全不会生成，适用于需要精确控制布局的场景
+- `hideBody` 为 `true` 时，头部区域的底边与底部区域的顶边会一并去掉（此时两者不再与正文相邻，保留分隔线会出现悬空边）
 - 若卡片内部包含多个可交互元素（如多个链接），请确保各元素的 `z-index` 或点击区域不冲突
 - `as` 属性支持 `div`、`section`、`article`、`aside`、`li` 五种容器标签

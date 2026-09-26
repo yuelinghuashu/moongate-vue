@@ -1,12 +1,7 @@
 <template>
-  <div
-    :class="[
-      'mg-form-item',
-      `mg-form-item--${layout}`,
-      { 'mg-form-item--error': !!errorText },
-      { 'mg-form-item--validating': isLoading },
-    ]"
-  >
+  <!-- 状态类只保留有样式定义的 layout 修饰符；错误/校验中状态由下方的
+       .mg-form-item__error / .mg-form-item__validating 文案节点承载 -->
+  <div :class="['mg-form-item', `mg-form-item--${layout}`]">
     <label v-if="label != null" class="mg-form-item__label" :class="{ required }" :for="forAttr">
       <span v-if="required" class="mg-form-item__required" aria-hidden="true">*</span>
       {{ label }}

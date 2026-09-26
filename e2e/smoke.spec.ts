@@ -9,11 +9,101 @@ test.describe('组件渲染冒烟', () => {
     // 基础组件
     await expect(page.getByTestId('basic')).toBeVisible()
     await expect(page.getByTestId('btn')).toBeVisible()
-    // 按钮 + 悬停提示内 + 弹出触发等共 7 个
-    await expect(page.locator('.mg-button')).toHaveCount(7)
+    // 按钮 + 悬停提示内 + 弹出触发等共 8 个
+    await expect(page.locator('.mg-button')).toHaveCount(8)
     await expect(page.locator('.mg-badge')).toBeVisible()
     await expect(page.locator('.mg-card')).toBeVisible()
     await expect(page.locator('.mg-divider')).toBeVisible()
+  })
+
+  test('默认尺寸档为 md，且比 lg 档更紧凑（尺寸阶梯真实生效）', async ({ page }) => {
+    await page.goto('/')
+
+    // 默认按钮 = md 档（size prop 默认值即 'md'）
+    await expect(page.getByTestId('btn')).toHaveClass(/mg-button-md/)
+
+    const defaultBox = await page.getByTestId('btn').boundingBox()
+    const largeBox = await page.getByTestId('btn-lg').boundingBox()
+    expect(defaultBox).not.toBeNull()
+    expect(largeBox).not.toBeNull()
+
+    // 默认档落在 md 高度区间（不再是小号）
+    expect(defaultBox!.height).toBeGreaterThan(35)
+    expect(defaultBox!.height).toBeLessThan(39)
+    // 相对比较，避免依赖具体字体渲染尺寸
+    expect(defaultBox!.height).toBeLessThan(largeBox!.height)
+  })
+
+  test('同档位控件高度一致（控件高度由库决定，不随宿主行高漂移）', async ({ page }) => {
+    await page.goto('/')
+
+    // md 档（各组件 size prop 的默认档）控件在同一父容器下必须落在同一高度带。
+    // 回归背景：Input/Badge/Select/Tab 未声明 font-size/line-height 时，
+    // 宿主 `input,button,select { line-height: inherit }` 会把它们抬到宿主行高
+    // （文档站实测 Input 42px / Badge 40px vs Button 37px）。
+    const heights = await page.evaluate(() => {
+      const host = document.createElement('div')
+      host.style.cssText =
+        'position:fixed;left:-9999px;top:0;display:flex;align-items:flex-start;gap:10px'
+      // 只比对「自身即是控件」的元素；.mg-tab 需在 .mg-tabs-header 里才有完整上下文，
+      // 单独渲染会带上 UA 默认按钮样式，故不纳入本断言（其契约由 CSS 单测覆盖）
+      host.innerHTML = [
+        '<button class="mg-button mg-button-filled-primary">按钮</button>',
+        '<input class="mg-input" value="输入" />',
+        '<textarea class="mg-textarea" rows="1"></textarea>',
+        '<select class="mg-select-native"><option>选择</option></select>',
+        '<span class="mg-badge mg-badge-primary mg-badge-md">徽章</span>',
+      ].join('')
+      document.body.appendChild(host)
+      const out = Array.from(host.children).map((el) => ({
+        tag: el.tagName,
+        h: Math.round(el.getBoundingClientRect().height * 10) / 10,
+      }))
+      host.remove()
+      return out
+    })
+
+    for (const { tag, h } of heights) {
+      expect(h, `${tag} 高度应落在 md 档高度带`).toBeGreaterThan(35)
+      expect(h, `${tag} 高度应落在 md 档高度带`).toBeLessThan(41)
+    }
+    // 最大最小差不超过 4px（输入类控件含 1px 边框，天然比按钮高 2px）
+    const values = heights.map((x) => x.h)
+    expect(Math.max(...values) - Math.min(...values)).toBeLessThanOrEqual(4)
+  })
+
+  test('三档实测高度符合尺寸契约（sm≈25 / md≈37 / lg≈49）', async ({ page }) => {
+    await page.goto('/')
+
+    // 同一父容器下等比测量，三档均带 .mg-button-label 以对齐真实渲染结构
+    const heights = await page.evaluate(() => {
+      const classes = ['mg-button-sm', 'mg-button-md', 'mg-button-lg']
+      const host = document.createElement('div')
+      host.style.cssText =
+        'position:fixed;left:-9999px;top:0;display:flex;align-items:flex-start;gap:12px'
+      host.innerHTML = classes
+        .map(
+          (c) =>
+            `<button class="mg-button mg-button-filled-primary ${c}"><span class="mg-button-label">尺寸</span></button>`,
+        )
+        .join('')
+      document.body.appendChild(host)
+      const out = Array.from(host.children).map((el) => el.getBoundingClientRect().height)
+      host.remove()
+      return out
+    })
+
+    const [sm, md, lg] = heights
+    // 容差 ±2px，避免字体渲染差异导致脆弱；上限约住「档位取值被改回 md」的回归
+    expect(sm).toBeGreaterThan(23)
+    expect(sm).toBeLessThan(27)
+    expect(md).toBeGreaterThan(35)
+    expect(md).toBeLessThan(39)
+    expect(lg).toBeGreaterThan(47)
+    expect(lg).toBeLessThan(51)
+    // 阶梯单调
+    expect(sm).toBeLessThan(md)
+    expect(md).toBeLessThan(lg)
   })
 
   test('表单组件正常渲染', async ({ page }) => {

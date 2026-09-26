@@ -70,6 +70,16 @@
     color-mix(in srgb, var(--ui-primary), transparent 80%);
 }
 
+/* 分页内的文本与按钮统一显式行高：否则宿主 `button/input { line-height: inherit }`
+   （如 VitePress）会把各元素高度抬到宿主行高，档位高度随之漂移 */
+.mg-pagination-btn,
+.mg-pagination-current,
+.mg-pagination-sep,
+.mg-pagination-total,
+.mg-pagination-input {
+  line-height: 1.4;
+}
+
 /* 尺寸变体 */
 /* 小号 */
 .mg-pagination-sm {

@@ -17,10 +17,9 @@ yarn add moongate-vue
 
 ## 样式引入
 
-组件库的默认样式是**非侵入式**的（不会重置你的全局样式，`*` 等元素默认行为保持不变）：
+组件库的默认样式是**非侵入式**的：`style.css` 不重置全局样式，唯一例外是 `<code>` / `<pre>` 会被自动着色（见 [Code 组件](/components/code)）。
 
 ```ts
-// 默认引入：仅包含组件样式，无副作用
 import 'moongate-vue/style.css'
 ```
 
@@ -62,5 +61,3 @@ function renderTable<T>(props: TableProps<T>) {
 | Table      | `TableColumn` `SortParams` `CellSlotProps` `ColumnSlotProps`                                                                                                                                                                                                                                                                                                                       |
 | 配置       | `Config` `LocaleTexts`                                                                                                                                                                                                                                                                                                                                                             |
 | Composable | `Rule` `FieldRules` `UseFormOptions` `MenuItemBase`                                                                                                                                                                                                                                                                                                                                |
-
-> 样式引入方式见上文[样式引入](#样式引入)。

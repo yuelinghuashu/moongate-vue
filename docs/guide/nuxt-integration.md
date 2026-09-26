@@ -2,7 +2,7 @@
 
 ## SSR 支持（开箱即用）
 
-组件库已内置 SSR 支持，全部 29 个组件在 Nuxt / VitePress 等服务端渲染环境中开箱即用，无需额外配置（浏览器环境守卫、`useId()` hydration 一致性等实现机制见[设计哲学 · SSR 安全](/guide/philosophy#ssr-安全)）。
+组件库已内置 SSR 支持，声明式组件无需额外配置即可在 Nuxt / VitePress 中使用；`Message` / `Toast` 的命令式调用见下一节。
 
 ## Message / Toast：唯一需要注意的点
 

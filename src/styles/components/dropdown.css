@@ -87,6 +87,8 @@
 }
 
 /* ========== 尺寸变体 ========== */
+/* 三档都显式声明菜单项样式：md 档此前只有 min-width，菜单项靠基础规则命中，
+   导致「基础规则 = md 档」这一隐含契约不可见（sm/lg 均有显式覆盖） */
 .mg-dropdown-menu-sm {
   min-width: 100px;
 }
@@ -97,6 +99,10 @@
 
 .mg-dropdown-menu-md {
   min-width: 120px;
+}
+.mg-dropdown-menu-md .mg-dropdown-item {
+  padding: var(--ui-spacing-sm, 8px) var(--ui-spacing-md, 12px);
+  font-size: var(--ui-typography-size-body, 15px);
 }
 
 .mg-dropdown-menu-lg {
